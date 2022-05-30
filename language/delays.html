@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Circuit timing &#8212; OpenQASM Live Specification  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="circuit-timing">
-<h1>Circuit timing<a class="headerlink" href="#circuit-timing" title="Permalink to this headline">¶</a></h1>
+<h1>Circuit timing<a class="headerlink" href="#circuit-timing" title="Permalink to this heading">¶</a></h1>
 <p>A key aspect of expressing code for quantum experiments is the ability
 to control the timing of gates and pulses. Examples include
 characterization of decoherence and crosstalk, dynamical decoupling,
@@ -49,7 +50,7 @@ we want to provide the ability to capture <em>design intent</em> such as “spac
 these gates evenly to implement a higher-order echo decoupling sequence”
 or “implement this gate as late as possible”.</p>
 <section id="duration-and-stretch-types">
-<span id="duration-and-stretch"></span><h2>Duration and stretch types<a class="headerlink" href="#duration-and-stretch-types" title="Permalink to this headline">¶</a></h2>
+<span id="duration-and-stretch"></span><h2>Duration and stretch types<a class="headerlink" href="#duration-and-stretch-types" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">duration</span></code> type is used denote increments of time. Durations are positive real numbers
 that are manipulated at compile time. Durations must be followed by time units which can be
 any of the following:</p>
@@ -151,7 +152,7 @@ multi-qubit stretches is intended to alleviate potential problems from
 these side effects. Also contrary to TeX, we prohibit overlapping gates.</p>
 </section>
 <section id="operations-on-durations">
-<h2>Operations on durations<a class="headerlink" href="#operations-on-durations" title="Permalink to this headline">¶</a></h2>
+<h2>Operations on durations<a class="headerlink" href="#operations-on-durations" title="Permalink to this heading">¶</a></h2>
 <p>We can add/subtract two durations, or multiply or divide them by a constant, to get a new
 duration. Division of two durations results in a machine-precision float
 (see <a class="reference internal" href="types.html#divideduration"><span class="std std-ref">Converting duration to other types</span></a>). Negative durations are allowed, however
@@ -169,7 +170,7 @@ durations, including stretches, will be resolved to constants.</p>
 </div>
 </section>
 <section id="delays-and-other-duration-based-instructions">
-<h2>Delays (and other duration-based instructions)<a class="headerlink" href="#delays-and-other-duration-based-instructions" title="Permalink to this headline">¶</a></h2>
+<h2>Delays (and other duration-based instructions)<a class="headerlink" href="#delays-and-other-duration-based-instructions" title="Permalink to this heading">¶</a></h2>
 <p>OpenQASM and OpenPulse have a <code class="docutils literal notranslate"><span class="pre">delay</span></code> instruction, whose duration is defined by
 a <code class="docutils literal notranslate"><span class="pre">duration</span></code>. If the duration passed to the delay contains stretch, it will become a
 stretchy delay. We use square bracket notation to pass these duration
@@ -300,7 +301,7 @@ to properly take into account the finite duration of each gate.</p>
 </div>
 </section>
 <section id="boxed-expressions">
-<h2>Boxed expressions<a class="headerlink" href="#boxed-expressions" title="Permalink to this headline">¶</a></h2>
+<h2>Boxed expressions<a class="headerlink" href="#boxed-expressions" title="Permalink to this heading">¶</a></h2>
 <p>We introduce a <code class="docutils literal notranslate"><span class="pre">box</span></code> statement for scoping the timing of a particular part of the circuit.
 A boxed subcircuit is different from a <code class="docutils literal notranslate"><span class="pre">gate</span></code> or <code class="docutils literal notranslate"><span class="pre">def</span></code> subroutine, in that it is merely
 an enclosure to a piece of code within the larger scope which constains it. This can be used to
@@ -354,7 +355,7 @@ require more than 150ns for all valid combinations:</p>
 </div>
 </section>
 <section id="barrier-instruction">
-<h2>Barrier instruction<a class="headerlink" href="#barrier-instruction" title="Permalink to this headline">¶</a></h2>
+<h2>Barrier instruction<a class="headerlink" href="#barrier-instruction" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">barrier</span></code> instruction of OpenQASM 2 prevents commutation and gate reordering
 on a set of qubits across its source line. The syntax is <code class="docutils literal notranslate"><span class="pre">barrier</span> <span class="pre">qregs|qubits;</span></code> and can be seen
 in the following example</p>
@@ -444,7 +445,7 @@ qubits.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -461,7 +462,7 @@ qubits.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

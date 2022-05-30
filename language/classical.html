@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Classical instructions &#8212; OpenQASM Live Specification  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="classical-instructions">
-<h1>Classical instructions<a class="headerlink" href="#classical-instructions" title="Permalink to this headline">¶</a></h1>
+<h1>Classical instructions<a class="headerlink" href="#classical-instructions" title="Permalink to this heading">¶</a></h1>
 <p>We envision two levels of classical control: simple, low-level instructions embedded as
 part of a quantum circuit and high-level external functions which perform more complex
 classical computations. The low-level functions allow basic
@@ -51,9 +52,9 @@ OpenQASM. <code class="docutils literal notranslate"><span class="pre">extern</s
 processors, if possible. <code class="docutils literal notranslate"><span class="pre">extern</span></code> functions can write to the global controller’s memory,
 which may not be directly accessible by the local controllers.</p>
 <section id="low-level-classical-instructions">
-<h2>Low-level classical instructions<a class="headerlink" href="#low-level-classical-instructions" title="Permalink to this headline">¶</a></h2>
+<h2>Low-level classical instructions<a class="headerlink" href="#low-level-classical-instructions" title="Permalink to this heading">¶</a></h2>
 <section id="generalities">
-<h3>Generalities<a class="headerlink" href="#generalities" title="Permalink to this headline">¶</a></h3>
+<h3>Generalities<a class="headerlink" href="#generalities" title="Permalink to this heading">¶</a></h3>
 <p>All types support the assignment operator <code class="docutils literal notranslate"><span class="pre">=</span></code>. The left-hand-side (LHS) and
 right-hand-side (RHS) of the assignment operator must be of the same
 type. For real-time values assignment is by copy of the RHS value to the
@@ -69,12 +70,12 @@ assigned variable on the LHS.</p>
 </div>
 </section>
 <section id="classical-bits-and-registers">
-<h3>Classical bits and registers<a class="headerlink" href="#classical-bits-and-registers" title="Permalink to this headline">¶</a></h3>
+<h3>Classical bits and registers<a class="headerlink" href="#classical-bits-and-registers" title="Permalink to this heading">¶</a></h3>
 <p>Classical registers and bits support bitwise operators and the
 corresponding assignment operators between registers of the same size:
 and <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, or <code class="docutils literal notranslate"><span class="pre">|</span></code>, xor <code class="docutils literal notranslate"><span class="pre">^</span></code>. They support left shift <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> and right shift <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> by an unsigned
 integer, and the corresponding assignment operators. The shift operators
-shift bits off the end. They also support not <code class="docutils literal notranslate"><span class="pre">~</span></code>, <code class="docutils literal notranslate"><span class="pre">popcount</span></code> <a class="footnote-reference brackets" href="#id4" id="id1">1</a>, and left and
+shift bits off the end. They also support not <code class="docutils literal notranslate"><span class="pre">~</span></code>, <code class="docutils literal notranslate"><span class="pre">popcount</span></code> <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, and left and
 right circular shift, <code class="docutils literal notranslate"><span class="pre">rotl</span></code> and <code class="docutils literal notranslate"><span class="pre">rotr</span></code>, respectively.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">bit</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;10001111&quot;</span><span class="p">;</span><span class="w"></span>
 <span class="n">bit</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;01110000&quot;</span><span class="p">;</span><span class="w"></span>
@@ -87,7 +88,7 @@ right circular shift, <code class="docutils literal notranslate"><span class="pr
 </div>
 </section>
 <section id="comparison-boolean-instructions">
-<h3>Comparison (Boolean) Instructions<a class="headerlink" href="#comparison-boolean-instructions" title="Permalink to this headline">¶</a></h3>
+<h3>Comparison (Boolean) Instructions<a class="headerlink" href="#comparison-boolean-instructions" title="Permalink to this heading">¶</a></h3>
 <p>Integers, angles, bits, and classical registers can
 be compared (<span class="math notranslate nohighlight">\(&gt;\)</span>, <span class="math notranslate nohighlight">\(&gt;=\)</span>, <span class="math notranslate nohighlight">\(&lt;\)</span>, <span class="math notranslate nohighlight">\(&lt;=\)</span>, <span class="math notranslate nohighlight">\(==\)</span>,
 <span class="math notranslate nohighlight">\(!=\)</span>) and yield Boolean values. Boolean values support logical
@@ -108,8 +109,8 @@ an index set, for example <code class="docutils literal notranslate"><span class
 </div>
 </section>
 <section id="integers">
-<h3>Integers<a class="headerlink" href="#integers" title="Permalink to this headline">¶</a></h3>
-<p>Integer types support addition <code class="docutils literal notranslate"><span class="pre">+</span></code>, subtraction <code class="docutils literal notranslate"><span class="pre">-</span></code>, multiplication <code class="docutils literal notranslate"><span class="pre">*</span></code>, integer division <a class="footnote-reference brackets" href="#id5" id="id2">2</a> <code class="docutils literal notranslate"><span class="pre">/</span></code>, modulo <code class="docutils literal notranslate"><span class="pre">%</span></code>, and power <code class="docutils literal notranslate"><span class="pre">**</span></code>, as well as the corresponding assignments <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code>, <code class="docutils literal notranslate"><span class="pre">/=</span></code>, <code class="docutils literal notranslate"><span class="pre">%=</span></code>, and <code class="docutils literal notranslate"><span class="pre">**=</span></code>.</p>
+<h3>Integers<a class="headerlink" href="#integers" title="Permalink to this heading">¶</a></h3>
+<p>Integer types support addition <code class="docutils literal notranslate"><span class="pre">+</span></code>, subtraction <code class="docutils literal notranslate"><span class="pre">-</span></code>, multiplication <code class="docutils literal notranslate"><span class="pre">*</span></code>, integer division <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <code class="docutils literal notranslate"><span class="pre">/</span></code>, modulo <code class="docutils literal notranslate"><span class="pre">%</span></code>, and power <code class="docutils literal notranslate"><span class="pre">**</span></code>, as well as the corresponding assignments <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code>, <code class="docutils literal notranslate"><span class="pre">/=</span></code>, <code class="docutils literal notranslate"><span class="pre">%=</span></code>, and <code class="docutils literal notranslate"><span class="pre">**=</span></code>.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
 <span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
 
@@ -122,7 +123,7 @@ an index set, for example <code class="docutils literal notranslate"><span class
 </div>
 </section>
 <section id="floating-point-numbers-and-angles">
-<h3>Floating-point numbers and angles<a class="headerlink" href="#floating-point-numbers-and-angles" title="Permalink to this headline">¶</a></h3>
+<h3>Floating-point numbers and angles<a class="headerlink" href="#floating-point-numbers-and-angles" title="Permalink to this heading">¶</a></h3>
 <p>Floating-point and angle types support addition, subtraction,
 multiplication, division, and power and the corresponding assignment operators.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pi</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
@@ -135,7 +136,7 @@ multiplication, division, and power and the corresponding assignment operators.<
 </div>
 </section>
 <section id="complex-numbers">
-<h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Permalink to this headline">¶</a></h3>
+<h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Permalink to this heading">¶</a></h3>
 <p>Complex numbers support addition, subtraction, multiplication, division, power and the corresponding
 assignment operators.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="mi">64</span><span class="p">]]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">5.0</span><span class="n">im</span><span class="p">;</span><span class="w"></span>
@@ -149,15 +150,11 @@ assignment operators.</p>
 </div>
 </section>
 <section id="evaluation-order">
-<h3>Evaluation order<a class="headerlink" href="#evaluation-order" title="Permalink to this headline">¶</a></h3>
+<h3>Evaluation order<a class="headerlink" href="#evaluation-order" title="Permalink to this heading">¶</a></h3>
 <p>OpenQASM evaluates expressions from left to right.</p>
 <blockquote>
 <div><table class="docutils align-default" id="id7">
 <caption><span class="caption-number">Table 3 </span><span class="caption-text">[operator-precedence] operator precedence in OpenQASM ordered from highest precedence to lowest precedence. Higher precedence operators will be evaluated first.</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 53%" />
-<col style="width: 47%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Operator</p></td>
 <td><p>Operator Types</p></td>
@@ -206,7 +203,7 @@ assignment operators.</p>
 </div></blockquote>
 </section>
 <section id="looping-and-branching">
-<h3>Looping and branching<a class="headerlink" href="#looping-and-branching" title="Permalink to this headline">¶</a></h3>
+<h3>Looping and branching<a class="headerlink" href="#looping-and-branching" title="Permalink to this heading">¶</a></h3>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code> branches to program if the Boolean evaluates to true and
 may optionally be followed by <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code>.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
@@ -238,7 +235,7 @@ the indexset.</p>
 </pre></div>
 </div>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code> executes program until the Boolean evaluates to
-false <a class="footnote-reference brackets" href="#id6" id="id3">3</a>. Variables in the loop condition statement may be modified
+false <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Variables in the loop condition statement may be modified
 within the while loop body.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
 <span class="n">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"></span>
@@ -282,7 +279,7 @@ preceding, <code class="docutils literal notranslate"><span class="pre">{</span>
 </section>
 </section>
 <section id="extern-function-calls">
-<h2>Extern function calls<a class="headerlink" href="#extern-function-calls" title="Permalink to this headline">¶</a></h2>
+<h2>Extern function calls<a class="headerlink" href="#extern-function-calls" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">extern</span></code> functions are declared by giving their signature using the
 statement <code class="docutils literal notranslate"><span class="pre">extern</span> <span class="pre">name(inputs)</span> <span class="pre">-&gt;</span> <span class="pre">output;</span></code> where <code class="docutils literal notranslate"><span class="pre">inputs</span></code> is a comma-separated list of type
 names and <code class="docutils literal notranslate"><span class="pre">output</span></code> is a single type name. The parentheses may be omitted if there are no <code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
@@ -300,21 +297,22 @@ are not required to be idempotent. They may change the state of the process prov
 In our computational model, <code class="docutils literal notranslate"><span class="pre">extern</span></code> functions may run concurrently with other classical and
 quantum computations. That is, invoking an <code class="docutils literal notranslate"><span class="pre">extern</span></code> function will  <em>schedule</em> a classical
 computation, but does not wait for that computation to terminate.</p>
-<dl class="footnote brackets">
-<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">popcount</span></code> computes the Hamming weight of the input register.</p>
-</dd>
-<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
-<dd><p>If multiplication and division instructions are not available in
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><code class="docutils literal notranslate"><span class="pre">popcount</span></code> computes the Hamming weight of the input register.</p>
+</aside>
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>If multiplication and division instructions are not available in
 hardware, they can be implemented by expanding into other
 instructions.</p>
-</dd>
-<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
-<dd><p>This clearly allows users to write code that does not terminate. We
+</aside>
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>This clearly allows users to write code that does not terminate. We
 do not discuss implementation details here, but one possibility is to
 compile into target code that imposes iteration limits.</p>
-</dd>
-</dl>
+</aside>
 </section>
 </section>
 
@@ -381,7 +379,7 @@ compile into target code that imposes iteration limits.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -398,7 +396,7 @@ compile into target code that imposes iteration limits.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

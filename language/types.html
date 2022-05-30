@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Types and Casting &#8212; OpenQASM Live Specification  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,9 +37,9 @@
           <div class="body" role="main">
             
   <section id="types-and-casting">
-<h1>Types and Casting<a class="headerlink" href="#types-and-casting" title="Permalink to this headline">¶</a></h1>
+<h1>Types and Casting<a class="headerlink" href="#types-and-casting" title="Permalink to this heading">¶</a></h1>
 <section id="identifiers">
-<span id="id1"></span><h2>Identifiers<a class="headerlink" href="#identifiers" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Identifiers<a class="headerlink" href="#identifiers" title="Permalink to this heading">¶</a></h2>
 <p>Identifiers must begin with a letter [A-Za-z], an underscore or an element from
 the Unicode character categories Lu/Ll/Lt/Lm/Lo/Nl <span id="id2">[<a class="reference internal" href="../index.html#id51" title="Unicode Character Categories. URL: http://www.fileformat.info/info/unicode/category/index.htm (visited on 2020-10-23).">noa</a>]</span>.
 The set of permissible continuation characters consists of all members of the
@@ -46,7 +47,7 @@ aforementioned character sets with the addition of decimal numerals [0-9].
 Identifiers may not override a reserved identifier.</p>
 </section>
 <section id="variables">
-<span id="id3"></span><h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>Variables<a class="headerlink" href="#variables" title="Permalink to this heading">¶</a></h2>
 <p>Variables must be named according to the rules for identifiers (See <a class="reference internal" href="#identifiers"><span class="std std-ref">Identifiers</span></a>).
 Variables may be assigned values within a program. Variables representing any classical type
 can be initialized on declaration. Any classical variable or Boolean that is not explicitly
@@ -76,9 +77,9 @@ explicitly transform types to cross these boundaries. Classical types
 are scoped to the braces within which they are declared.</p>
 </section>
 <section id="quantum-types">
-<h2>Quantum types<a class="headerlink" href="#quantum-types" title="Permalink to this headline">¶</a></h2>
+<h2>Quantum types<a class="headerlink" href="#quantum-types" title="Permalink to this heading">¶</a></h2>
 <section id="qubits">
-<h3>Qubits<a class="headerlink" href="#qubits" title="Permalink to this headline">¶</a></h3>
+<h3>Qubits<a class="headerlink" href="#qubits" title="Permalink to this heading">¶</a></h3>
 <p>There is a quantum bit (<code class="docutils literal notranslate"><span class="pre">qubit</span></code>) type that is interpreted as a reference to a
 two-level subsystem of a quantum state. The statement <code class="docutils literal notranslate"><span class="pre">qubit</span> <span class="pre">name;</span></code>
 declares a reference to a quantum bit. These qubits are referred
@@ -101,7 +102,7 @@ However, it also means that users or compiler have to explicitly manage
 the quantum memory.</p>
 </section>
 <section id="physical-qubits">
-<h3>Physical Qubits<a class="headerlink" href="#physical-qubits" title="Permalink to this headline">¶</a></h3>
+<h3>Physical Qubits<a class="headerlink" href="#physical-qubits" title="Permalink to this heading">¶</a></h3>
 <p>While program qubits can be named, hardware qubits are referenced only
 by the syntax <code class="docutils literal notranslate"><span class="pre">$[NUM]</span></code>. For an <code class="docutils literal notranslate"><span class="pre">n</span></code> qubit system, we have physical qubit
 references given by <code class="docutils literal notranslate"><span class="pre">$0</span></code>, <code class="docutils literal notranslate"><span class="pre">$1</span></code>, …, <code class="docutils literal notranslate"><span class="pre">$n-1</span></code>. These qubit types are
@@ -120,9 +121,9 @@ circuits. Physical qubits must not be declared and they are, as all the qubits, 
 </section>
 </section>
 <section id="classical-types">
-<h2>Classical types<a class="headerlink" href="#classical-types" title="Permalink to this headline">¶</a></h2>
+<h2>Classical types<a class="headerlink" href="#classical-types" title="Permalink to this heading">¶</a></h2>
 <section id="classical-bits-and-registers">
-<h3>Classical bits and registers<a class="headerlink" href="#classical-bits-and-registers" title="Permalink to this headline">¶</a></h3>
+<h3>Classical bits and registers<a class="headerlink" href="#classical-bits-and-registers" title="Permalink to this heading">¶</a></h3>
 <p>There is a classical bit type that takes values 0 or 1. Classical
 registers are static arrays of bits. The classical registers model part
 of the controller state that is exposed within the OpenQASM program. The
@@ -144,7 +145,7 @@ bit is on the right.</p>
 </div>
 </section>
 <section id="integers">
-<h3>Integers<a class="headerlink" href="#integers" title="Permalink to this headline">¶</a></h3>
+<h3>Integers<a class="headerlink" href="#integers" title="Permalink to this heading">¶</a></h3>
 <p>There are n-bit signed and unsigned integers. The statements <code class="docutils literal notranslate"><span class="pre">int[size]</span> <span class="pre">name;</span></code> and <code class="docutils literal notranslate"><span class="pre">uint[size]</span> <span class="pre">name;</span></code> declare
 signed 1:n-1:0 and unsigned 0:n:0 integers of the given size. The sizes
 and the surrounding brackets can be omitted (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">name;</span></code>) to use
@@ -171,7 +172,7 @@ one another.</p>
 </div>
 </section>
 <section id="floating-point-numbers">
-<h3>Floating point numbers<a class="headerlink" href="#floating-point-numbers" title="Permalink to this headline">¶</a></h3>
+<h3>Floating point numbers<a class="headerlink" href="#floating-point-numbers" title="Permalink to this heading">¶</a></h3>
 <p>IEEE 754 floating point registers may be declared with <code class="docutils literal notranslate"><span class="pre">float[size]</span> <span class="pre">name;</span></code>, where <code class="docutils literal notranslate"><span class="pre">float[64]</span></code> would
 indicate a standard double-precision float. Note that some hardware
 vendors may not support manipulating these values at run-time.</p>
@@ -187,7 +188,7 @@ types for the purposes of casting.</p>
 </div>
 </section>
 <section id="fixed-point-angles">
-<h3>Fixed-point angles<a class="headerlink" href="#fixed-point-angles" title="Permalink to this headline">¶</a></h3>
+<h3>Fixed-point angles<a class="headerlink" href="#fixed-point-angles" title="Permalink to this heading">¶</a></h3>
 <p>Fixed-point angles are interpreted as 2π times a 0:0:n
 fixed-point number. This represents angles in the interval
 <span class="math notranslate nohighlight">\([0,2\pi)\)</span> up to an error <span class="math notranslate nohighlight">\(\epsilon\leq \pi/2^{n-1}\)</span> modulo
@@ -212,7 +213,7 @@ compatible with run-time values on some platforms.</p>
 </div>
 </section>
 <section id="complex-numbers">
-<h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Permalink to this headline">¶</a></h3>
+<h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Permalink to this heading">¶</a></h3>
 <p>Complex numbers may be declared as <code class="docutils literal notranslate"><span class="pre">complex[type]</span> <span class="pre">name</span></code>, for a numeric OpenQASM classical type
 <code class="docutils literal notranslate"><span class="pre">type</span></code> (<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">angle</span></code> plus their optional size). The real
 and imaginary parts of the complex number are <code class="docutils literal notranslate"><span class="pre">type[size]</span></code> types. For instance, <code class="docutils literal notranslate"><span class="pre">complex[float[32]]</span> <span class="pre">c</span></code>
@@ -229,7 +230,7 @@ complex[float] my_machine_complex;
 </div>
 </section>
 <section id="boolean-types">
-<h3>Boolean types<a class="headerlink" href="#boolean-types" title="Permalink to this headline">¶</a></h3>
+<h3>Boolean types<a class="headerlink" href="#boolean-types" title="Permalink to this heading">¶</a></h3>
 <p>There is a Boolean type <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">name;</span></code> that takes values <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>. Qubit measurement results
 can be converted from a classical <code class="docutils literal notranslate"><span class="pre">bit</span></code> type to a Boolean using <code class="docutils literal notranslate"><span class="pre">bool(c)</span></code>, where 1 will
 be true and 0 will be false.</p>
@@ -241,7 +242,7 @@ be true and 0 will be false.</p>
 </div>
 </section>
 <section id="const-values">
-<h3>Const values<a class="headerlink" href="#const-values" title="Permalink to this headline">¶</a></h3>
+<h3>Const values<a class="headerlink" href="#const-values" title="Permalink to this heading">¶</a></h3>
 <p>To support mathematical expressions, immutable constants of any classical type
 may be declared using the type modifier <code class="docutils literal notranslate"><span class="pre">const</span></code>. On
 declaration, they take their assigned value and cannot be redefined
@@ -273,12 +274,6 @@ are all of type <code class="docutils literal notranslate"><span class="pre">flo
 <div class="docutils container" id="tab-real-constants">
 <table class="docutils align-default" id="id4">
 <caption><span class="caption-number">Table 1 </span><span class="caption-text">[tab:real-constants] Built-in real constants in OpenQASM3 of type <code class="docutils literal notranslate"><span class="pre">float[64]</span></code>.</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 39%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 26%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Constant</p></th>
 <th class="head"><p>Alphanumeric</p></th>
@@ -308,19 +303,13 @@ are all of type <code class="docutils literal notranslate"><span class="pre">flo
 <p>Note that <cite>e</cite> is a valid identifier. <cite>e/E</cite> are also used in scientific notation where appropriate.</p>
 </section>
 <section id="mathematical-functions-available-for-constant-initialization">
-<h3>Mathematical functions available for constant initialization<a class="headerlink" href="#mathematical-functions-available-for-constant-initialization" title="Permalink to this headline">¶</a></h3>
+<h3>Mathematical functions available for constant initialization<a class="headerlink" href="#mathematical-functions-available-for-constant-initialization" title="Permalink to this heading">¶</a></h3>
 <p>In addition to simple arithmetic functions used in expressions initializing constants,
 OpenQASM 3 offers the following built-in mathematical operators followed by
 their argument expression in parentheses:</p>
 <div class="docutils container" id="tab-built-in-math">
 <table class="docutils align-default" id="id5">
 <caption><span class="caption-number">Table 2 </span><span class="caption-text">Built-in mathematical functions in OpenQASM3.</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 8%" />
-<col style="width: 28%" />
-<col style="width: 31%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
 <th class="head"><p>Input Range/Type, […]</p></th>
@@ -434,7 +423,7 @@ the principal value is returned.</p></td>
 </section>
 </section>
 <section id="literals">
-<h2>Literals<a class="headerlink" href="#literals" title="Permalink to this headline">¶</a></h2>
+<h2>Literals<a class="headerlink" href="#literals" title="Permalink to this heading">¶</a></h2>
 <p>There are five types of literals in OpenQASM 3, integer, float, boolean,
 bit string, and timing.</p>
 <p>Integer literals can be written in decimal without a prefix, or as a hex, octal, or
@@ -485,7 +474,7 @@ backend-dependent unit equivalent to one waveform sample.</p>
 </div>
 </section>
 <section id="arrays">
-<h2>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h2>
+<h2>Arrays<a class="headerlink" href="#arrays" title="Permalink to this heading">¶</a></h2>
 <p>Statically-sized arrays of values can be created and initialized, and individual elements
 can be accessed, using the following general syntax:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="n">myArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">};</span><span class="w"></span>
@@ -534,9 +523,9 @@ the shape and type of the assigned value must match that of the reference.</p>
 <a class="reference internal" href="subroutines.html#arrays-in-subroutines"><span class="std std-ref">Arrays in subroutines</span></a>.</p>
 </section>
 <section id="types-related-to-timing">
-<h2>Types related to timing<a class="headerlink" href="#types-related-to-timing" title="Permalink to this headline">¶</a></h2>
+<h2>Types related to timing<a class="headerlink" href="#types-related-to-timing" title="Permalink to this heading">¶</a></h2>
 <section id="duration">
-<h3>Duration<a class="headerlink" href="#duration" title="Permalink to this headline">¶</a></h3>
+<h3>Duration<a class="headerlink" href="#duration" title="Permalink to this heading">¶</a></h3>
 <p>We introduce a <code class="docutils literal notranslate"><span class="pre">duration</span></code> type to express timing.
 Durations can be assigned with expressions including timing literals.
 <code class="docutils literal notranslate"><span class="pre">durationof()</span></code> is an intrinsic function used to reference the
@@ -550,7 +539,7 @@ duration of a calibrated gate.</p>
 <p><code class="docutils literal notranslate"><span class="pre">duration</span></code> is further discussed in <a class="reference internal" href="delays.html#duration-and-stretch"><span class="std std-ref">Duration and stretch types</span></a></p>
 </section>
 <section id="stretch">
-<h3>Stretch<a class="headerlink" href="#stretch" title="Permalink to this headline">¶</a></h3>
+<h3>Stretch<a class="headerlink" href="#stretch" title="Permalink to this heading">¶</a></h3>
 <p>We further introduce a <code class="docutils literal notranslate"><span class="pre">stretch</span></code> type which is a sub-type of <code class="docutils literal notranslate"><span class="pre">duration</span></code>. <code class="docutils literal notranslate"><span class="pre">stretch</span></code> types
 have variable non-negative duration that is permitted to grow as necessary
 to satisfy constraints. Stretch variables are resolved at compile time
@@ -560,7 +549,7 @@ intent.</p>
 </section>
 </section>
 <section id="aliasing">
-<h2>Aliasing<a class="headerlink" href="#aliasing" title="Permalink to this headline">¶</a></h2>
+<h2>Aliasing<a class="headerlink" href="#aliasing" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">let</span></code> keyword allows quantum bits and registers to be referred to by
 another name as long as the alias is in scope.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">qubit</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
@@ -570,10 +559,10 @@ another name as long as the alias is in scope.</p>
 </div>
 </section>
 <section id="index-sets-and-slicing">
-<h2>Index sets and slicing<a class="headerlink" href="#index-sets-and-slicing" title="Permalink to this headline">¶</a></h2>
+<h2>Index sets and slicing<a class="headerlink" href="#index-sets-and-slicing" title="Permalink to this heading">¶</a></h2>
 </section>
 <section id="register-concatenation-and-slicing">
-<h2>Register concatenation and slicing<a class="headerlink" href="#register-concatenation-and-slicing" title="Permalink to this headline">¶</a></h2>
+<h2>Register concatenation and slicing<a class="headerlink" href="#register-concatenation-and-slicing" title="Permalink to this heading">¶</a></h2>
 <p>Two or more registers of the same type (i.e. classical or quantum) can
 be concatenated to form a register of the same type whose size is the
 sum of the sizes of the individual registers. The concatenated register
@@ -619,7 +608,7 @@ variables whose values may only be known at run time.</p>
 </div>
 </section>
 <section id="classical-value-bit-slicing">
-<h2>Classical value bit slicing<a class="headerlink" href="#classical-value-bit-slicing" title="Permalink to this headline">¶</a></h2>
+<h2>Classical value bit slicing<a class="headerlink" href="#classical-value-bit-slicing" title="Permalink to this heading">¶</a></h2>
 <p>A subset of classical values (int, uint, and angle) may be accessed at the bit
 level using index sets similar to register slicing. The bit slicing operation
 always returns a bit array of size equal to the size of the index set.</p>
@@ -649,7 +638,7 @@ elements.</p>
 </div>
 </section>
 <section id="array-concatenation-and-slicing">
-<span id="array-slicing"></span><h2>Array concatenation and slicing<a class="headerlink" href="#array-concatenation-and-slicing" title="Permalink to this headline">¶</a></h2>
+<span id="array-slicing"></span><h2>Array concatenation and slicing<a class="headerlink" href="#array-concatenation-and-slicing" title="Permalink to this heading">¶</a></h2>
 <p>Two or more classical arrays of the same fundamental type can be
 concatenated to form an array of the same type whose size is the
 sum of the sizes of the individual arrays. Unlike with qubit registers, this operation
@@ -706,7 +695,7 @@ the slices must match.</p>
 </div>
 </section>
 <section id="casting-specifics">
-<span id="castingspecifics"></span><h2>Casting specifics<a class="headerlink" href="#casting-specifics" title="Permalink to this headline">¶</a></h2>
+<span id="castingspecifics"></span><h2>Casting specifics<a class="headerlink" href="#casting-specifics" title="Permalink to this heading">¶</a></h2>
 <p>The classical types are divided into the ‘standard’ classical types (bool, int,
 uint, and float) that exist in languages like C, and the ‘special’ classical
 types (bit, angle, duration, and stretch) that do not.
@@ -729,19 +718,8 @@ precision, if the source value is larger than can be represented in the target
 type, the exact behavior is implementation specific and must be documented by
 the vendor.</p>
 <section id="allowed-casts">
-<h3>Allowed casts<a class="headerlink" href="#allowed-casts" title="Permalink to this headline">¶</a></h3>
+<h3>Allowed casts<a class="headerlink" href="#allowed-casts" title="Permalink to this heading">¶</a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 12%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head" colspan="8"><p><span class="center">Casting To</span></p></th>
@@ -843,14 +821,14 @@ the vendor.</p>
 <p>*Note: <code class="docutils literal notranslate"><span class="pre">duration</span></code> values can be converted to <code class="docutils literal notranslate"><span class="pre">float</span></code> using the division operator. See <a class="reference internal" href="#divideduration"><span class="std std-ref">Converting duration to other types</span></a></p>
 </section>
 <section id="casting-from-bool">
-<h3>Casting from bool<a class="headerlink" href="#casting-from-bool" title="Permalink to this headline">¶</a></h3>
+<h3>Casting from bool<a class="headerlink" href="#casting-from-bool" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">bool</span></code> values cast from <code class="docutils literal notranslate"><span class="pre">false</span></code> to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> and from <code class="docutils literal notranslate"><span class="pre">true</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code> or
 an equivalent representation. <code class="docutils literal notranslate"><span class="pre">bool</span></code> values can only be cast to <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code>
 (a single bit), so explicit index syntax must be given if the target <code class="docutils literal notranslate"><span class="pre">bit</span></code>
 has more than 1 bit of precision.</p>
 </section>
 <section id="casting-from-int-uint">
-<h3>Casting from int/uint<a class="headerlink" href="#casting-from-int-uint" title="Permalink to this headline">¶</a></h3>
+<h3>Casting from int/uint<a class="headerlink" href="#casting-from-int-uint" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">int[n]</span></code> and <code class="docutils literal notranslate"><span class="pre">uint[n]</span></code> values cast to the standard types mimicking C99
 behavior. Casting to <code class="docutils literal notranslate"><span class="pre">bool</span></code> values follows the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0</span></code>.
 As noted above, if the value is too large to be represented in the
@@ -863,7 +841,7 @@ As noted, the conversion is done assuming a little-endian 2’s complement
 representation.</p>
 </section>
 <section id="casting-from-float">
-<h3>Casting from float<a class="headerlink" href="#casting-from-float" title="Permalink to this headline">¶</a></h3>
+<h3>Casting from float<a class="headerlink" href="#casting-from-float" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">float[n]</span></code> values cast to the standard types mimicking C99 behavior (<em>e.g.</em>
 discarding the fractional part for integer-type targets). As noted above,
 if the value is too large to be represented in the
@@ -875,7 +853,7 @@ tie between two possible nearest values the result is the one with an even
 least significant bit (<em>i.e.</em> round to nearest, ties to even).</p>
 </section>
 <section id="casting-from-angle">
-<h3>Casting from angle<a class="headerlink" href="#casting-from-angle" title="Permalink to this headline">¶</a></h3>
+<h3>Casting from angle<a class="headerlink" href="#casting-from-angle" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">angle[n]</span></code> values cast to <code class="docutils literal notranslate"><span class="pre">bool</span></code> using the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0.0</span></code>.
 Casting to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code> values is only allowed when
 <code class="docutils literal notranslate"><span class="pre">n==m</span></code>, otherwise explicit slicing syntax must be provided.</p>
@@ -889,7 +867,7 @@ Trunction is likely to have more hardware support. This behavior can be
 controlled by the use of a <code class="docutils literal notranslate"><span class="pre">#pragma</span></code>.</p>
 </section>
 <section id="casting-from-bit">
-<h3>Casting from bit<a class="headerlink" href="#casting-from-bit" title="Permalink to this headline">¶</a></h3>
+<h3>Casting from bit<a class="headerlink" href="#casting-from-bit" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> values cast to <code class="docutils literal notranslate"><span class="pre">bool</span></code> using the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0</span></code>. Casting to
 <code class="docutils literal notranslate"><span class="pre">int[m]</span></code> or <code class="docutils literal notranslate"><span class="pre">uint[m]</span></code> is done assuming a little endian 2’s complement
 representation, and is only allowed when <code class="docutils literal notranslate"><span class="pre">n==m</span></code>, otherwise explicit slicing
@@ -899,7 +877,7 @@ bit order. Finally, casting between bits of differing precisions is not
 allowed, explicit slicing syntax must be given.</p>
 </section>
 <section id="converting-duration-to-other-types">
-<span id="divideduration"></span><h3>Converting duration to other types<a class="headerlink" href="#converting-duration-to-other-types" title="Permalink to this headline">¶</a></h3>
+<span id="divideduration"></span><h3>Converting duration to other types<a class="headerlink" href="#converting-duration-to-other-types" title="Permalink to this heading">¶</a></h3>
 <p>Casting from or to duration values is not allowed, however, operations on
 durations that produce values of different types is allowed. For example,
 dividing a duration by a duration produces a machine-precision <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p>
@@ -989,7 +967,7 @@ dividing a duration by a duration produces a machine-precision <code class="docu
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -1006,7 +984,7 @@ dividing a duration by a duration produces a machine-precision <code class="docu
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

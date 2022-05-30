@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Directives &#8212; OpenQASM Live Specification  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="directives">
-<h1>Directives<a class="headerlink" href="#directives" title="Permalink to this headline">¶</a></h1>
+<h1>Directives<a class="headerlink" href="#directives" title="Permalink to this heading">¶</a></h1>
 <p>OpenQASM supports directive mechanisms that allows other information to
 be included in the program. Directives are either pragmas or annotations.
 Both are used to supply additional information to the compiler passes and the
@@ -43,7 +44,7 @@ target system or simulator. Ideally the meaning of the program does not change
 if some or all of the directives are ignored, so they can be interpreted
 at the discretion of the consuming process.</p>
 <section id="pragmas">
-<h2>Pragmas<a class="headerlink" href="#pragmas" title="Permalink to this headline">¶</a></h2>
+<h2>Pragmas<a class="headerlink" href="#pragmas" title="Permalink to this heading">¶</a></h2>
 <p>Pragma directives start with <code class="docutils literal notranslate"><span class="pre">pragma</span></code> and continue to the end of line. The
 text after <code class="docutils literal notranslate"><span class="pre">pragma</span></code> is a single string, and parsing is left to the specific
 implementation. Implementations may optionally choose to support the older <code class="docutils literal notranslate"><span class="pre">#pragma</span></code>
@@ -76,7 +77,7 @@ the entire circuit.</p>
 </div>
 </section>
 <section id="annotations">
-<h2>Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h2>
+<h2>Annotations<a class="headerlink" href="#annotations" title="Permalink to this heading">¶</a></h2>
 <p>Annotations can be added to supply additional information to the following
 OpenQASM <code class="docutils literal notranslate"><span class="pre">statement</span></code> as defined in the grammar. Annotations will start with a
 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol, have an identifying keyword and continue to the end of the line.</p>
@@ -111,7 +112,7 @@ documentation for supported annotations.</p>
 </section>
 </section>
 <section id="input-output">
-<h1>Input/output<a class="headerlink" href="#input-output" title="Permalink to this headline">¶</a></h1>
+<h1>Input/output<a class="headerlink" href="#input-output" title="Permalink to this heading">¶</a></h1>
 <p>OpenQASM introduces features targeted to support near-time computation, in
 the form of parameterized circuits. These features are modifiers <code class="docutils literal notranslate"><span class="pre">input</span></code>
 and <code class="docutils literal notranslate"><span class="pre">output</span></code>, which allow OpenQASM3 circuits to accept input parameters
@@ -261,7 +262,7 @@ not using parameterized circuits in a quantum program for the case of the VQE:</
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -278,7 +279,7 @@ not using parameterized circuits in a quantum program for the case of the VQE:</
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

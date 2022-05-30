@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Gates &#8212; OpenQASM Live Specification  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,10 +37,10 @@
           <div class="body" role="main">
             
   <section id="gates">
-<h1>Gates<a class="headerlink" href="#gates" title="Permalink to this headline">¶</a></h1>
+<h1>Gates<a class="headerlink" href="#gates" title="Permalink to this heading">¶</a></h1>
 <p>In OpenQASM we refer to unitary quantum instructions as gates.</p>
 <section id="built-in-gates">
-<h2>Built-in gates<a class="headerlink" href="#built-in-gates" title="Permalink to this headline">¶</a></h2>
+<h2>Built-in gates<a class="headerlink" href="#built-in-gates" title="Permalink to this heading">¶</a></h2>
 <p>We define a mechanism for parameterizing unitary matrices to define new
 quantum gates. The parameterization uses a built-in universal gate set
 of single-qubit gates and a two-qubit entangling gate (CNOT)
@@ -62,7 +63,7 @@ register, the statement <code class="docutils literal notranslate"><span class="
 values <span class="math notranslate nohighlight">\(\theta\in [0,2\pi)\)</span>, <span class="math notranslate nohighlight">\(\phi\in [0,2\pi)\)</span>, and
 <span class="math notranslate nohighlight">\(\lambda\in
 [0,2\pi)\)</span> in this base gate are angles whose precision is implementation
-dependent <a class="footnote-reference brackets" href="#id3" id="id2">1</a>. This specifies any element of <span class="math notranslate nohighlight">\(U(2)\)</span> up to a
+dependent <a class="footnote-reference brackets" href="#id3" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. This specifies any element of <span class="math notranslate nohighlight">\(U(2)\)</span> up to a
 global phase. For example <code class="docutils literal notranslate"><span class="pre">U(π/2,</span> <span class="pre">0,</span> <span class="pre">π)</span> <span class="pre">q[0];</span></code>, applies a Hadamard gate to qubit <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>.</p>
 <p>New gates are associated to a unitary transformation by defining them as a sequence of built-in or
 previously defined gates. For example the <code class="docutils literal notranslate"><span class="pre">gate</span></code> block</p>
@@ -171,7 +172,7 @@ e^{-i\tau/2} &amp; 0 \\
 0 &amp; 0 &amp; 0 &amp; e^{i\tau/2} \end{array}\right).\end{split}\]</div>
 </section>
 <section id="hierarchically-defined-unitary-gates">
-<span id="sec-macros"></span><h2>Hierarchically defined unitary gates<a class="headerlink" href="#hierarchically-defined-unitary-gates" title="Permalink to this headline">¶</a></h2>
+<span id="sec-macros"></span><h2>Hierarchically defined unitary gates<a class="headerlink" href="#hierarchically-defined-unitary-gates" title="Permalink to this heading">¶</a></h2>
 <p>For new gates, we associate them with a corresponding unitary
 transformation by a sequence of built-in gates. For example, a CPHASE
 operation is shown schematically in <a class="reference internal" href="#fig-gate"><span class="std std-numref">Fig. 3</span></a>
@@ -263,7 +264,7 @@ for j ← 0, 1 do
 like the built-in gates.</p>
 </section>
 <section id="quantum-gate-modifiers">
-<h2>Quantum gate modifiers<a class="headerlink" href="#quantum-gate-modifiers" title="Permalink to this headline">¶</a></h2>
+<h2>Quantum gate modifiers<a class="headerlink" href="#quantum-gate-modifiers" title="Permalink to this heading">¶</a></h2>
 <p>A gate modifier is a keyword that applies to a gate. A modifier
 <span class="math notranslate nohighlight">\(m\)</span> transforms a gate <span class="math notranslate nohighlight">\(U\)</span> to a new gate <span class="math notranslate nohighlight">\(m(U)\)</span> acting
 on the same or larger Hilbert space. We include modifiers in OpenQASM
@@ -348,13 +349,12 @@ gate x q1 {
 }
 </pre></div>
 </div>
-<dl class="footnote brackets">
-<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
-<dd><p>The intention is that the accuracy of these built-in gates is
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>The intention is that the accuracy of these built-in gates is
 sufficient for the accuracy of the derived gates to not be limited by
 that of the built-in gates.</p>
-</dd>
-</dl>
+</aside>
 </section>
 </section>
 
@@ -422,7 +422,7 @@ that of the built-in gates.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -439,7 +439,7 @@ that of the built-in gates.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
