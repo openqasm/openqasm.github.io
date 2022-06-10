@@ -204,8 +204,12 @@ assignment operators.</p>
 </section>
 <section id="looping-and-branching">
 <h3>Looping and branching<a class="headerlink" href="#looping-and-branching" title="Permalink to this heading">¶</a></h3>
-<p>The statement <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code> branches to program if the Boolean evaluates to true and
-may optionally be followed by <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code>.</p>
+<section id="if-else-statements">
+<h4>If-else statements<a class="headerlink" href="#if-else-statements" title="Permalink to this heading">¶</a></h4>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">&lt;true-body&gt;</span></code> branches to program if the Boolean evaluates to true and
+may optionally be followed by <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">&lt;false-body&gt;</span></code>.  Both <code class="docutils literal notranslate"><span class="pre">true-body</span></code> and
+<code class="docutils literal notranslate"><span class="pre">false-body</span></code> can be a single statement terminated by a semicolon, or a program
+block of several statements <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">stmt1;</span> <span class="pre">stmt2;</span> <span class="pre">}</span></code>.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
 <span class="n">qubit</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"></span>
 <span class="n">h</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"></span>
@@ -219,24 +223,81 @@ may optionally be followed by <code class="docutils literal notranslate"><span c
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p>The statement <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">name</span> <span class="pre">in</span> <span class="pre">indexset</span> <span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code> loops over integer values in the indexset, assigning them
-to <code class="docutils literal notranslate"><span class="pre">name</span></code>. The for loop body is not permitted to modify the loop variable of
-the indexset.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w"></span>
+</section>
+<section id="for-loops">
+<h4>For loops<a class="headerlink" href="#for-loops" title="Permalink to this heading">¶</a></h4>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">&lt;type&gt;</span> <span class="pre">&lt;name&gt;</span> <span class="pre">in</span> <span class="pre">&lt;values&gt;</span> <span class="pre">&lt;body&gt;</span></code> loops over the
+items in <code class="docutils literal notranslate"><span class="pre">values</span></code>, assigning each value to the variable <code class="docutils literal notranslate"><span class="pre">name</span></code> in subsequent
+iterations of the loop <code class="docutils literal notranslate"><span class="pre">body</span></code>.  <code class="docutils literal notranslate"><span class="pre">values</span></code> can be:</p>
+<ul class="simple">
+<li><p>a discrete set of scalar types, defined using the
+<a class="reference internal" href="types.html#types-arrays"><span class="std std-ref">array-literal syntax</span></a>, such as <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">2,</span> <span class="pre">3}</span></code>.  Each value
+in the set must be able to be implicitly promoted to the type <code class="docutils literal notranslate"><span class="pre">type</span></code>.</p></li>
+<li><p>a range expression in square brackets of the form <code class="docutils literal notranslate"><span class="pre">[start</span> <span class="pre">:</span> <span class="pre">(step</span> <span class="pre">:)?</span> <span class="pre">stop]</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">step</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">1</span></code> if omitted.  As in other range expressions,
+the range is inclusive at both ends.  Both <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> must be
+given.  All three values must be of integer or unsigned-integer types.  The
+scalar type of elements in the resulting range expression is the same as the
+type of result of the <a class="reference internal" href="types.html#implicit-promotion-rules"><span class="std std-ref">implicit promotion</span></a>
+between <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>.  For example, if <code class="docutils literal notranslate"><span class="pre">start</span></code> is a <code class="docutils literal notranslate"><span class="pre">uint[8]</span></code>
+and <code class="docutils literal notranslate"><span class="pre">stop</span></code> is an <code class="docutils literal notranslate"><span class="pre">int[16]</span></code>, the values to be assigned will all be of type
+<code class="docutils literal notranslate"><span class="pre">int[16]</span></code>.</p></li>
+<li><p>a value of type <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code>, or the target of a <code class="docutils literal notranslate"><span class="pre">let</span></code> statement that creates
+an alias to classical bits.  The corresponding scalar type of the loop
+variable is <code class="docutils literal notranslate"><span class="pre">bit</span></code>, as appropriate.</p></li>
+<li><p>a value of type <code class="docutils literal notranslate"><span class="pre">array[&lt;scalar&gt;,</span> <span class="pre">n]</span></code>, _i.e._ a one-dimensional
+array.  Values of type <code class="docutils literal notranslate"><span class="pre">scalar</span></code> must be able to be implicitly promoted to
+values of type <code class="docutils literal notranslate"><span class="pre">type</span></code>.  Modification of the loop variable does not change
+the corresponding value in the array.</p></li>
+</ul>
+<p>It is valid to use an indexing expression (e.g. <code class="docutils literal notranslate"><span class="pre">my_array[1:3]</span></code>) to arrive at
+one of the types given above.  In the cases of sets, <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code>, classical
+aliases and <code class="docutils literal notranslate"><span class="pre">array</span></code>, the iteration order is guaranteed to be in sequential
+index order, that is <code class="docutils literal notranslate"><span class="pre">iden[0]</span></code> then <code class="docutils literal notranslate"><span class="pre">iden[1]</span></code>, and so on.</p>
+<p>The loop body can either be a single statement terminated by a semicolon, or a
+program block in curly braces <code class="docutils literal notranslate"><span class="pre">{}</span></code> containing several statements.</p>
+<p>Assigning a value to the loop variable within an iteration over the body does
+not affect the next value that the loop variable will take.</p>
+<p>The scope of the loop variable is limited to the body of the loop.  It is not
+accessible after the loop.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
 <span class="c1">// loop over a discrete set of values</span>
-<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// b == 16</span>
+<span class="p">}</span><span class="w"></span>
+<span class="c1">// b == 16, and i is not in scope.</span>
 
-<span class="c1">// loop over every even integer from 0 to 20 using an indexset</span>
-<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="o">:</span><span class="mi">2</span><span class="o">:</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="c1">// loop over every even integer from 0 to 20 using a range, and call a</span>
+<span class="c1">// subroutine with that value.</span>
+<span class="k">for</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="o">:</span><span class="mi">2</span><span class="o">:</span><span class="mi">20</span><span class="p">]</span><span class="w"></span>
+<span class="w">   </span><span class="n">subroutine</span><span class="p">(</span><span class="n">i</span><span class="p">);</span><span class="w"></span>
+
+<span class="c1">// high precision typed loop variable</span>
+<span class="k">for</span><span class="w"> </span><span class="n">uint</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">[</span><span class="mi">4294967296</span><span class="o">:</span><span class="mi">4294967306</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">   </span><span class="c1">// do something</span>
 <span class="p">}</span><span class="w"></span>
+
+<span class="c1">// Loop over an array of floats.</span>
+<span class="n">array</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="mi">64</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="n">my_floats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1.2</span><span class="p">,</span><span class="w"> </span><span class="mf">-3.4</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">9.8</span><span class="p">};</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">my_floats</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="c1">// do something with &#39;f&#39;</span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="c1">// Loop over a register of bits.</span>
+<span class="n">bit</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="k">register</span><span class="p">;</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="k">register</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+<span class="n">let</span><span class="w"> </span><span class="n">alias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">register</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">3</span><span class="p">];</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">alias</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
 </pre></div>
 </div>
-<p>The statement <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code> executes program until the Boolean evaluates to
+</section>
+<section id="while-loops">
+<h4>While loops<a class="headerlink" href="#while-loops" title="Permalink to this heading">¶</a></h4>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">&lt;body&gt;</span></code> executes program until the Boolean evaluates to
 false <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Variables in the loop condition statement may be modified
-within the while loop body.</p>
+within the while loop body.  The <code class="docutils literal notranslate"><span class="pre">body</span></code> can be either a single statement
+terminated by a semicolon, or a program block in curly braces <code class="docutils literal notranslate"><span class="pre">{}</span></code> of several
+statements:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
 <span class="n">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"></span>
 
@@ -252,10 +313,16 @@ within the while loop body.</p>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p>A block <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code> can be exited with the statement <code class="docutils literal notranslate"><span class="pre">break;</span></code>. The statement <code class="docutils literal notranslate"><span class="pre">continue;</span></code> can appear in
-the body of a for or while loop. It returns control to the loop
-condition. The statement <code class="docutils literal notranslate"><span class="pre">end;</span></code> terminates the program. In all of the
-preceding, <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">program</span> <span class="pre">}</span></code> can also be replaced by a statement without the braces.</p>
+</section>
+<section id="breaking-and-continuing-loops">
+<h4>Breaking and continuing loops<a class="headerlink" href="#breaking-and-continuing-loops" title="Permalink to this heading">¶</a></h4>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">break;</span></code> moves control to the statement immediately following
+the closest containing <code class="docutils literal notranslate"><span class="pre">for</span></code> or <code class="docutils literal notranslate"><span class="pre">while</span></code> loop.</p>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">continue;</span></code> causes execution to jump to the next step in the
+closest containing <code class="docutils literal notranslate"><span class="pre">for</span></code> or <code class="docutils literal notranslate"><span class="pre">while</span></code> loop.  In a <code class="docutils literal notranslate"><span class="pre">while</span></code> loop, this point
+is the evaluation of the loop condition.  In a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop, this is the
+assignment of the next value of the loop variable, or the end of the loop if the
+current value is the last in the set.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
 
 <span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -276,6 +343,23 @@ preceding, <code class="docutils literal notranslate"><span class="pre">{</span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
+<p>It is an error to have a <code class="docutils literal notranslate"><span class="pre">break;</span></code> or <code class="docutils literal notranslate"><span class="pre">continue;</span></code> statement outside a loop,
+such as at the top level of the main circuit or of a subroutine.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">break</span><span class="p">;</span><span class="w">  </span><span class="c1">// Invalid: no containing loop.</span>
+
+<span class="n">def</span><span class="w"> </span><span class="nf">fn</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="c1">// Invalid: no containing loop.</span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="terminating-the-program-early">
+<h4>Terminating the program early<a class="headerlink" href="#terminating-the-program-early" title="Permalink to this heading">¶</a></h4>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">end;</span></code> immediately terminates the program, no matter what scope
+it is called from.</p>
+</section>
 </section>
 </section>
 <section id="extern-function-calls">
