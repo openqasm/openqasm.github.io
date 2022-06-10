@@ -166,19 +166,44 @@ NCO in analogy to virtual to physical register allocation.</p>
 </section>
 <section id="frame-manipulation">
 <h3>Frame Manipulation<a class="headerlink" href="#frame-manipulation" title="Permalink to this heading">¶</a></h3>
-<p>The (frequency, phase) tuple of a frame can be manipulated throughout program
-by referencing <code class="docutils literal notranslate"><span class="pre">.frequency</span></code>, and <code class="docutils literal notranslate"><span class="pre">.phase</span></code>, with updates applied immediately
-at the current time of the frame. Operations must be appropriate for the respective type,
-<code class="docutils literal notranslate"><span class="pre">float</span></code> for frequency and <code class="docutils literal notranslate"><span class="pre">angle</span></code> for phase. Again, the exact precision of these calculations
-is hardware specific. If either the frequency or phase are set to values that are invalid for
-the hardware, the compiler shall raise a compile-time error.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">phase</span></code> and <code class="docutils literal notranslate"><span class="pre">frequency</span></code> states of a frame can be manipulated throughout the program
+by using <code class="docutils literal notranslate"><span class="pre">set</span></code> and <code class="docutils literal notranslate"><span class="pre">shift</span></code> instructions and read using a <code class="docutils literal notranslate"><span class="pre">get</span></code> instruction. In particular,
+the <cite>set_phase</cite> and <cite>shift_phase</cite> instructions allow one to supply the frame and a value of type
+<code class="docutils literal notranslate"><span class="pre">angle</span></code> representing the amount by which to set/shift the phase.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">set_phase</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">,</span><span class="w"> </span><span class="nx">angle</span><span class="w"> </span><span class="nx">phase</span><span class="p">);</span><span class="w"></span>
+<span class="nx">shift_phase</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">,</span><span class="w"> </span><span class="nx">angle</span><span class="w"> </span><span class="nx">phase</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The <cite>get_phase</cite> instruction allows one to supply the frame from which to retrieve the phase of
+type <code class="docutils literal notranslate"><span class="pre">angle</span></code>.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">get_phase</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">angle</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Analogously, the <cite>set_frequency</cite> and <cite>shift_frequency</cite> instructions allow one to supply the frame
+and a value of type <code class="docutils literal notranslate"><span class="pre">float</span></code> representing the amount by which to set/shift the frequency.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">set_frequency</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">,</span><span class="w"> </span><span class="kr">float</span><span class="w"> </span><span class="nx">freq</span><span class="p">);</span><span class="w"></span>
+<span class="nx">shift_frequency</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">,</span><span class="w"> </span><span class="kr">float</span><span class="w"> </span><span class="nx">freq</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The <cite>get_frequency</cite> instruction allows one to supply the frame from which to retrieve the frequency
+of type <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">get_frequency</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">float</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Changing the frequency or phase behaves as an instantaneous operation (ie., its
+duration is zero device ticks) at the current time point of the frame. If a vendor
+is unable to support such instantaneous operations, it is expected that the
+compiler shall raise a compile-time error when encountering such frame manipulations.</p>
+<p>The exact precision and range of the frequency is hardware specific, and it is likely
+hardware vendors will perform a float to fixed conversion in the backend. If the frequency
+is set to an out of bounds value, the compiler shall raise a compile-time error.</p>
 <p>Here’s an example of manipulating the phase to calibrate an <code class="docutils literal notranslate"><span class="pre">rz</span></code> gate on a frame called
 <code class="docutils literal notranslate"><span class="pre">driveframe</span></code>:</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">...</span><span class="w"></span>
 
-<span class="w"> </span><span class="c1">// Example 1: Shift phase of the &quot;drive&quot; frame by pi/4, to realize a virtual rz gate with angle -pi/4</span><span class="w"></span>
+<span class="w"> </span><span class="c1">// Shift phase of the &quot;drive&quot; frame by pi/4, to realize a virtual rz gate with angle -pi/4</span><span class="w"></span>
 <span class="w"> </span><span class="nx">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="nx">driveframe</span><span class="p">.</span><span class="nx">phase</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">pi</span><span class="o">/</span><span class="mf">4</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="nx">shift_phase</span><span class="p">(</span><span class="nx">driveframe</span><span class="p">,</span><span class="w"> </span><span class="nx">pi</span><span class="o">/</span><span class="mf">4</span><span class="p">);</span><span class="w"></span>
 <span class="w"> </span><span class="p">}</span><span class="w"></span>
 
 <span class="w"> </span><span class="c1">// The following is an example only. Frames as arrays has not been agreed on.</span><span class="w"></span>
@@ -186,7 +211,7 @@ the hardware, the compiler shall raise a compile-time error.</p>
 <span class="w"> </span><span class="c1">// which also has not been well-defined. We are exploring other solutions to</span><span class="w"></span>
 <span class="w"> </span><span class="c1">// the problem of mapping qubits to pulse-level resources.</span><span class="w"></span>
 
-<span class="w"> </span><span class="c1">// Example 2: Define a calibration for the rz gate on all 8 physical qubits</span><span class="w"></span>
+<span class="w"> </span><span class="c1">// Define a calibration for the rz gate on all 8 physical qubits</span><span class="w"></span>
 <span class="w"> </span><span class="nx">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">   </span><span class="nx">array</span><span class="p">[</span><span class="nx">frame</span><span class="p">,</span><span class="w"> </span><span class="mf">8</span><span class="p">]</span><span class="w"> </span><span class="nx">rz_frames</span><span class="p">;</span><span class="w"></span>
 <span class="w">   </span><span class="nx">frame</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newframe</span><span class="p">(...);</span><span class="w"></span>
@@ -194,20 +219,17 @@ the hardware, the compiler shall raise a compile-time error.</p>
 <span class="w"> </span><span class="p">}</span><span class="w"></span>
 
 <span class="w"> </span><span class="nx">defcal</span><span class="w"> </span><span class="nx">rz</span><span class="p">(</span><span class="nx">angle</span><span class="p">[</span><span class="mf">20</span><span class="p">]</span><span class="w"> </span><span class="nx">theta</span><span class="p">)</span><span class="w"> </span><span class="nx">$q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="nx">rz_frames</span><span class="p">[</span><span class="nx">q</span><span class="p">].</span><span class="nx">phase</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="nx">theta</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="nx">shift_phase</span><span class="p">(</span><span class="nx">rz_frames</span><span class="p">[</span><span class="nx">q</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="nx">theta</span><span class="p">);</span><span class="w"></span>
 <span class="w"> </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Manipulating frames based on the state of other frames is also permitted:</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Swap phases between two frames</span><span class="w"></span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">angle</span><span class="w"> </span><span class="nx">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">frame1</span><span class="p">.</span><span class="nx">phase</span><span class="p">;</span><span class="w"></span>
-<span class="nx">frame1</span><span class="p">.</span><span class="nx">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">frame2</span><span class="p">.</span><span class="nx">phase</span><span class="p">;</span><span class="w"></span>
-<span class="nx">frame2</span><span class="p">.</span><span class="nx">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">temp</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">angle</span><span class="w"> </span><span class="nx">temp1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">get_phase</span><span class="p">(</span><span class="nx">frame1</span><span class="p">);</span><span class="w"></span>
+<span class="nx">angle</span><span class="w"> </span><span class="nx">temp2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">get_phase</span><span class="p">(</span><span class="nx">frame2</span><span class="p">);</span><span class="w"></span>
+<span class="nx">set_phase</span><span class="p">(</span><span class="nx">frame1</span><span class="p">,</span><span class="w"> </span><span class="nx">temp2</span><span class="p">);</span><span class="w"></span>
+<span class="nx">set_phase</span><span class="p">(</span><span class="nx">frame2</span><span class="p">,</span><span class="w"> </span><span class="nx">temp1</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
-<p>Changing the frequency or phase is an instantaneous operation. If a vendor
-is unable to support such instantaneous operations, it is expected that the
-compiler shall raise a compile-time error when encountering such frame manipulations.</p>
 </section>
 </section>
 <section id="waveforms">
@@ -294,23 +316,23 @@ new waveforms (this list may be updated as more functionality is required).</p>
 <p>Waveforms are scheduled using the <code class="docutils literal notranslate"><span class="pre">play</span></code> instruction. These instructions may
 only appear inside a <code class="docutils literal notranslate"><span class="pre">defcal</span></code> block and have two required parameters:</p>
 <ul class="simple">
-<li><p>A value of type <code class="docutils literal notranslate"><span class="pre">waveform</span></code> representing the waveform envelope.</p></li>
 <li><p>The frame to use for the pulse.</p></li>
+<li><p>A value of type <code class="docutils literal notranslate"><span class="pre">waveform</span></code> representing the waveform envelope.</p></li>
 </ul>
-<p>Here, the <code class="docutils literal notranslate"><span class="pre">frame</span></code> provides both time at which the <code class="docutils literal notranslate"><span class="pre">waveform</span></code> envelope is scheduled (i.e. via the frame <code class="docutils literal notranslate"><span class="pre">.time</span></code>
-attribute), its carrier frequency (i.e. via the frames <code class="docutils literal notranslate"><span class="pre">.frequency</span></code> attribute), and its phase offset (i.e. via
-the frame <code class="docutils literal notranslate"><span class="pre">.phase</span></code> attribute).</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">play</span><span class="p">(</span><span class="nx">waveform</span><span class="w"> </span><span class="nx">wfm</span><span class="p">,</span><span class="w"> </span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">)</span><span class="w"></span>
+<p>Here, the <code class="docutils literal notranslate"><span class="pre">frame</span></code> provides the time at which the <code class="docutils literal notranslate"><span class="pre">waveform</span></code> envelope is scheduled (i.e. via
+the frame’s current <code class="docutils literal notranslate"><span class="pre">time</span></code>), its carrier frequency (i.e. via the frames current <code class="docutils literal notranslate"><span class="pre">frequency</span></code>),
+and its phase offset (i.e. via the frame’s current <code class="docutils literal notranslate"><span class="pre">phase</span></code>).</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">play</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">fr</span><span class="p">,</span><span class="w"> </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">wfm</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <p>For example,</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">defcal</span><span class="w"> </span><span class="nx">play_my_pulses</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="c1">// Play a 3 sample pulse on the tx0 port</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">([</span><span class="mf">1</span><span class="o">+</span><span class="mf">0</span><span class="nx">im</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="o">+</span><span class="mf">1</span><span class="nx">im</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="o">/</span><span class="nx">sqrt</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="o">+</span><span class="mf">1</span><span class="o">/</span><span class="nx">sqrt</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="nx">im</span><span class="p">],</span><span class="w"> </span><span class="nx">driveframe</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="o">+</span><span class="mf">0</span><span class="nx">im</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="o">+</span><span class="mf">1</span><span class="nx">im</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="o">/</span><span class="nx">sqrt</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="o">+</span><span class="mf">1</span><span class="o">/</span><span class="nx">sqrt</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="nx">im</span><span class="p">]);</span><span class="w"></span>
 
 <span class="w">  </span><span class="c1">// Play a gaussian pulse on the tx1 port</span><span class="w"></span>
 <span class="w">  </span><span class="nx">frame</span><span class="w"> </span><span class="nx">f1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newframe</span><span class="p">(</span><span class="nx">tx1</span><span class="p">,</span><span class="w"> </span><span class="nx">q1_freq</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">gaussian</span><span class="p">(...),</span><span class="w"> </span><span class="nx">f1</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">f1</span><span class="p">,</span><span class="w"> </span><span class="nx">gaussian</span><span class="p">(...));</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
@@ -339,16 +361,16 @@ extern definition at the top-level, such as:</p>
 <span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v0</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">);</span><span class="w"></span>
 
 <span class="c1">// A capture command that returns an iq value</span><span class="w"></span>
-<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v1</span><span class="p">(</span><span class="nx">waveform</span><span class="w"> </span><span class="nx">filter</span><span class="p">,</span><span class="w"> </span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">complex</span><span class="p">[</span><span class="kr">float</span><span class="p">[</span><span class="mf">32</span><span class="p">]];</span><span class="w"></span>
+<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v1</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">filter</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">complex</span><span class="p">[</span><span class="kr">float</span><span class="p">[</span><span class="mf">32</span><span class="p">]];</span><span class="w"></span>
 
 <span class="c1">// A capture command that returns a discrimnated bit</span><span class="w"></span>
-<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v2</span><span class="p">(</span><span class="nx">waveform</span><span class="w"> </span><span class="nx">filter</span><span class="p">,</span><span class="w"> </span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">bit</span><span class="p">;</span><span class="w"></span>
+<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v2</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">filter</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">bit</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// A capture command that returns a raw waveform data</span><span class="w"></span>
-<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v3</span><span class="p">(</span><span class="nx">duration</span><span class="w"> </span><span class="nx">len</span><span class="p">,</span><span class="w"> </span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">waveform</span><span class="p">;</span><span class="w"></span>
+<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v3</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="nx">duration</span><span class="w"> </span><span class="nx">len</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">waveform</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// A capture that returns a count e.g. number of photons detected</span><span class="w"></span>
-<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v4</span><span class="p">(</span><span class="nx">duration</span><span class="w"> </span><span class="nx">len</span><span class="p">,</span><span class="w"> </span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">int</span><span class="w"></span>
+<span class="nx">extern</span><span class="w"> </span><span class="nx">capture_v4</span><span class="p">(</span><span class="nx">frame</span><span class="w"> </span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="nx">duration</span><span class="w"> </span><span class="nx">len</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">int</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The return type of a <code class="docutils literal notranslate"><span class="pre">capture</span></code> command varies. It could be a raw trace, ie., a
@@ -378,14 +400,14 @@ discriminated using user-defined boxcar and discrimination <code class="docutils
 <span class="w">    </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">meas_wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">gaussian_square</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">16000</span><span class="nx">dt</span><span class="p">,</span><span class="w"> </span><span class="mf">262</span><span class="nx">dt</span><span class="p">,</span><span class="w"> </span><span class="mf">13952</span><span class="nx">dt</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Play the stimulus</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">meas_wf</span><span class="p">,</span><span class="w"> </span><span class="nx">stimulus_frame</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">stimulus_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">meas_wf</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Align measure and capture frames</span><span class="w"></span>
 <span class="w">    </span><span class="nx">barrier</span><span class="w"> </span><span class="nx">stimulus_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">capture_frame</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Capture transmitted data after interaction with measurement resonator</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// extern capture(duration duration, frame capture_frame) -&gt; waveform;</span><span class="w"></span>
-<span class="w">    </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">raw_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture_v1</span><span class="p">(</span><span class="mf">16000</span><span class="nx">dt</span><span class="p">,</span><span class="w"> </span><span class="nx">capture_frame</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// extern capture_v1(frame capture_frame, duration duration) -&gt; waveform;</span><span class="w"></span>
+<span class="w">    </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">raw_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture_v1</span><span class="p">(</span><span class="nx">capture_frame</span><span class="p">,</span><span class="w"> </span><span class="mf">16000</span><span class="nx">dt</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Kernel and discriminate</span><span class="w"></span>
 <span class="w">    </span><span class="nx">complex</span><span class="p">[</span><span class="kr">float</span><span class="p">[</span><span class="mf">32</span><span class="p">]]</span><span class="w"> </span><span class="nx">iq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">boxcar</span><span class="p">(</span><span class="nx">raw_output</span><span class="p">);</span><span class="w"></span>
@@ -419,22 +441,22 @@ would be absolute 0. Meanwhile, a <code class="docutils literal notranslate"><sp
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">my_gate1</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe1</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe1</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">my_gate2</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="c1">// initialized to time at beginning of `my_gate2`</span><span class="w"></span>
 <span class="w">  </span><span class="nx">frame</span><span class="w"> </span><span class="nx">driveframe2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newframe</span><span class="p">(</span><span class="nx">d0</span><span class="p">,</span><span class="w"> </span><span class="mf">5.0e9</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe2</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe2</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">my_gate3</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="c1">// initialized to time at beginning of `my_gate3`</span><span class="w"></span>
 <span class="w">  </span><span class="nx">frame</span><span class="w"> </span><span class="nx">driveframe3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newframe</span><span class="p">(</span><span class="nx">d0</span><span class="p">,</span><span class="w"> </span><span class="mf">5.0e9</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe3</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe3</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="c1">// driveframe1.time = 0ns when `play(wf, driveframe1)` is issued, advances to 16ns after `play`</span><span class="w"></span>
+<span class="c1">// driveframe1.time = 0ns when `play(driveframe1, wf)` is issued, advances to 16ns after `play`</span><span class="w"></span>
 <span class="nx">my_gate1</span><span class="w"> </span><span class="nx">$0</span><span class="p">;</span><span class="w"></span>
 <span class="c1">// driveframe2.time = 16ns when initialized via `newframe`</span><span class="w"></span>
 <span class="nx">my_gate2</span><span class="w"> </span><span class="nx">$0</span><span class="p">;</span><span class="w"></span>
@@ -471,7 +493,7 @@ by the duration of the associated <code class="docutils literal notranslate"><sp
 <span class="nx">delay</span><span class="p">[</span><span class="mi">13n</span><span class="nx">s</span><span class="p">]</span><span class="w"> </span><span class="nx">driveframe</span><span class="p">;</span><span class="w"></span>
 <span class="c1">// driveframe.time is now 13ns</span><span class="w"></span>
 
-<span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe</span><span class="p">);</span><span class="w"></span>
+<span class="nx">play</span><span class="p">(</span><span class="nx">driveframe</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="c1">// driveframe.time is now 29ns</span><span class="w"></span>
 </pre></div>
 </div>
@@ -509,13 +531,13 @@ aligned to the latest time of the all <code class="docutils literal notranslate"
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">two_qubit_gate</span><span class="w"> </span><span class="nx">$1</span><span class="w"> </span><span class="nx">$2</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="c1">// implicit: barrier driveframe1, driveframe2;</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe1</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe2</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe1</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe2</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">single_qubit_gate</span><span class="w"> </span><span class="nx">$1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="c1">// implicit: barrier driveframe1;</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe1</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe1</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">single_qubit_gate</span><span class="w"> </span><span class="nx">$1</span><span class="p">;</span><span class="w"></span>
@@ -526,9 +548,10 @@ aligned to the latest time of the all <code class="docutils literal notranslate"
 </section>
 <section id="phase-tracking">
 <h3>Phase tracking<a class="headerlink" href="#phase-tracking" title="Permalink to this heading">¶</a></h3>
-<p>As discussed in the <span class="xref std std-ref">Frame Manipulation</span> section, the accrued phase of a frame can be manipulated
-throughout a program by referencing <code class="docutils literal notranslate"><span class="pre">.phase</span></code>. The phase is also implicitly manipulated when the time
-of the frame is advanced using a <code class="docutils literal notranslate"><span class="pre">delay</span></code>, <code class="docutils literal notranslate"><span class="pre">play</span></code>, or <code class="docutils literal notranslate"><span class="pre">capture</span></code> instruction e.g.</p>
+<p>As discussed in the <span class="xref std std-ref">Frame Manipulation</span> section, the accrued phase of a frame can be
+manipulated throughout a program via <code class="docutils literal notranslate"><span class="pre">set_phase</span></code> and <code class="docutils literal notranslate"><span class="pre">shift_phase</span></code> instructions. In addition,
+the phase is implicitly manipulated when the time of the frame is advanced using a <code class="docutils literal notranslate"><span class="pre">delay</span></code>,
+<code class="docutils literal notranslate"><span class="pre">play</span></code>, or <code class="docutils literal notranslate"><span class="pre">capture</span></code> instruction e.g.</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">extern</span><span class="w"> </span><span class="nx">port</span><span class="w"> </span><span class="nx">tx0</span><span class="p">;</span><span class="w"></span>
 <span class="w">  </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span><span class="w"> </span><span class="c1">// some 100ns waveform</span><span class="w"></span>
@@ -538,26 +561,26 @@ of the frame is advanced using a <code class="docutils literal notranslate"><spa
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">single_qubit_gate</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe0</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe0</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">single_qubit_delay</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nx">delay</span><span class="p">[</span><span class="mi">13n</span><span class="nx">s</span><span class="p">]</span><span class="w"> </span><span class="nx">driveframe0</span><span class="p">;</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="c1">// driveframe0.phase = 0</span><span class="w"></span>
+<span class="c1">// get_phase(driveframe0) == 0</span><span class="w"></span>
 <span class="nx">single_qubit_gate</span><span class="w"> </span><span class="nx">$0</span><span class="p">;</span><span class="w"></span>
-<span class="c1">// Implicit advancement: driveframe0.phase += 2π * driveframe0.frequency * durationof(wf)</span><span class="w"></span>
-<span class="c1">//                                         += 2π * 5e9 * 100e-9</span><span class="w"></span>
+<span class="c1">// Implicit advancement: -&gt; shift_phase(driveframe0, 2π * get_frequency(driveframe0) * durationof(wf))</span><span class="w"></span>
+<span class="c1">//                        = shift_phase(driveframe0, 2π * 5e9 * 100e-9)</span><span class="w"></span>
 
 <span class="c1">// Change the frequency</span><span class="w"></span>
 <span class="nx">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">driveframe0</span><span class="p">.</span><span class="nx">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">6e9</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="nx">set_frequency</span><span class="p">(</span><span class="nx">driveframe0</span><span class="p">,</span><span class="w"> </span><span class="mf">6e9</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">single_qubit_delay</span><span class="w"> </span><span class="nx">$0</span><span class="p">;</span><span class="w"></span>
-<span class="c1">// Implicit advancement: driveframe0.phase += 2π * driveframe0.frequency * 13e-9</span><span class="w"></span>
-<span class="c1">//                                         += 2π * 6e9 * 13e-9</span><span class="w"></span>
+<span class="c1">// Implicit advancement: -&gt; set_phase(driveframe0, 2π * get_frequency(driveframe0) * 13e-9)</span><span class="w"></span>
+<span class="c1">//                        = set_phase(driveframe0, 2π * 6e9 * 13e-9)</span><span class="w"></span>
 </pre></div>
 </div>
 <p>This is a key property required for pulses to be defined in the rotating frame with the effect
@@ -570,11 +593,11 @@ considered a compile-time error e.g.</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">...</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">single_qubit_gate</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe1</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe1</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">single_qubit_gate</span><span class="w"> </span><span class="nx">$1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe1</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe1</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="p">...</span><span class="w"></span>
@@ -607,18 +630,18 @@ the program.</p>
 <span class="c1">// define a long saturation pulse of a set duration and amplitude</span><span class="w"></span>
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">saturation_pulse</span><span class="w"> </span><span class="nx">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// assume frame can be linked from a vendor supplied `cal` block</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">constant</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">100e-6</span><span class="p">),</span><span class="w"> </span><span class="nx">driveframe</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe</span><span class="p">,</span><span class="w"> </span><span class="nx">constant</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">100e-6</span><span class="p">));</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="c1">// step into a `cal` block to set the start of the frequency sweep</span><span class="w"></span>
 <span class="nx">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nx">driveframe</span><span class="p">.</span><span class="nx">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">frequency_start</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="nx">set_frequency</span><span class="p">(</span><span class="nx">driveframe</span><span class="p">,</span><span class="w"> </span><span class="nx">frequency_start</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="o">:</span><span class="nx">frequency_num_steps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// step into a `cal` block to adjust the pulse frequency via the frame frequency</span><span class="w"></span>
 <span class="w">    </span><span class="nx">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="nx">driveframe</span><span class="p">.</span><span class="nx">frequency</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">frequency_step</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="nx">shift_frequency</span><span class="p">(</span><span class="nx">driveframe</span><span class="p">,</span><span class="w"> </span><span class="nx">frequency_step</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
 
 <span class="w">    </span><span class="nx">saturation_pulse</span><span class="w"> </span><span class="nx">$0</span><span class="p">;</span><span class="w"></span>
@@ -639,7 +662,7 @@ the program.</p>
 <span class="w">    </span><span class="nx">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">gaussian</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="nx">pulse_length</span><span class="p">,</span><span class="w"> </span><span class="nx">sigma</span><span class="p">);</span><span class="w"></span>
 <span class="w">        </span><span class="c1">// assume frame can be linked from a vendor supplied `cal` block</span><span class="w"></span>
-<span class="w">        </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf</span><span class="p">,</span><span class="w"> </span><span class="nx">driveframe</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="nx">play</span><span class="p">(</span><span class="nx">driveframe</span><span class="p">,</span><span class="w"> </span><span class="nx">wf</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
 <span class="w">    </span><span class="nx">measure</span><span class="w"> </span><span class="nx">$0</span><span class="p">;</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
@@ -663,10 +686,10 @@ the program.</p>
 
 <span class="w">    </span><span class="c1">// generate new frame for second drive that is locally scoped</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// initialized to time at the beginning of `cross_resonance`</span><span class="w"></span>
-<span class="w">    </span><span class="nx">frame</span><span class="w"> </span><span class="nx">temp_frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newframe</span><span class="p">(</span><span class="nx">d1</span><span class="p">,</span><span class="w"> </span><span class="nx">frame0</span><span class="p">.</span><span class="nx">frequency</span><span class="p">,</span><span class="w"> </span><span class="nx">frame0</span><span class="p">.</span><span class="nx">phase</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">frame</span><span class="w"> </span><span class="nx">temp_frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newframe</span><span class="p">(</span><span class="nx">d1</span><span class="p">,</span><span class="w"> </span><span class="nx">get_frequency</span><span class="p">(</span><span class="nx">frame0</span><span class="p">),</span><span class="w"> </span><span class="nx">get_phase</span><span class="p">(</span><span class="nx">frame0</span><span class="p">));</span><span class="w"></span>
 
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf1</span><span class="p">,</span><span class="w"> </span><span class="nx">frame0</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">wf2</span><span class="p">,</span><span class="w"> </span><span class="nx">temp_frame</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">frame0</span><span class="p">,</span><span class="w"> </span><span class="nx">wf1</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">temp_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">wf2</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="cm">/*** Do post-rotation ***/</span><span class="w"></span>
 
@@ -695,10 +718,10 @@ the program.</p>
 <span class="w">    </span><span class="kr">float</span><span class="p">[</span><span class="mf">32</span><span class="p">]</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sqrt</span><span class="p">(</span><span class="mf">1</span><span class="o">-</span><span class="nx">a</span><span class="o">**</span><span class="mf">2</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Double-tap</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">scale</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">X_01</span><span class="p">),</span><span class="w"> </span><span class="nx">frame_01</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">scale</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">X_12</span><span class="p">),</span><span class="w"> </span><span class="nx">frame_12</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">scale</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">X_01</span><span class="p">),</span><span class="w"> </span><span class="nx">frame_01</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">scale</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">X_12</span><span class="p">),</span><span class="w"> </span><span class="nx">frame_12</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">frame_01</span><span class="p">,</span><span class="w"> </span><span class="nx">scale</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">X_01</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">frame_12</span><span class="p">,</span><span class="w"> </span><span class="nx">scale</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">X_12</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">frame_01</span><span class="p">,</span><span class="w"> </span><span class="nx">scale</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">X_01</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">frame_12</span><span class="p">,</span><span class="w"> </span><span class="nx">scale</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">X_12</span><span class="p">));</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
@@ -765,18 +788,18 @@ sideband).</p>
 <span class="c1">// π/2 pulses on all three qubits</span><span class="w"></span>
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">rx</span><span class="p">(</span><span class="nx">π</span><span class="o">/</span><span class="mf">2</span><span class="p">)</span><span class="w"> </span><span class="nx">$1</span><span class="w"> </span><span class="nx">$2</span><span class="w"> </span><span class="nx">$3</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="c1">// Simultaneous π/2 pulses</span><span class="w"></span>
-<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_a_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="nx">raman_a_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_b_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="nx">raman_b_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">q1_π_half_sig</span><span class="p">,</span><span class="w"> </span><span class="nx">q1_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">q2_π_half_sig</span><span class="p">,</span><span class="w"> </span><span class="nx">q2_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">q3_π_half_sig</span><span class="p">,</span><span class="w"> </span><span class="nx">q3_frame</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">raman_a_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_a_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">));</span><span class="w"></span>
+<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">raman_b_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_b_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">));</span><span class="w"></span>
+<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">q1_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">q1_π_half_sig</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">q2_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">q2_π_half_sig</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="nx">play</span><span class="p">(</span><span class="nx">q3_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">q3_π_half_sig</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="c1">// π/2 pulse on only qubit $2</span><span class="w"></span>
 <span class="nx">defcal</span><span class="w"> </span><span class="nx">rx</span><span class="p">(</span><span class="nx">π</span><span class="o">/</span><span class="mf">2</span><span class="p">)</span><span class="w"> </span><span class="nx">$2</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_a_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="nx">raman_a_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_b_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="nx">raman_b_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">q2_π_half_sig</span><span class="p">,</span><span class="w"> </span><span class="nx">q2_frame</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">raman_a_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_a_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">raman_b_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">constant</span><span class="p">(</span><span class="nx">raman_b_amp</span><span class="p">,</span><span class="w"> </span><span class="nx">π_half_time</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">q2_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">q2_π_half_sig</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="c1">// Ramsey sequence on qubit 1 and 3, Hahn echo on qubit 2</span><span class="w"></span>
@@ -802,9 +825,9 @@ sideband).</p>
 <span class="w">    </span><span class="nx">delay</span><span class="p">[</span><span class="nx">τ</span><span class="o">/</span><span class="mf">2</span><span class="p">]</span><span class="w"> </span><span class="nx">raman_a_frame</span><span class="w"> </span><span class="nx">raman_b_frame</span><span class="w"> </span><span class="nx">q1_frame</span><span class="w"> </span><span class="nx">q2_frame</span><span class="w"> </span><span class="nx">q3_frame</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Time-proportional phase increment signals different amount</span><span class="w"></span>
-<span class="w">    </span><span class="nx">q1_frame</span><span class="p">.</span><span class="nx">phase</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">tppi_1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">τ</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="nx">q2_frame</span><span class="p">.</span><span class="nx">phase</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">tppi_2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">τ</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="nx">q3_frame</span><span class="p">.</span><span class="nx">phase</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">tppi_3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">τ</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="nx">shift_phase</span><span class="p">(</span><span class="nx">q1_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">tppi_1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">τ</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">shift_phase</span><span class="p">(</span><span class="nx">q2_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">tppi_2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">τ</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">shift_phase</span><span class="p">(</span><span class="nx">q3_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">tppi_3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">τ</span><span class="p">);</span><span class="w"></span>
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
 
 <span class="w">  </span><span class="c1">// Second π/2 pulse</span><span class="w"></span>
@@ -841,8 +864,8 @@ many (just adding more frames, waveforms, plays, and captures).</p>
 <span class="w">    </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">q1_ro_wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">constant</span><span class="p">(</span><span class="nx">amp</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="o">=</span><span class="p">...);</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// multiplexed readout</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">q0_ro_wf</span><span class="p">,</span><span class="w"> </span><span class="nx">q0_stimulus_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">q1_ro_wf</span><span class="p">,</span><span class="w"> </span><span class="nx">q1_stimulus_frame</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">q0_stimulus_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">q0_ro_wf</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">play</span><span class="p">(</span><span class="nx">q1_stimulus_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">q1_ro_wf</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// simple boxcar kernel</span><span class="w"></span>
 <span class="w">    </span><span class="nx">waveform</span><span class="w"> </span><span class="nx">ro_kernel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">constant</span><span class="p">(</span><span class="nx">amp</span><span class="o">=</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="o">=</span><span class="p">...);</span><span class="w"></span>
@@ -851,9 +874,9 @@ many (just adding more frames, waveforms, plays, and captures).</p>
 <span class="w">    </span><span class="nx">delay</span><span class="p">[</span><span class="nx">electrical_delay</span><span class="p">]</span><span class="w"> </span><span class="nx">q0_capture_frame</span><span class="w"> </span><span class="nx">q1_capture_frame</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// multiplexed capture</span><span class="w"></span>
-<span class="w">    </span><span class="c1">// extern capture(waveform ro_kernel, frame capture_frame) -&gt; bit;</span><span class="w"></span>
-<span class="w">    </span><span class="nx">b</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="p">(</span><span class="nx">ro_kernel</span><span class="p">,</span><span class="w"> </span><span class="nx">q0_capture_frame</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="nx">b</span><span class="p">[</span><span class="mf">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="p">(</span><span class="nx">ro_kernel</span><span class="p">,</span><span class="w"> </span><span class="nx">q1_capture_frame</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// extern capture(frame capture_frame, waveform ro_kernel) -&gt; bit;</span><span class="w"></span>
+<span class="w">    </span><span class="nx">b</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="p">(</span><span class="nx">q0_capture_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">ro_kernel</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="nx">b</span><span class="p">[</span><span class="mf">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="p">(</span><span class="nx">q1_capture_frame</span><span class="p">,</span><span class="w"> </span><span class="nx">ro_kernel</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">b</span><span class="p">;</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
