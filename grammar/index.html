@@ -239,7 +239,7 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos">191</span>    | BOOL
 <span class="linenos">192</span>    | DURATION
 <span class="linenos">193</span>    | STRETCH
-<span class="linenos">194</span>    | COMPLEX LBRACKET scalarType RBRACKET
+<span class="linenos">194</span>    | COMPLEX (LBRACKET scalarType RBRACKET)?
 <span class="linenos">195</span>;
 <span class="linenos">196</span>qubitType: QUBIT designator?;
 <span class="linenos">197</span>arrayType: ARRAY LBRACKET scalarType COMMA expressionList RBRACKET;
@@ -385,7 +385,7 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos">119</span><span class="nl">BitshiftOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&gt;&gt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&lt;&#39;</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">120</span>
 <span class="linenos">121</span><span class="nl">IMAG</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;im&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">122</span><span class="nl">ImaginaryLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="no">IMAG</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">122</span><span class="nl">ImaginaryLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="o">*</span><span class="w"> </span><span class="no">IMAG</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">123</span>
 <span class="linenos">124</span><span class="nl">BinaryIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="s1">&#39;0b&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;0B&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">01</span><span class="p">];</span><span class="w"></span>
 <span class="linenos">125</span><span class="nl">OctalIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0o&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-7</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">0-7</span><span class="p">];</span><span class="w"></span>

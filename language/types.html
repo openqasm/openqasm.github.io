@@ -214,19 +214,44 @@ compatible with run-time values on some platforms.</p>
 </section>
 <section id="complex-numbers">
 <h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Permalink to this heading">¶</a></h3>
-<p>Complex numbers may be declared as <code class="docutils literal notranslate"><span class="pre">complex[type]</span> <span class="pre">name</span></code>, for a numeric OpenQASM classical type
-<code class="docutils literal notranslate"><span class="pre">type</span></code> (<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">angle</span></code> plus their optional size). The real
-and imaginary parts of the complex number are <code class="docutils literal notranslate"><span class="pre">type[size]</span></code> types. For instance, <code class="docutils literal notranslate"><span class="pre">complex[float[32]]</span> <span class="pre">c</span></code>
-would declare a complex number with real and imaginary parts that are 32-bit floating point numbers. The
-<code class="docutils literal notranslate"><span class="pre">im</span></code> keyword defines the imaginary number <span class="math notranslate nohighlight">\(sqrt(-1)\)</span>. <code class="docutils literal notranslate"><span class="pre">complex[type[size]]</span></code> types are initalized as
-<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span> <span class="pre">im</span></code>, where <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> must be of the same type as <code class="docutils literal notranslate"><span class="pre">type[size]</span></code>. <code class="docutils literal notranslate"><span class="pre">b</span></code> must occur to the
-left of <code class="docutils literal notranslate"><span class="pre">im</span></code> and the two can only be seperated by spaces/tabs (or nothing at all).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>complex[float[64]] c;
-c = 2.5 + 3.5im; // 2.5, 3.5 are resolved to be ``float[64]`` types
-complex[float[64]] d = 2.0+sin(π) + 3.1*5.5 im;
-complex[int[32]] f = 2 + 5 im; // 2, 5 are resolved to be ``int[32]`` types
-complex[float] my_machine_complex;
+<p>Complex numbers may be declared as <code class="docutils literal notranslate"><span class="pre">complex[float[size]]</span> <span class="pre">name</span></code>, where <code class="docutils literal notranslate"><span class="pre">size</span></code>
+is the size of the IEEE-754 floating-point number used to store the real and
+imaginary components.  Each component behaves as a <code class="docutils literal notranslate"><span class="pre">float[size]</span></code> type.  The
+designator <code class="docutils literal notranslate"><span class="pre">[size]</span></code> can be omitted to use the default hardware <code class="docutils literal notranslate"><span class="pre">float</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> with no arguments is a synonym for <code class="docutils literal notranslate"><span class="pre">complex[float]</span></code>.</p>
+<p>Imaginary literals are written as a decimal-integer or floating-point literal
+followed by the letters <code class="docutils literal notranslate"><span class="pre">im</span></code>.  There may be zero or more spaces between the
+numeric component and the <code class="docutils literal notranslate"><span class="pre">im</span></code> component.  The type of this token is
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> (its value has zero real component), and the component type is as
+normal given the floating-point literal, or the machine-size <code class="docutils literal notranslate"><span class="pre">float</span></code> if the
+numeric component is an integer.</p>
+<p>The real and imaginary components of a complex number can be extracted using the
+builtin functions <code class="docutils literal notranslate"><span class="pre">real()</span></code> and <code class="docutils literal notranslate"><span class="pre">imag()</span></code> respectively.  The output types of
+these functions is the component type specified in the type declaration.  For
+example, given a declaration <code class="docutils literal notranslate"><span class="pre">complex[float[64]]</span> <span class="pre">c;</span></code> the output type of
+<code class="docutils literal notranslate"><span class="pre">imag(c)</span></code> would be <code class="docutils literal notranslate"><span class="pre">float[64]</span></code>.  The <code class="docutils literal notranslate"><span class="pre">real()</span></code> and <code class="docutils literal notranslate"><span class="pre">imag()</span></code> functions
+can be used in compile-time constant expressions when called on compile-time
+constant values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">complex</span><span class="p">[</span><span class="nb">float</span><span class="p">[</span><span class="mi">64</span><span class="p">]]</span> <span class="n">c</span><span class="p">;</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="o">+</span> <span class="mf">3.5</span><span class="n">im</span><span class="p">;</span>
+<span class="nb">complex</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">+</span><span class="n">sin</span><span class="p">(</span><span class="n">π</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">3.1</span> <span class="o">*</span> <span class="mf">5.5</span> <span class="n">im</span><span class="p">);</span>
+<span class="nb">float</span> <span class="n">d_real</span> <span class="o">=</span> <span class="n">real</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>  <span class="o">//</span> <span class="n">equal</span> <span class="n">to</span> <span class="mf">3.0</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Real-world hardware may not support run-time manipulation of <code class="docutils literal notranslate"><span class="pre">complex</span></code>
+values.  Consult your hardware’s documentation to determine whether these
+language features will be available at run time.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The OpenQASM 3.0 specification only directly permits complex numbers with
+floating-point component types.  Individually language implementations may
+choose to make other component types available, but this version of the
+specification prescribes no portable semantics in these cases.  It is
+possible that a later version of the OpenQASM specification will define
+semantics for non-<code class="docutils literal notranslate"><span class="pre">float</span></code> component types.</p>
 </div>
 </section>
 <section id="boolean-types">
@@ -697,16 +722,21 @@ the slices must match.</p>
 <section id="casting-specifics">
 <span id="implicit-promotion-rules"></span><span id="castingspecifics"></span><h2>Casting specifics<a class="headerlink" href="#casting-specifics" title="Permalink to this heading">¶</a></h2>
 <p>The classical types are divided into the ‘standard’ classical types (bool, int,
-uint, and float) that exist in languages like C, and the ‘special’ classical
-types (bit, angle, duration, and stretch) that do not.
+uint, float, and complex) that exist in languages like C, and the ‘special’
+classical types (bit, angle, duration, and stretch) that do not.
 The standard types follow rules that mimic those of C99 for <a class="reference external" href="https://en.cppreference.com/w/c/language/conversion">promotion and
 conversion</a> in mixed
-expressions and assignments. Like the C99 specification, all float values have
-higher rank than all integer types, and higher-precision types have higher rank
-than the same type with a lower precision (see <a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Usual_arithmetic_conversions">usual arithmetic conversions</a>,
+expressions and assignments.</p>
+<p>If values with two different types are used as the operands of a binary
+operation, the lesser of the two types is cast to the greater of the two.  All
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> are greater than all <code class="docutils literal notranslate"><span class="pre">float</span></code>, and all <code class="docutils literal notranslate"><span class="pre">complex</span></code> and all
+<code class="docutils literal notranslate"><span class="pre">float</span></code> are greater than all <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">uint</span></code>.  Within each level of
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> and <code class="docutils literal notranslate"><span class="pre">float</span></code>, types with greater width are greater than types with
+lower width.  For more information, see the <a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Usual_arithmetic_conversions">usual arithmetic conversions in C</a>.</p>
+<p>The rules for rank of integer conversions mimic those of C99.  For more, see
 <a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Integer_promotions">integer promotions</a>, and
-<a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Integer_conversions">integer conversions</a>).
-Standard and special classical types
+<a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Integer_conversions">integer conversions</a>.</p>
+<p>Standard and special classical types
 may only mix in expressions with operators defined for those mixed types,
 otherwise explicit casts must be provided, unless otherwise noted (such as for
 assigning float values or expressions to angles).
