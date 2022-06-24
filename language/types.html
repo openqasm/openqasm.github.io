@@ -187,30 +187,58 @@ types for the purposes of casting.</p>
 </pre></div>
 </div>
 </section>
-<section id="fixed-point-angles">
-<h3>Fixed-point angles<a class="headerlink" href="#fixed-point-angles" title="Permalink to this heading">¶</a></h3>
-<p>Fixed-point angles are interpreted as 2π times a 0:0:n
-fixed-point number. This represents angles in the interval
-<span class="math notranslate nohighlight">\([0,2\pi)\)</span> up to an error <span class="math notranslate nohighlight">\(\epsilon\leq \pi/2^{n-1}\)</span> modulo
-2π. The statement <code class="docutils literal notranslate"><span class="pre">angle[size]</span> <span class="pre">name;</span></code> declares an n-bit angle, and
-<code class="docutils literal notranslate"><span class="pre">angle</span> <span class="pre">name;</span></code> declares an angle with machine-architecture-specified width.
-In cases where the width is not specified, bit-level operations are forbidden,
-and the type is different from all other sized angle types for the purposes of
-casting, similar to the rules for integers.
-OpenQASM3 introduces this specialized type because of the ubiquity of this angle
-representation in phase estimation circuits and numerically controlled
-oscillators found in hardware platform. Note that defining gate
-parameters with <code class="docutils literal notranslate"><span class="pre">angle</span></code> types may be necessary for those parameters to be
-compatible with run-time values on some platforms.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declare an angle with 20 bits of precision and assign it a value of π/2</span>
-<span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="n">my_angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">π</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
-<span class="kt">float</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">float_pi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">π</span><span class="p">;</span><span class="w"></span>
-<span class="c1">// equivalent to pi_by_2 up to rounding errors</span>
-<span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">](</span><span class="n">float_pi</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
-<span class="c1">// Declare a machine-sized angle</span>
-<span class="n">angle</span><span class="w"> </span><span class="n">my_machine_angle</span><span class="p">;</span><span class="w"></span>
+<section id="angles">
+<span id="angle-type"></span><h3>Angles<a class="headerlink" href="#angles" title="Permalink to this heading">¶</a></h3>
+<p>OpenQASM 3 includes a new type to represent classical angles: <code class="docutils literal notranslate"><span class="pre">angle</span></code>.
+This type is intended to make manipulations of angles more efficient at runtime,
+when the hardware executing the program does not have built-in support for
+floating-point operations.  The manipulations on <code class="docutils literal notranslate"><span class="pre">angle</span></code> values are designed
+to be significantly less expensive when done using integer hardware than the
+equivalent software emulation of floating-point operations, by using the
+equivalence of angles modulo <span class="math notranslate nohighlight">\(2\pi\)</span> to remove the need for large dynamic
+range.</p>
+<p>In brief, the type <code class="docutils literal notranslate"><span class="pre">angle[size]</span></code> is manipulated very similarly to a single
+unsigned integer, where the value <code class="docutils literal notranslate"><span class="pre">1</span></code> represents an angle of
+<span class="math notranslate nohighlight">\(2\pi/2^{\text{size}}\)</span>, and the largest representable value is
+this subtracted from <span class="math notranslate nohighlight">\(2\pi\)</span>.  Addition with other angles, and
+multiplication and division by unsigned integers is defined by standard
+unsigned-integer arithmetic, with more details found in <a class="reference internal" href="classical.html#classical-instructions"><span class="std std-ref">the section on
+classical instructions</span></a>.</p>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">angle[size]</span> <span class="pre">name;</span></code> statement declares a new angle called
+<code class="docutils literal notranslate"><span class="pre">name</span></code> with <code class="docutils literal notranslate"><span class="pre">size</span></code> bits in its representation.  Angles can be assigned
+values using the constant <code class="docutils literal notranslate"><span class="pre">π</span></code> or <code class="docutils literal notranslate"><span class="pre">pi</span></code>, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Declare</span> <span class="n">a</span> <span class="mi">20</span><span class="o">-</span><span class="n">bit</span> <span class="n">angle</span> <span class="k">with</span> <span class="n">the</span> <span class="n">value</span> <span class="n">of</span> <span class="s2">&quot;π/2&quot;</span>
+<span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="n">my_angle</span> <span class="o">=</span> <span class="n">π</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+<span class="o">//</span> <span class="n">Declare</span> <span class="n">a</span> <span class="n">machine</span><span class="o">-</span><span class="n">sized</span> <span class="n">angle</span>
+<span class="n">angle</span> <span class="n">my_machine_angle</span><span class="p">;</span>
 </pre></div>
 </div>
+<p>The bit representation of the type <code class="docutils literal notranslate"><span class="pre">angle[size]</span></code> is such that if
+<code class="docutils literal notranslate"><span class="pre">angle_as_uint</span></code> is the integer whose representation as a <code class="docutils literal notranslate"><span class="pre">uint[size]</span></code> has
+the same bit pattern, the value of the angle (using exact mathematical
+operations on the field of real numbers) would be</p>
+<div class="math notranslate nohighlight">
+\[2\pi \times \frac{\text{angle_as_uint}}{2^{\text{size}}}\]</div>
+<p>This “mathematical” value is the value used in casts from floating-point values
+(if available), whereas casts to and from <code class="docutils literal notranslate"><span class="pre">bit[size]</span></code> types reinterpret the
+bits directly.  This means that, unless <code class="docutils literal notranslate"><span class="pre">a</span></code> is sufficiently small:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">float</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="n">a</span><span class="p">;</span>
+<span class="n">angle</span><span class="p">[</span><span class="mi">32</span><span class="p">](</span><span class="n">bit</span><span class="p">[</span><span class="mi">32</span><span class="p">](</span><span class="n">uint</span><span class="p">[</span><span class="mi">32</span><span class="p">](</span><span class="n">a</span><span class="p">)))</span> <span class="o">!=</span> <span class="n">angle</span><span class="p">[</span><span class="mi">32</span><span class="p">](</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Explicitly, the most significant bit (bit index <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">-</span> <span class="pre">1</span></code>) correpsonds to
+<span class="math notranslate nohighlight">\(\pi\)</span>, and the least significant bit (bit index <code class="docutils literal notranslate"><span class="pre">0</span></code>) corresponds to
+<span class="math notranslate nohighlight">\(2^{-\text{size} + 1}\pi\)</span>.  For example, with the most-significant bit on
+the left in the bitstrings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">angle</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="n">my_pi</span> <span class="o">=</span> <span class="n">π</span><span class="p">;</span>  <span class="o">//</span> <span class="s2">&quot;1000&quot;</span>
+<span class="n">angle</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="n">my_pi_over_two</span> <span class="o">=</span> <span class="n">π</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>  <span class="o">//</span> <span class="s2">&quot;010000&quot;</span>
+<span class="n">angle</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">my_angle</span> <span class="o">=</span> <span class="mi">7</span> <span class="o">*</span> <span class="p">(</span><span class="n">π</span> <span class="o">/</span> <span class="mi">8</span><span class="p">);</span>  <span class="o">//</span> <span class="s2">&quot;01110000&quot;</span>
+</pre></div>
+</div>
+<p>Angles outside the interval <span class="math notranslate nohighlight">\([0, 2\pi)\)</span> are represented by their values
+modulo <span class="math notranslate nohighlight">\(2\pi\)</span>.  Up to this modulo operation, the closest <code class="docutils literal notranslate"><span class="pre">angle[size]</span></code>
+representation of an exact mathematical value is different from the true value
+by at most <span class="math notranslate nohighlight">\(\epsilon\leq \pi/2^{\text{size}}\)</span>.</p>
 </section>
 <section id="complex-numbers">
 <h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Permalink to this heading">¶</a></h3>
@@ -875,18 +903,35 @@ representation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">float[n]</span></code> values cast to the standard types mimicking C99 behavior (<em>e.g.</em>
 discarding the fractional part for integer-type targets). As noted above,
 if the value is too large to be represented in the
-target type the result is implementation-specific.
-Casting a <code class="docutils literal notranslate"><span class="pre">float</span></code> value to an <code class="docutils literal notranslate"><span class="pre">angle[m]</span></code> is accomplished by first
-performing a modulo 2π operation on the float value. The resulting value
-is then converted to the nearest <code class="docutils literal notranslate"><span class="pre">angle[m]</span></code> possible. In the event of a
-tie between two possible nearest values the result is the one with an even
-least significant bit (<em>i.e.</em> round to nearest, ties to even).</p>
+target type the result is implementation-specific.</p>
+<p>Casting a <code class="docutils literal notranslate"><span class="pre">float[n]</span></code> value to an <code class="docutils literal notranslate"><span class="pre">angle[m]</span></code> involves finding the nearest
+representable value modulo <span class="math notranslate nohighlight">\(\text{float}_n(2\pi)\)</span>, where ties between two
+possible representations are resolved by choosing to have zero in the
+least-significant bit (<em>i.e.</em> round to nearest, ties to even).  Casting the
+floating-point values <code class="docutils literal notranslate"><span class="pre">inf</span></code>, <code class="docutils literal notranslate"><span class="pre">-inf</span></code> and all representations of <code class="docutils literal notranslate"><span class="pre">NaN</span></code> to
+<code class="docutils literal notranslate"><span class="pre">angle[m]</span></code> is not defined.</p>
+<p>For example, given the double-precision floating-point value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">The</span> <span class="n">closest</span> <span class="n">double</span><span class="o">-</span><span class="n">precision</span> <span class="n">representation</span> <span class="n">of</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">.</span>
+<span class="n">const</span> <span class="nb">float</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span> <span class="n">two_pi</span> <span class="o">=</span> <span class="mf">6.283185307179586</span>
+<span class="o">//</span> <span class="n">For</span> <span class="n">double</span> <span class="n">precision</span><span class="p">,</span> <span class="n">we</span> <span class="n">have</span>
+<span class="o">//</span>   <span class="p">(</span><span class="n">two_pi</span> <span class="o">*</span> <span class="p">(</span><span class="mf">127.</span><span class="o">/</span><span class="mf">512.</span><span class="p">))</span> <span class="o">/</span> <span class="n">two_pi</span> <span class="o">==</span> <span class="p">(</span><span class="mf">127.</span><span class="o">/</span><span class="mf">512.</span><span class="p">)</span>
+<span class="o">//</span> <span class="n">exactly</span><span class="o">.</span>
+<span class="nb">float</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span> <span class="n">f</span> <span class="o">=</span> <span class="n">two_pi</span> <span class="o">*</span> <span class="p">(</span><span class="mf">127.</span> <span class="o">/</span> <span class="mf">512.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>the result of the cast <code class="docutils literal notranslate"><span class="pre">angle[8](f)</span></code> should have the bitwise representation
+<code class="docutils literal notranslate"><span class="pre">&quot;01000000&quot;</span></code> (which represents the exact angle
+<span class="math notranslate nohighlight">\(2\pi\cdot\frac{64}{256} = \frac\pi2\)</span>), despite <code class="docutils literal notranslate"><span class="pre">&quot;00111111&quot;</span></code>
+(<span class="math notranslate nohighlight">\(2\pi\cdot\frac{63}{256}\)</span>) being equally close, because of the
+round-to-nearest ties-to-even behaviour.</p>
 </section>
 <section id="casting-from-angle">
 <h3>Casting from angle<a class="headerlink" href="#casting-from-angle" title="Permalink to this heading">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">angle[n]</span></code> values cast to <code class="docutils literal notranslate"><span class="pre">bool</span></code> using the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0.0</span></code>.
-Casting to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code> values is only allowed when
-<code class="docutils literal notranslate"><span class="pre">n==m</span></code>, otherwise explicit slicing syntax must be provided.</p>
+<p><code class="docutils literal notranslate"><span class="pre">angle[n]</span></code> values cast to <code class="docutils literal notranslate"><span class="pre">bool</span></code> using the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0</span></code>.  Casting
+to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code> values is only allowed when <code class="docutils literal notranslate"><span class="pre">n==m</span></code>, otherwise explicit slicing
+syntax must be provided.  When casting to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code>, the value is a direct
+copy of the bit pattern using the same little-endian ordering <a class="reference internal" href="#angle-type"><span class="std std-ref">as described
+above</span></a>.</p>
 <p>When casting between angles of differing precisions (<code class="docutils literal notranslate"><span class="pre">n!=m</span></code>): if the target
 has more significant bits, then the value is padded with <code class="docutils literal notranslate"><span class="pre">m-n</span></code> least
 significant bits of <code class="docutils literal notranslate"><span class="pre">0</span></code>; if the target has fewer significant bits, then

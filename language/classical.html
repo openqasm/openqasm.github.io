@@ -37,7 +37,7 @@
           <div class="body" role="main">
             
   <section id="classical-instructions">
-<h1>Classical instructions<a class="headerlink" href="#classical-instructions" title="Permalink to this heading">¶</a></h1>
+<span id="id1"></span><h1>Classical instructions<a class="headerlink" href="#classical-instructions" title="Permalink to this heading">¶</a></h1>
 <p>We envision two levels of classical control: simple, low-level instructions embedded as
 part of a quantum circuit and high-level external functions which perform more complex
 classical computations. The low-level functions allow basic
@@ -71,12 +71,13 @@ assigned variable on the LHS.</p>
 </section>
 <section id="classical-bits-and-registers">
 <h3>Classical bits and registers<a class="headerlink" href="#classical-bits-and-registers" title="Permalink to this heading">¶</a></h3>
-<p>Classical registers and bits support bitwise operators and the
-corresponding assignment operators between registers of the same size:
-and <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, or <code class="docutils literal notranslate"><span class="pre">|</span></code>, xor <code class="docutils literal notranslate"><span class="pre">^</span></code>. They support left shift <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> and right shift <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> by an unsigned
-integer, and the corresponding assignment operators. The shift operators
-shift bits off the end. They also support not <code class="docutils literal notranslate"><span class="pre">~</span></code>, <code class="docutils literal notranslate"><span class="pre">popcount</span></code> <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, and left and
-right circular shift, <code class="docutils literal notranslate"><span class="pre">rotl</span></code> and <code class="docutils literal notranslate"><span class="pre">rotr</span></code>, respectively.</p>
+<p>Classical registers, <code class="docutils literal notranslate"><span class="pre">bit</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code> and <code class="docutils literal notranslate"><span class="pre">angle</span></code> support bitwise operators
+and the corresponding assignment operators with registers of the same size:
+and <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, or <code class="docutils literal notranslate"><span class="pre">|</span></code>, xor <code class="docutils literal notranslate"><span class="pre">^</span></code>. They support left shift <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> and right shift
+<code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> by an unsigned integer, and the corresponding assignment operators. The
+shift operators shift bits off the end. They also support bitwise negation <code class="docutils literal notranslate"><span class="pre">~</span></code>,
+<code class="docutils literal notranslate"><span class="pre">popcount</span></code> <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, and left and right circular shift, <code class="docutils literal notranslate"><span class="pre">rotl</span></code> and <code class="docutils literal notranslate"><span class="pre">rotr</span></code>,
+respectively.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">bit</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;10001111&quot;</span><span class="p">;</span><span class="w"></span>
 <span class="n">bit</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;01110000&quot;</span><span class="p">;</span><span class="w"></span>
 
@@ -84,6 +85,17 @@ right circular shift, <code class="docutils literal notranslate"><span class="pr
 <span class="n">rotl</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c1">// Produces &quot;00111110&quot;</span>
 <span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="c1">// Produces &quot;11111111&quot;</span>
 <span class="n">a</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="c1">// Produces &quot;00000000&quot;</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">uint</span></code> and <code class="docutils literal notranslate"><span class="pre">angle</span></code>, the results of these operations are defined as if
+the operations were applied to their defined bit representations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">angle</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">*</span> <span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">8</span><span class="p">);</span>  <span class="o">//</span> <span class="s2">&quot;1001&quot;</span>
+<span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">;</span>  <span class="o">//</span> <span class="n">Produces</span> <span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="s2">&quot;0100&quot;</span>
+<span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>  <span class="o">//</span> <span class="n">Produces</span> <span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="s2">&quot;0010&quot;</span>
+
+<span class="n">uint</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">37</span><span class="p">;</span>  <span class="o">//</span> <span class="s2">&quot;100101&quot;</span>
+<span class="n">popcount</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>  <span class="o">//</span> <span class="n">Produces</span> <span class="mf">3.</span>
+<span class="n">rotl</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>   <span class="o">//</span> <span class="n">Produces</span> <span class="mi">44</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="s2">&quot;101100&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -107,10 +119,20 @@ an index set, for example <code class="docutils literal notranslate"><span class
 <span class="n">e</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kt">float</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Angles are naturally defined on a ring, and so comparisons may not work
+exactly how you might expect.  For example, <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">ang</span> <span class="pre">&gt;=</span> <span class="pre">ang</span></code> is not
+necessarily true; if <code class="docutils literal notranslate"><span class="pre">ang</span></code> represents the angle <span class="math notranslate nohighlight">\(3\pi/2\)</span>, then
+<code class="docutils literal notranslate"><span class="pre">2*ang</span> <span class="pre">==</span> <span class="pre">pi</span></code> and <code class="docutils literal notranslate"><span class="pre">pi</span> <span class="pre">&lt;</span> <span class="pre">ang</span></code>.</p>
+<p>This is the same behavior as unsigned integers in many languages (including
+OpenQASM 3), but the types of operation commonly performed on <code class="docutils literal notranslate"><span class="pre">angle</span></code> are
+particularly likely to trigger these modulo arithmetic effects.</p>
+</div>
 </section>
 <section id="integers">
 <h3>Integers<a class="headerlink" href="#integers" title="Permalink to this heading">¶</a></h3>
-<p>Integer types support addition <code class="docutils literal notranslate"><span class="pre">+</span></code>, subtraction <code class="docutils literal notranslate"><span class="pre">-</span></code>, multiplication <code class="docutils literal notranslate"><span class="pre">*</span></code>, integer division <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <code class="docutils literal notranslate"><span class="pre">/</span></code>, modulo <code class="docutils literal notranslate"><span class="pre">%</span></code>, and power <code class="docutils literal notranslate"><span class="pre">**</span></code>, as well as the corresponding assignments <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code>, <code class="docutils literal notranslate"><span class="pre">/=</span></code>, <code class="docutils literal notranslate"><span class="pre">%=</span></code>, and <code class="docutils literal notranslate"><span class="pre">**=</span></code>.</p>
+<p>Integer types support addition <code class="docutils literal notranslate"><span class="pre">+</span></code>, subtraction <code class="docutils literal notranslate"><span class="pre">-</span></code>, multiplication <code class="docutils literal notranslate"><span class="pre">*</span></code>, integer division <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <code class="docutils literal notranslate"><span class="pre">/</span></code>, modulo <code class="docutils literal notranslate"><span class="pre">%</span></code>, and power <code class="docutils literal notranslate"><span class="pre">**</span></code>, as well as the corresponding assignments <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code>, <code class="docutils literal notranslate"><span class="pre">/=</span></code>, <code class="docutils literal notranslate"><span class="pre">%=</span></code>, and <code class="docutils literal notranslate"><span class="pre">**=</span></code>.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
 <span class="kt">int</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
 
@@ -122,10 +144,58 @@ an index set, for example <code class="docutils literal notranslate"><span class
 </pre></div>
 </div>
 </section>
-<section id="floating-point-numbers-and-angles">
-<h3>Floating-point numbers and angles<a class="headerlink" href="#floating-point-numbers-and-angles" title="Permalink to this heading">¶</a></h3>
-<p>Floating-point and angle types support addition, subtraction,
-multiplication, division, and power and the corresponding assignment operators.</p>
+<section id="angles">
+<h3>Angles<a class="headerlink" href="#angles" title="Permalink to this heading">¶</a></h3>
+<p>In addition to the bitwise operations mentioned above, angles support:</p>
+<ul class="simple">
+<li><p>Addition <code class="docutils literal notranslate"><span class="pre">+</span></code> and subtraction <code class="docutils literal notranslate"><span class="pre">-</span></code> by other angles of the same size, which
+returns an angle of the same size.</p></li>
+<li><p>Multiplication <code class="docutils literal notranslate"><span class="pre">*</span></code> and division <code class="docutils literal notranslate"><span class="pre">/</span></code> by unsigned integers of the same size.
+The result is an <code class="docutils literal notranslate"><span class="pre">angle</span></code> type of the same size.  Both <code class="docutils literal notranslate"><span class="pre">uint</span> <span class="pre">*</span> <span class="pre">angle</span></code> and
+<code class="docutils literal notranslate"><span class="pre">angle</span> <span class="pre">*</span> <span class="pre">uint</span></code> are valid and produce the same result, but only <code class="docutils literal notranslate"><span class="pre">angle</span> <span class="pre">/</span>
+<span class="pre">uint</span></code> is valid; it is not allowed to divide an integer by an angle.</p></li>
+<li><p>Division <code class="docutils literal notranslate"><span class="pre">/</span></code> by another angle of the same size.  This returns a <code class="docutils literal notranslate"><span class="pre">uint</span></code> of
+the same size.</p></li>
+<li><p>Unary negation <code class="docutils literal notranslate"><span class="pre">-</span></code>, which represents the mathematical operation <span class="math notranslate nohighlight">\(-a
+\equiv 2\pi - a\)</span>.</p></li>
+<li><p>Compound assignment operators <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code> and <code class="docutils literal notranslate"><span class="pre">/=</span></code> with angles of the
+same size as both left- and right operands.  These have the same effect as if
+the equivalent binary operation had been written out in full.</p></li>
+<li><p>The compound assignment operators <code class="docutils literal notranslate"><span class="pre">*=</span></code> and <code class="docutils literal notranslate"><span class="pre">/=</span></code> with an unsigned integer
+of the same size as the right operand.  This has the same effect as if the
+multiplication or division had been written as a binary operation and
+assigned.</p></li>
+</ul>
+<p>In all of these cases, except for unary negation, the bit pattern of the result
+of these operations is the same as if the operations had been carried out
+between two <code class="docutils literal notranslate"><span class="pre">uint</span></code> types of the same size with the same bit representations,
+including both upper and lower overflow.  Explicitly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>angle[4] a = 7 * (pi / 8);  // &quot;0111&quot;
+angle[4] b = pi / 8;        // &quot;0001&quot;
+angle[4] c = 5 * (pi / 4);  // &quot;1010&quot;
+uint[4] two = 2;
+
+a + b;    // angle[4] │ pi           │ &quot;1000&quot;
+b - a;    // angle[4] │ 5 * (pi / 4) │ &quot;1010&quot;
+a / two;  // angle[4] │ 3 * (pi / 8) │ &quot;0011&quot;
+two * c;  // angle[4] │ pi / 2       │ &quot;0100&quot;
+c / b;    // uint[4]  │ 10           │ &quot;1010&quot;
+pi * 2;   // angle[4] │ 0            │ &quot;0000&quot;
+</pre></div>
+</div>
+<p>Unary negation of an angle <code class="docutils literal notranslate"><span class="pre">a</span></code> is defined to produce the same value as
+<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">-</span> <span class="pre">a</span></code>, such that <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">(-a)</span></code> is always equal to zero.  This is the same as
+the C99 definition for unsigned integers.  In bitwise operations, the negation
+can be written as <code class="docutils literal notranslate"><span class="pre">(~a)</span> <span class="pre">+</span> <span class="pre">1</span></code>. Explicitly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>angle[4] a = pi / 4;  // &quot;0010&quot;
+angle[4] b = -a;  // 7*(pi/4) │ &quot;1110&quot;
+</pre></div>
+</div>
+</section>
+<section id="floating-point-numbers">
+<h3>Floating-point numbers<a class="headerlink" href="#floating-point-numbers" title="Permalink to this heading">¶</a></h3>
+<p>Floating-point numbers support addition, subtraction, multiplication, division,
+and power and the corresponding assignment operators.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pi</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
 <span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pi</span><span class="p">;</span><span class="w"></span>
 <span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="c1">// 3/2 * pi</span>
@@ -133,6 +203,12 @@ multiplication, division, and power and the corresponding assignment operators.<
 <span class="n">angle</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="n">c</span><span class="p">;</span><span class="w"></span>
 <span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">angle</span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="c1">// cast to angle[10]</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Real hardware may well not have access to floating-point operations at
+runtime.  OpenQASM 3 compilers may reject programs that require runtime
+operations on these values if the target backend does not support them.</p>
 </div>
 </section>
 <section id="complex-numbers">
@@ -158,8 +234,8 @@ hardware-dependent rounding mode and subnormal handling.</p>
 <h3>Evaluation order<a class="headerlink" href="#evaluation-order" title="Permalink to this heading">¶</a></h3>
 <p>OpenQASM evaluates expressions from left to right.</p>
 <blockquote>
-<div><table class="docutils align-default" id="id7">
-<caption><span class="caption-number">Table 3 </span><span class="caption-text">[operator-precedence] operator precedence in OpenQASM ordered from highest precedence to lowest precedence. Higher precedence operators will be evaluated first.</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<div><table class="docutils align-default" id="id8">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text">[operator-precedence] operator precedence in OpenQASM ordered from highest precedence to lowest precedence. Higher precedence operators will be evaluated first.</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>Operator</p></td>
 <td><p>Operator Types</p></td>
@@ -299,7 +375,7 @@ accessible after the loop.</p>
 <section id="while-loops">
 <h4>While loops<a class="headerlink" href="#while-loops" title="Permalink to this heading">¶</a></h4>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">&lt;body&gt;</span></code> executes program until the Boolean evaluates to
-false <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Variables in the loop condition statement may be modified
+false <a class="footnote-reference brackets" href="#id7" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Variables in the loop condition statement may be modified
 within the while loop body.  The <code class="docutils literal notranslate"><span class="pre">body</span></code> can be either a single statement
 terminated by a semicolon, or a program block in curly braces <code class="docutils literal notranslate"><span class="pre">{}</span></code> of several
 statements:</p>
@@ -386,18 +462,18 @@ are not required to be idempotent. They may change the state of the process prov
 In our computational model, <code class="docutils literal notranslate"><span class="pre">extern</span></code> functions may run concurrently with other classical and
 quantum computations. That is, invoking an <code class="docutils literal notranslate"><span class="pre">extern</span></code> function will  <em>schedule</em> a classical
 computation, but does not wait for that computation to terminate.</p>
-<aside class="footnote brackets" id="id4" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
 <p><code class="docutils literal notranslate"><span class="pre">popcount</span></code> computes the Hamming weight of the input register.</p>
 </aside>
-<aside class="footnote brackets" id="id5" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
 <p>If multiplication and division instructions are not available in
 hardware, they can be implemented by expanding into other
 instructions.</p>
 </aside>
-<aside class="footnote brackets" id="id6" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
 <p>This clearly allows users to write code that does not terminate. We
 do not discuss implementation details here, but one possibility is to
 compile into target code that imposes iteration limits.</p>
