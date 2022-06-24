@@ -155,7 +155,7 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos">107</span>
 <span class="linenos">108</span>// TODO: this handling of the defcal block is incorrect, because it is not
 <span class="linenos">109</span>// constrained to consume balanced brace blocks.  This needs more attention.
-<span class="linenos">110</span>defcalStatement: DEFCAL Identifier (LPAREN argumentDefinitionList? RPAREN)? hardwareQubitList returnSignature? LBRACE .*? RBRACE;
+<span class="linenos">110</span>defcalStatement: DEFCAL Identifier (LPAREN argumentDefinitionList? RPAREN)?  defcalArgumentList returnSignature? LBRACE .*? RBRACE;
 <span class="linenos">111</span>
 <span class="linenos">112</span>
 <span class="linenos">113</span>/* End top-level statement definitions. */
@@ -252,19 +252,20 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos">204</span>
 <span class="linenos">205</span>gateOperand: indexedIdentifier | HardwareQubit;
 <span class="linenos">206</span>externArgument: scalarType | arrayReferenceType | CREG designator?;
-<span class="linenos">207</span>argumentDefinition:
-<span class="linenos">208</span>    scalarType Identifier
-<span class="linenos">209</span>    | qubitType Identifier
-<span class="linenos">210</span>    | (CREG | QREG) Identifier designator?
-<span class="linenos">211</span>    | arrayReferenceType Identifier
-<span class="linenos">212</span>;
-<span class="linenos">213</span>
-<span class="linenos">214</span>argumentDefinitionList: argumentDefinition (COMMA argumentDefinition)* COMMA?;
-<span class="linenos">215</span>expressionList: expression (COMMA expression)* COMMA?;
-<span class="linenos">216</span>hardwareQubitList: HardwareQubit (COMMA HardwareQubit)* COMMA?;
-<span class="linenos">217</span>identifierList: Identifier (COMMA Identifier)* COMMA?;
-<span class="linenos">218</span>gateOperandList: gateOperand (COMMA gateOperand)* COMMA?;
-<span class="linenos">219</span>externArgumentList: externArgument (COMMA externArgument)* COMMA?;
+<span class="linenos">207</span>defcalArgument: HardwareQubit | Identifier;
+<span class="linenos">208</span>argumentDefinition:
+<span class="linenos">209</span>    scalarType Identifier
+<span class="linenos">210</span>    | qubitType Identifier
+<span class="linenos">211</span>    | (CREG | QREG) Identifier designator?
+<span class="linenos">212</span>    | arrayReferenceType Identifier
+<span class="linenos">213</span>;
+<span class="linenos">214</span>
+<span class="linenos">215</span>argumentDefinitionList: argumentDefinition (COMMA argumentDefinition)* COMMA?;
+<span class="linenos">216</span>expressionList: expression (COMMA expression)* COMMA?;
+<span class="linenos">217</span>defcalArgumentList: defcalArgument (COMMA defcalArgument)* COMMA?;
+<span class="linenos">218</span>identifierList: Identifier (COMMA Identifier)* COMMA?;
+<span class="linenos">219</span>gateOperandList: gateOperand (COMMA gateOperand)* COMMA?;
+<span class="linenos">220</span>externArgumentList: externArgument (COMMA externArgument)* COMMA?;
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="k">lexer</span><span class="w"> </span><span class="k">grammar</span><span class="w"> </span><span class="nc">qasm3Lexer</span><span class="p">;</span><span class="w"></span>
@@ -402,59 +403,56 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos">133</span><span class="k">fragment</span><span class="w"> </span><span class="nl">GeneralIdCharacter</span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">];</span><span class="w"></span>
 <span class="linenos">134</span>
 <span class="linenos">135</span><span class="nl">Identifier</span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="no">GeneralIdCharacter</span><span class="o">*</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">136</span><span class="c">// TODO: OpenPulse asks for identifiers like &#39;$q&#39; in the argument list of</span><span class="w"></span>
-<span class="linenos">137</span><span class="c">// &#39;defcal&#39; statements, though this is not a valid identifier by the OpenQASM 3</span><span class="w"></span>
-<span class="linenos">138</span><span class="c">// specification.  For now, we allow it as a special case.</span><span class="w"></span>
-<span class="linenos">139</span><span class="nl">HardwareQubit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;$&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="o">+</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="o">)</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">140</span>
-<span class="linenos">141</span><span class="k">fragment</span><span class="w"> </span><span class="nl">FloatLiteralExponent</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">eE</span><span class="p">]</span><span class="w"> </span><span class="o">(</span><span class="no">PLUS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">)?</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">142</span><span class="nl">FloatLiteral</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">143</span><span class="w">    </span><span class="c">// 1_123e-3, 123e+4 or 123E5 (needs the exponent or it&#39;s just an integer)</span><span class="w"></span>
-<span class="linenos">144</span><span class="w">    </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="w"></span>
-<span class="linenos">145</span><span class="w">    </span><span class="c">// .1234_5678 or .1e3 (no digits before the dot)</span><span class="w"></span>
-<span class="linenos">146</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="w"></span>
-<span class="linenos">147</span><span class="w">    </span><span class="c">// 123.456, 123. or 145.32e+1_00</span><span class="w"></span>
-<span class="linenos">148</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="o">?</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">149</span>
-<span class="linenos">150</span><span class="k">fragment</span><span class="w"> </span><span class="nl">TimeUnit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;dt&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ns&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;us&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;µs&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ms&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;s&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">151</span><span class="c">// represents explicit time value in SI or backend units</span><span class="w"></span>
-<span class="linenos">152</span><span class="nl">TimingLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="no">TimeUnit</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">153</span>
-<span class="linenos">154</span>
-<span class="linenos">155</span><span class="nl">BitstringLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">156</span><span class="c">// allow ``&quot;str&quot;`` and ``&#39;str&#39;``</span><span class="w"></span>
-<span class="linenos">157</span><span class="nl">StringLiteral</span><span class="w"></span>
-<span class="linenos">158</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">~</span><span class="p">[</span><span class="x">&quot;\r\t\n]+? &#39;&quot;&#39;</span>
-<span class="linenos">159</span><span class="x">    | &#39;\&#39;&#39; ~</span><span class="p">[</span><span class="x">&#39;\r\t\n]+? &#39;\&#39;&#39;</span>
-<span class="linenos">160</span><span class="x">    ;</span>
-<span class="linenos">161</span>
-<span class="linenos">162</span><span class="x">// Ignore whitespace between tokens, and define C++-style comments.</span>
-<span class="linenos">163</span><span class="x">Whitespace: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
-<span class="linenos">164</span><span class="x">Newline: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
-<span class="linenos">165</span><span class="x">LineComment : &#39;//&#39; ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">* -&gt; skip;</span>
-<span class="linenos">166</span><span class="x">BlockComment : &#39;/*&#39; .*? &#39;*/&#39; -&gt; skip;</span>
-<span class="linenos">167</span>
-<span class="linenos">168</span>
-<span class="linenos">169</span><span class="x">// The version identifier token would be ambiguous between itself and</span>
-<span class="linenos">170</span><span class="x">// integer/floating-point literals, so we use a special mode to ensure it&#39;s</span>
-<span class="linenos">171</span><span class="x">// lexed correctly.</span>
-<span class="linenos">172</span><span class="x">mode VERSION_IDENTIFIER;</span>
-<span class="linenos">173</span><span class="x">    VERSION_IDENTIFER_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
-<span class="linenos">174</span><span class="x">    VersionSpecifier: </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+ (&#39;.&#39; </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+)? -&gt; popMode;</span>
-<span class="linenos">175</span>
-<span class="linenos">176</span>
-<span class="linenos">177</span><span class="x">// A different lexer mode to swap to when we need handle tokens on a line basis</span>
-<span class="linenos">178</span><span class="x">// rather than the default arbitrary-whitespace-based tokenisation.  This is</span>
-<span class="linenos">179</span><span class="x">// used by the annotation and pragma rules.</span>
-<span class="linenos">180</span><span class="x">mode EAT_TO_LINE_END;</span>
-<span class="linenos">181</span><span class="x">    EAT_INITIAL_SPACE: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
-<span class="linenos">182</span><span class="x">    EAT_LINE_END: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x"> -&gt; popMode, skip;</span>
-<span class="linenos">183</span>
-<span class="linenos">184</span><span class="x">    // The line content must be a non-empty token to satisfy ANTLR (otherwise it</span>
-<span class="linenos">185</span><span class="x">    // would be able to produce an infinite number of tokens).  We could include</span>
-<span class="linenos">186</span><span class="x">    // the line ending to guarantee that this is always non-empty, but that just</span>
-<span class="linenos">187</span><span class="x">    // puts an annoying burden on consumers to remove it again.</span>
-<span class="linenos">188</span><span class="x">    RemainingLineContent: ~</span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x"> ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">*;</span>
+<span class="linenos">136</span><span class="nl">HardwareQubit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;$&#39;</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="o">+</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">137</span>
+<span class="linenos">138</span><span class="k">fragment</span><span class="w"> </span><span class="nl">FloatLiteralExponent</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">eE</span><span class="p">]</span><span class="w"> </span><span class="o">(</span><span class="no">PLUS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">)?</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">139</span><span class="nl">FloatLiteral</span><span class="p">:</span><span class="w"></span>
+<span class="linenos">140</span><span class="w">    </span><span class="c">// 1_123e-3, 123e+4 or 123E5 (needs the exponent or it&#39;s just an integer)</span><span class="w"></span>
+<span class="linenos">141</span><span class="w">    </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="w"></span>
+<span class="linenos">142</span><span class="w">    </span><span class="c">// .1234_5678 or .1e3 (no digits before the dot)</span><span class="w"></span>
+<span class="linenos">143</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="w"></span>
+<span class="linenos">144</span><span class="w">    </span><span class="c">// 123.456, 123. or 145.32e+1_00</span><span class="w"></span>
+<span class="linenos">145</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="o">?</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">146</span>
+<span class="linenos">147</span><span class="k">fragment</span><span class="w"> </span><span class="nl">TimeUnit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;dt&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ns&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;us&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;µs&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ms&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;s&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">148</span><span class="c">// represents explicit time value in SI or backend units</span><span class="w"></span>
+<span class="linenos">149</span><span class="nl">TimingLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="no">TimeUnit</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">150</span>
+<span class="linenos">151</span>
+<span class="linenos">152</span><span class="nl">BitstringLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">153</span><span class="c">// allow ``&quot;str&quot;`` and ``&#39;str&#39;``</span><span class="w"></span>
+<span class="linenos">154</span><span class="nl">StringLiteral</span><span class="w"></span>
+<span class="linenos">155</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">~</span><span class="p">[</span><span class="x">&quot;\r\t\n]+? &#39;&quot;&#39;</span>
+<span class="linenos">156</span><span class="x">    | &#39;\&#39;&#39; ~</span><span class="p">[</span><span class="x">&#39;\r\t\n]+? &#39;\&#39;&#39;</span>
+<span class="linenos">157</span><span class="x">    ;</span>
+<span class="linenos">158</span>
+<span class="linenos">159</span><span class="x">// Ignore whitespace between tokens, and define C++-style comments.</span>
+<span class="linenos">160</span><span class="x">Whitespace: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
+<span class="linenos">161</span><span class="x">Newline: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
+<span class="linenos">162</span><span class="x">LineComment : &#39;//&#39; ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">* -&gt; skip;</span>
+<span class="linenos">163</span><span class="x">BlockComment : &#39;/*&#39; .*? &#39;*/&#39; -&gt; skip;</span>
+<span class="linenos">164</span>
+<span class="linenos">165</span>
+<span class="linenos">166</span><span class="x">// The version identifier token would be ambiguous between itself and</span>
+<span class="linenos">167</span><span class="x">// integer/floating-point literals, so we use a special mode to ensure it&#39;s</span>
+<span class="linenos">168</span><span class="x">// lexed correctly.</span>
+<span class="linenos">169</span><span class="x">mode VERSION_IDENTIFIER;</span>
+<span class="linenos">170</span><span class="x">    VERSION_IDENTIFER_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
+<span class="linenos">171</span><span class="x">    VersionSpecifier: </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+ (&#39;.&#39; </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+)? -&gt; popMode;</span>
+<span class="linenos">172</span>
+<span class="linenos">173</span>
+<span class="linenos">174</span><span class="x">// A different lexer mode to swap to when we need handle tokens on a line basis</span>
+<span class="linenos">175</span><span class="x">// rather than the default arbitrary-whitespace-based tokenisation.  This is</span>
+<span class="linenos">176</span><span class="x">// used by the annotation and pragma rules.</span>
+<span class="linenos">177</span><span class="x">mode EAT_TO_LINE_END;</span>
+<span class="linenos">178</span><span class="x">    EAT_INITIAL_SPACE: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
+<span class="linenos">179</span><span class="x">    EAT_LINE_END: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x"> -&gt; popMode, skip;</span>
+<span class="linenos">180</span>
+<span class="linenos">181</span><span class="x">    // The line content must be a non-empty token to satisfy ANTLR (otherwise it</span>
+<span class="linenos">182</span><span class="x">    // would be able to produce an infinite number of tokens).  We could include</span>
+<span class="linenos">183</span><span class="x">    // the line ending to guarantee that this is always non-empty, but that just</span>
+<span class="linenos">184</span><span class="x">    // puts an annoying burden on consumers to remove it again.</span>
+<span class="linenos">185</span><span class="x">    RemainingLineContent: ~</span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x"> ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">*;</span>
 </pre></div>
 </div>
 </section>

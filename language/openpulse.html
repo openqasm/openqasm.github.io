@@ -218,7 +218,7 @@ is set to an out of bounds value, the compiler shall raise a compile-time error.
 <span class="w">   </span><span class="c1">// and so on</span><span class="w"></span>
 <span class="w"> </span><span class="p">}</span><span class="w"></span>
 
-<span class="w"> </span><span class="nx">defcal</span><span class="w"> </span><span class="nx">rz</span><span class="p">(</span><span class="nx">angle</span><span class="p">[</span><span class="mf">20</span><span class="p">]</span><span class="w"> </span><span class="nx">theta</span><span class="p">)</span><span class="w"> </span><span class="nx">$q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="nx">defcal</span><span class="w"> </span><span class="nx">rz</span><span class="p">(</span><span class="nx">angle</span><span class="p">[</span><span class="mf">20</span><span class="p">]</span><span class="w"> </span><span class="nx">theta</span><span class="p">)</span><span class="w"> </span><span class="nx">q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">   </span><span class="nx">shift_phase</span><span class="p">(</span><span class="nx">rz_frames</span><span class="p">[</span><span class="nx">q</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="nx">theta</span><span class="p">);</span><span class="w"></span>
 <span class="w"> </span><span class="p">}</span><span class="w"></span>
 </pre></div>
@@ -707,7 +707,7 @@ the program.</p>
 <span class="w">    </span><span class="nx">frame</span><span class="w"> </span><span class="nx">frame_12</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newframe</span><span class="p">(</span><span class="nx">dq</span><span class="p">,</span><span class="w"> </span><span class="nx">fq_01</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">anharm</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="nx">defcal</span><span class="w"> </span><span class="nx">geo_gate</span><span class="p">(</span><span class="nx">angle</span><span class="p">[</span><span class="mf">32</span><span class="p">]</span><span class="w"> </span><span class="nx">theta</span><span class="p">)</span><span class="w"> </span><span class="nx">$q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="nx">defcal</span><span class="w"> </span><span class="nx">geo_gate</span><span class="p">(</span><span class="nx">angle</span><span class="p">[</span><span class="mf">32</span><span class="p">]</span><span class="w"> </span><span class="nx">theta</span><span class="p">)</span><span class="w"> </span><span class="nx">q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// theta: rotation angle (about z-axis) on Bloch sphere</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Assume we have calibrated 0-&gt;1 pi pulses and 1-&gt;2 pi pulse</span><span class="w"></span>
