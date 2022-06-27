@@ -45,9 +45,9 @@
 <span class="math notranslate nohighlight">\(|0\rangle\)</span>. This corresponds to a partial trace over those qubits
 (i.e. discarding them) before replacing them with
 <span class="math notranslate nohighlight">\(|0\rangle\langle 0|\)</span>. Reset is shown in <a class="reference internal" href="#fig-prepare"><span class="std std-numref">Fig. 4</span></a>.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize and reset a register of 10 qubits</span>
-<span class="n">qubit</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
-<span class="n">reset</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize and reset a register of 10 qubits</span><span class="w"></span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
+<span class="ow">reset</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <figure class="align-default" id="id1">
@@ -75,11 +75,11 @@ Both arguments must be register-type, or both must be bit-type. If both
 arguments are register-type and have the same size, the statement  <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">measure</span> <span class="pre">a;</span></code>
 broadcasts to <code class="docutils literal notranslate"><span class="pre">b[j]</span> <span class="pre">=</span> <span class="pre">measure</span> <span class="pre">a[j];</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into register <code class="docutils literal notranslate"><span class="pre">a</span></code>. Measurement is shown in
 <a class="reference internal" href="#fig-measure"><span class="std std-numref">Fig. 5</span></a>.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize, flip and measure a register of 10 qubits</span>
-<span class="n">qubit</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
-<span class="n">bit</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="n">bits</span><span class="p">;</span><span class="w"></span>
-<span class="n">x</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
-<span class="n">bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measure</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize, flip and measure a register of 10 qubits</span><span class="w"></span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">bits</span><span class="p">;</span><span class="w"></span>
+<span class="nf">x</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
+<span class="n">bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <figure class="align-default" id="id2">

@@ -52,9 +52,9 @@ and measurement with a user-selectable pulse grammar.</p>
 <p>The entry point to such gate and measurement definitions is the <code class="docutils literal notranslate"><span class="pre">defcal</span></code> keyword
 analogous to the <code class="docutils literal notranslate"><span class="pre">gate</span></code> keyword, but where the <code class="docutils literal notranslate"><span class="pre">defcal</span></code> body specifies a pulse-level
 instruction sequence on <em>physical</em> qubits, e.g.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">defcal</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="n">defcal</span><span class="w"> </span><span class="n">measure</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">bit</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="n">defcal</span><span class="w"> </span><span class="n">measure_iq</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">complex</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">defcal</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="kt">angle</span><span class="p">[</span><span class="m">20</span><span class="p">]</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">measure</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">measure_iq</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">complex</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>We distinguish gate and measurement definitions by the presence of a
@@ -74,24 +74,24 @@ qubit 2.</p>
 causes that calibration definition to be valid for all physical qubits.
 This is most likely to be useful for gates that are implemented virtually.
 For instance, to define an equivalent <cite>rz</cite> calibration on qubits 0 and 1, we could write</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">defcal</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="n">angle</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="c1">// we&#39;ve defined ``rz`` on arbitrary physical qubits, so we can do:</span>
-<span class="n">rz</span><span class="p">(</span><span class="mf">3.14</span><span class="p">)</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"></span>
-<span class="n">rz</span><span class="p">(</span><span class="mf">3.14</span><span class="p">)</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">defcal</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="kt">angle</span><span class="p">[</span><span class="m">20</span><span class="p">]</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
+<span class="c1">// we&#39;ve defined ``rz`` on arbitrary physical qubits, so we can do:</span><span class="w"></span>
+<span class="nf">rz</span><span class="p">(</span><span class="mf">3.14</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"></span>
+<span class="nf">rz</span><span class="p">(</span><span class="mf">3.14</span><span class="p">)</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>As a consequence of the need for specialization of operations on
 particular qubits, the same symbol may be defined multiple
 times, e.g.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">defcal</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="n">defcal</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">$1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">defcal</span><span class="w"> </span><span class="nf">h</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">h</span><span class="w"> </span><span class="l">$1</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>and so forth. Some operations require further specialization on
 parameter values, so we also allow multiple declarations on the same
 physical qubits with different parameter values, e.g.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">defcal</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="n">defcal</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="n">pi</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">defcal</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="no">pi</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="no">pi</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Given multiple definitions of the same symbol, the compiler will match
@@ -106,7 +106,7 @@ match (2), <code class="docutils literal notranslate"><span class="pre">rx(pi/2)
 <p>Users specify the grammar used inside <code class="docutils literal notranslate"><span class="pre">defcal</span></code> blocks with a
 <code class="docutils literal notranslate"><span class="pre">defcalgrammar</span> <span class="pre">&quot;name&quot;</span></code> declaration. One such grammar is a
 <a class="reference external" href="openpulse.html">textual representation of OpenPulse</a> specified by:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Note that <code class="docutils literal notranslate"><span class="pre">defcal</span></code> and <code class="docutils literal notranslate"><span class="pre">gate</span></code> communicate orthogonal information to the compiler. <code class="docutils literal notranslate"><span class="pre">gate</span></code>s
@@ -130,27 +130,27 @@ Values declared within the <code class="docutils literal notranslate"><span clas
 that may observe that scope as defined by the calibration grammar. Values may not leak back to the block’s enclosing scope.
 In practice, calibration grammars such as OpenPulse may apply
 a global scope to all identifiers in order to declare values shared across all <code class="docutils literal notranslate"><span class="pre">defcal</span></code> calls thereby linking them together.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
-<span class="n">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3</span><span class="p">;</span><span class="w"></span>
+<span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">const</span><span class="w"> </span><span class="n">original_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.9e9</span><span class="p">;</span><span class="w"></span>
+<span class="kt">const</span><span class="w"> </span><span class="n">original_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.9e9</span><span class="p">;</span><span class="w"></span>
 
-<span class="n">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="c1">// Defined within `cal`, so it may not leak back out to the enclosing blocks scope</span>
+<span class="k">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="c1">// Defined within `cal`, so it may not leak back out to the enclosing blocks scope</span><span class="w"></span>
 <span class="w">   </span><span class="kt">float</span><span class="w"> </span><span class="n">new_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.2e9</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="c1">// declare global port</span>
-<span class="w">   </span><span class="k">extern</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="n">d0</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="c1">// reference `freq` variable from enclosing blocks scope</span>
-<span class="w">   </span><span class="n">frame</span><span class="w"> </span><span class="n">d0f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newframe</span><span class="p">(</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">freq</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="c1">// declare global port</span><span class="w"></span>
+<span class="w">   </span><span class="kt">extern</span><span class="w"> </span><span class="kt">port</span><span class="w"> </span><span class="n">d0</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="c1">// reference `freq` variable from enclosing blocks scope</span><span class="w"></span>
+<span class="w">   </span><span class="kt">frame</span><span class="w"> </span><span class="n">d0f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">newframe</span><span class="p">(</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">freq</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w"></span>
 
 <span class="p">}</span><span class="w"></span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">waveform</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gaussian</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mi">160</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="n">dt</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="c1">// References frame and `new_freq` declared in top-level cal block</span>
-<span class="w">   </span><span class="n">play</span><span class="p">(</span><span class="n">d0f</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">set_frequency</span><span class="p">(</span><span class="n">d0f</span><span class="p">,</span><span class="w"> </span><span class="n">new_freq</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">play</span><span class="p">(</span><span class="n">d0f</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">);</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">x</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="kt">waveform</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gaussian</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="m">160</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="mf">40dt</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="c1">// References frame and `new_freq` declared in top-level cal block</span><span class="w"></span>
+<span class="w">   </span><span class="nb">play</span><span class="p">(</span><span class="n">d0f</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="nb">set_frequency</span><span class="p">(</span><span class="n">d0f</span><span class="p">,</span><span class="w"> </span><span class="n">new_freq</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="nb">play</span><span class="p">(</span><span class="n">d0f</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
@@ -166,13 +166,13 @@ must be have a resolvable definite duration at compile time.</p>
 <p>For example,  consider the case of a <code class="docutils literal notranslate"><span class="pre">reset</span></code> gate. The <code class="docutils literal notranslate"><span class="pre">defcal</span></code> for a
 <code class="docutils literal notranslate"><span class="pre">reset</span></code> gate can be composed of a single if statement, provided each branch
 of the if statement has definite and equivalent duration.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">defcal</span><span class="w"> </span><span class="n">reset</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">bit</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="c1">// measure qubit $0</span>
-<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">res</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// flip the qubit</span>
-<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="c1">// delay for an equivalent amount of time</span>
-<span class="w">   </span><span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">defcal</span><span class="w"> </span><span class="nf">reset</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="x"></span>
+<span class="x">   bit res = // measure qubit $0</span>
+<span class="x">   if (res == 1) {</span>
+<span class="x">      // flip the qubit</span>
+<span class="x">   } else {</span>
+<span class="x">      // delay for an equivalent amount of time</span>
+<span class="x">   }</span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
@@ -194,82 +194,82 @@ The example below demonstrates this in practice for a two-qubit,
 cross-resonance device using a <code class="docutils literal notranslate"><span class="pre">backend.inc</span></code> include file.
 The name <code class="docutils literal notranslate"><span class="pre">backend.inc</span></code> is arbitrary - it’s just a file to be included using the
 existing <code class="docutils literal notranslate"><span class="pre">include</span></code> mechanism.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// backend.inc for openpulse two-qubit device</span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// backend.inc for openpulse two-qubit device</span><span class="w"></span>
 
-<span class="n">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">const</span><span class="w"> </span><span class="n">q0_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0e9</span><span class="p">;</span><span class="w"></span>
-<span class="k">const</span><span class="w"> </span><span class="n">q1_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.1e9</span><span class="p">;</span><span class="w"></span>
+<span class="kt">const</span><span class="w"> </span><span class="n">q0_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0e9</span><span class="p">;</span><span class="w"></span>
+<span class="kt">const</span><span class="w"> </span><span class="n">q1_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.1e9</span><span class="p">;</span><span class="w"></span>
 
-<span class="n">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="w">   </span><span class="k">extern</span><span class="w"> </span><span class="n">drag</span><span class="p">(</span><span class="k">complex</span><span class="p">[</span><span class="n">size</span><span class="p">]</span><span class="w"> </span><span class="n">amp</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="n">sigma</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="n">size</span><span class="p">]</span><span class="w"> </span><span class="n">beta</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">waveform</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="k">extern</span><span class="w"> </span><span class="n">gaussian_square</span><span class="p">(</span><span class="k">complex</span><span class="p">[</span><span class="n">size</span><span class="p">]</span><span class="w"> </span><span class="n">amp</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="n">square_width</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="n">sigma</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">waveform</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="kt">extern</span><span class="w"> </span><span class="nf">drag</span><span class="p">(</span><span class="kt">complex</span><span class="p">[</span><span class="n">size</span><span class="p">]</span><span class="w"> </span><span class="n">amp</span><span class="p">,</span><span class="w"> </span><span class="kt">duration</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="kt">duration</span><span class="w"> </span><span class="n">sigma</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="n">size</span><span class="p">]</span><span class="w"> </span><span class="n">beta</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">waveform</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="kt">extern</span><span class="w"> </span><span class="nf">gaussian_square</span><span class="p">(</span><span class="kt">complex</span><span class="p">[</span><span class="n">size</span><span class="p">]</span><span class="w"> </span><span class="n">amp</span><span class="p">,</span><span class="w"> </span><span class="kt">duration</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="kt">duration</span><span class="w"> </span><span class="n">square_width</span><span class="p">,</span><span class="w"> </span><span class="kt">duration</span><span class="w"> </span><span class="n">sigma</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">waveform</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">   </span><span class="k">extern</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="n">q0</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="k">extern</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="n">q1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="kt">extern</span><span class="w"> </span><span class="kt">port</span><span class="w"> </span><span class="n">q0</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="kt">extern</span><span class="w"> </span><span class="kt">port</span><span class="w"> </span><span class="n">q1</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">   </span><span class="n">frame</span><span class="w"> </span><span class="n">q0_frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newframe</span><span class="p">(</span><span class="n">q0</span><span class="p">,</span><span class="w"> </span><span class="n">q0_freq</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">frame</span><span class="w"> </span><span class="n">q1_frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newframe</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="w"> </span><span class="n">q1_freq</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="kt">frame</span><span class="w"> </span><span class="n">q0_frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">newframe</span><span class="p">(</span><span class="n">q0</span><span class="p">,</span><span class="w"> </span><span class="n">q0_freq</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="kt">frame</span><span class="w"> </span><span class="n">q1_frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">newframe</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="w"> </span><span class="n">q1_freq</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">rz</span><span class="p">(</span><span class="n">angle</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">shift_phase</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">theta</span><span class="p">);</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="kt">angle</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="nb">shift_phase</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">theta</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">rz</span><span class="p">(</span><span class="n">angle</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">$1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">shift_phase</span><span class="p">(</span><span class="n">q1_frame</span><span class="p">,</span><span class="w"> </span><span class="n">theta</span><span class="p">);</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="kt">angle</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="l">$1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="nb">shift_phase</span><span class="p">(</span><span class="n">q1_frame</span><span class="p">,</span><span class="w"> </span><span class="n">theta</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">sx</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">waveform</span><span class="w"> </span><span class="n">sx_wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">drag</span><span class="p">(</span><span class="mf">0.2</span><span class="o">+</span><span class="mf">0.1</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="mi">160</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mf">0.05</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">play</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">sx_wf</span><span class="p">);</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">sx</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="kt">waveform</span><span class="w"> </span><span class="n">sx_wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">drag</span><span class="p">(</span><span class="mf">0.2</span><span class="o">+</span><span class="mf">0.1im</span><span class="p">,</span><span class="w"> </span><span class="mf">160dt</span><span class="p">,</span><span class="w"> </span><span class="mf">40dt</span><span class="p">,</span><span class="w"> </span><span class="mf">0.05</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="nb">play</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">sx_wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">sx</span><span class="w"> </span><span class="n">$1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">waveform</span><span class="w"> </span><span class="n">sx_wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">drag</span><span class="p">(</span><span class="mf">0.1</span><span class="o">+</span><span class="mf">0.05</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="mi">160</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">play</span><span class="p">(</span><span class="n">q1_frame</span><span class="p">,</span><span class="w"> </span><span class="n">sx_wf</span><span class="p">);</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">sx</span><span class="w"> </span><span class="l">$1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="kt">waveform</span><span class="w"> </span><span class="n">sx_wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">drag</span><span class="p">(</span><span class="mf">0.1</span><span class="o">+</span><span class="mf">0.05im</span><span class="p">,</span><span class="w"> </span><span class="mf">160dt</span><span class="p">,</span><span class="w"> </span><span class="mf">40dt</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="nb">play</span><span class="p">(</span><span class="n">q1_frame</span><span class="p">,</span><span class="w"> </span><span class="n">sx_wf</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">cx</span><span class="w"> </span><span class="n">$1</span><span class="p">,</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">waveform</span><span class="w"> </span><span class="n">CR90p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gaussian_square</span><span class="p">(</span><span class="mf">0.2</span><span class="o">+</span><span class="mf">0.05</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="mi">560</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mi">240</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="n">dt</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">waveform</span><span class="w"> </span><span class="n">CR90m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gaussian_square</span><span class="p">(</span><span class="mf">-0.2-0.05</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="mi">560</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mi">240</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="n">dt</span><span class="p">);</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">cx</span><span class="w"> </span><span class="l">$1</span><span class="p">,</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="kt">waveform</span><span class="w"> </span><span class="n">CR90p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gaussian_square</span><span class="p">(</span><span class="mf">0.2</span><span class="o">+</span><span class="mf">0.05im</span><span class="p">,</span><span class="w"> </span><span class="mf">560dt</span><span class="p">,</span><span class="w"> </span><span class="mf">240dt</span><span class="p">,</span><span class="w"> </span><span class="mf">40dt</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="kt">waveform</span><span class="w"> </span><span class="n">CR90m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gaussian_square</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="o">-</span><span class="mf">0.05im</span><span class="p">,</span><span class="w"> </span><span class="mf">560dt</span><span class="p">,</span><span class="w"> </span><span class="mf">240dt</span><span class="p">,</span><span class="w"> </span><span class="mf">40dt</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">   </span><span class="n">rz</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"> </span><span class="n">rz</span><span class="p">(</span><span class="o">-</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"> </span><span class="n">sx</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">barrier</span><span class="w"> </span><span class="n">$0</span><span class="p">,</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">play</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">CR90p</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">barrier</span><span class="w"> </span><span class="n">$0</span><span class="p">,</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">barrier</span><span class="w"> </span><span class="n">$0</span><span class="p">,</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">rz</span><span class="p">(</span><span class="o">-</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"> </span><span class="n">rz</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"> </span><span class="n">sx</span><span class="w"> </span><span class="n">$1</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">play</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">CR90m</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="nf">rz</span><span class="p">(</span><span class="no">pi</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="o">-</span><span class="no">pi</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"> </span><span class="n">sx</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="ow">barrier</span><span class="w"> </span><span class="l">$0</span><span class="p">,</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="nb">play</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">CR90p</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="ow">barrier</span><span class="w"> </span><span class="l">$0</span><span class="p">,</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="ow">barrier</span><span class="w"> </span><span class="l">$0</span><span class="p">,</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="nf">rz</span><span class="p">(</span><span class="o">-</span><span class="no">pi</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="no">pi</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"> </span><span class="n">sx</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span><span class="w"></span>
+<span class="w">   </span><span class="nb">play</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">CR90m</span><span class="p">);</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The user would then include the <code class="docutils literal notranslate"><span class="pre">backend.inc</span></code> in their own program and use them as demonstrated below</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span><span class="w"></span>
 
-<span class="n">include</span><span class="w"> </span><span class="s">&quot;backend.inc&quot;</span><span class="w"></span>
+<span class="kn">include</span><span class="w"> </span><span class="s">&quot;backend.inc&quot;</span><span class="w"></span>
 
-<span class="c1">// Defcal using frames from backend.inc enabling the calibration</span>
-<span class="c1">// to &quot;plugin&quot; to the existing calibrations.</span>
-<span class="n">defcal</span><span class="w"> </span><span class="n">Y90p</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">waveform</span><span class="w"> </span><span class="n">y90p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">drag</span><span class="p">(</span><span class="mf">0.1-0.2</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="mi">160</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="mf">0.05</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="n">play</span><span class="p">(</span><span class="n">q0_frame</span><span class="p">,</span><span class="w"> </span><span class="n">y90p</span><span class="p">);</span><span class="w"></span>
+<span class="c1">// Defcal using frames from backend.inc enabling the calibration</span><span class="w"></span>
+<span class="c1">// to &quot;plugin&quot; to the existing calibrations.</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">Y90p</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="x"></span>
+<span class="x">   waveform y90p = drag(0.1-0.2im, 160dt, 40dt, 0.05);</span>
+<span class="x">   play(q0_frame, y90p);</span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="c1">// Teach the compiler what the unitary of a Y90p is</span>
-<span class="n">gate</span><span class="w"> </span><span class="n">Y90p</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">rz</span><span class="p">(</span><span class="o">-</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="n">sx</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
+<span class="c1">// Teach the compiler what the unitary of a Y90p is</span><span class="w"></span>
+<span class="kd">gate</span><span class="w"> </span><span class="nf">Y90p</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span><span class="x"></span>
+<span class="x">   rz(-pi/2) q;</span>
+<span class="x">   sx q;</span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="c1">// Use this defcal explicitly</span>
-<span class="n">Y90p</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"></span>
-<span class="n">cx</span><span class="w"> </span><span class="n">$1</span><span class="p">,</span><span class="w"> </span><span class="n">$0</span><span class="p">;</span><span class="w"></span>
+<span class="c1">// Use this defcal explicitly</span><span class="w"></span>
+<span class="n">Y90p</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"></span>
+<span class="n">cx</span><span class="w"> </span><span class="l">$1</span><span class="p">,</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
