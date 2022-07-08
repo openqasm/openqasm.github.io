@@ -54,7 +54,7 @@ analogous to the <code class="docutils literal notranslate"><span class="pre">ga
 instruction sequence on <em>physical</em> qubits, e.g.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">defcal</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="kt">angle</span><span class="p">[</span><span class="m">20</span><span class="p">]</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
 <span class="kd">defcal</span><span class="w"> </span><span class="nf">measure</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
-<span class="kd">defcal</span><span class="w"> </span><span class="nf">measure_iq</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">complex</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">measure_iq</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]]</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>We distinguish gate and measurement definitions by the presence of a
@@ -133,7 +133,7 @@ a global scope to all identifiers in order to declare values shared across all <
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3</span><span class="p">;</span><span class="w"></span>
 <span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kt">const</span><span class="w"> </span><span class="n">original_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.9e9</span><span class="p">;</span><span class="w"></span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">original_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.9e9</span><span class="p">;</span><span class="w"></span>
 
 <span class="k">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">   </span><span class="c1">// Defined within `cal`, so it may not leak back out to the enclosing blocks scope</span><span class="w"></span>
@@ -198,8 +198,8 @@ existing <code class="docutils literal notranslate"><span class="pre">include</s
 
 <span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span><span class="w"></span>
 
-<span class="kt">const</span><span class="w"> </span><span class="n">q0_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0e9</span><span class="p">;</span><span class="w"></span>
-<span class="kt">const</span><span class="w"> </span><span class="n">q1_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.1e9</span><span class="p">;</span><span class="w"></span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">q0_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0e9</span><span class="p">;</span><span class="w"></span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">q1_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.1e9</span><span class="p">;</span><span class="w"></span>
 
 <span class="k">cal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
