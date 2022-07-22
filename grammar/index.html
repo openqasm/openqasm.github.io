@@ -69,203 +69,207 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos"> 21</span>        | barrierStatement
 <span class="linenos"> 22</span>        | boxStatement
 <span class="linenos"> 23</span>        | breakStatement
-<span class="linenos"> 24</span>        | calibrationGrammarStatement
-<span class="linenos"> 25</span>        | classicalDeclarationStatement
-<span class="linenos"> 26</span>        | constDeclarationStatement
-<span class="linenos"> 27</span>        | continueStatement
-<span class="linenos"> 28</span>        | defStatement
-<span class="linenos"> 29</span>        | defcalStatement
-<span class="linenos"> 30</span>        | delayStatement
-<span class="linenos"> 31</span>        | endStatement
-<span class="linenos"> 32</span>        | expressionStatement
-<span class="linenos"> 33</span>        | externStatement
-<span class="linenos"> 34</span>        | forStatement
-<span class="linenos"> 35</span>        | gateCallStatement
-<span class="linenos"> 36</span>        | gateStatement
-<span class="linenos"> 37</span>        | ifStatement
-<span class="linenos"> 38</span>        | includeStatement
-<span class="linenos"> 39</span>        | ioDeclarationStatement
-<span class="linenos"> 40</span>        | measureArrowAssignmentStatement
-<span class="linenos"> 41</span>        | oldStyleDeclarationStatement
-<span class="linenos"> 42</span>        | quantumDeclarationStatement
-<span class="linenos"> 43</span>        | resetStatement
-<span class="linenos"> 44</span>        | returnStatement
-<span class="linenos"> 45</span>        | whileStatement
-<span class="linenos"> 46</span>    )
-<span class="linenos"> 47</span>;
-<span class="linenos"> 48</span>annotation: AnnotationKeyword RemainingLineContent?;
-<span class="linenos"> 49</span>scope: LBRACE statement* RBRACE;
-<span class="linenos"> 50</span>pragma: PRAGMA RemainingLineContent;
-<span class="linenos"> 51</span>
-<span class="linenos"> 52</span>statementOrScope: statement | scope;
-<span class="linenos"> 53</span>
+<span class="linenos"> 24</span>        | calStatement
+<span class="linenos"> 25</span>        | calibrationGrammarStatement
+<span class="linenos"> 26</span>        | classicalDeclarationStatement
+<span class="linenos"> 27</span>        | constDeclarationStatement
+<span class="linenos"> 28</span>        | continueStatement
+<span class="linenos"> 29</span>        | defStatement
+<span class="linenos"> 30</span>        | defcalStatement
+<span class="linenos"> 31</span>        | delayStatement
+<span class="linenos"> 32</span>        | endStatement
+<span class="linenos"> 33</span>        | expressionStatement
+<span class="linenos"> 34</span>        | externStatement
+<span class="linenos"> 35</span>        | forStatement
+<span class="linenos"> 36</span>        | gateCallStatement
+<span class="linenos"> 37</span>        | gateStatement
+<span class="linenos"> 38</span>        | ifStatement
+<span class="linenos"> 39</span>        | includeStatement
+<span class="linenos"> 40</span>        | ioDeclarationStatement
+<span class="linenos"> 41</span>        | measureArrowAssignmentStatement
+<span class="linenos"> 42</span>        | oldStyleDeclarationStatement
+<span class="linenos"> 43</span>        | quantumDeclarationStatement
+<span class="linenos"> 44</span>        | resetStatement
+<span class="linenos"> 45</span>        | returnStatement
+<span class="linenos"> 46</span>        | whileStatement
+<span class="linenos"> 47</span>    )
+<span class="linenos"> 48</span>;
+<span class="linenos"> 49</span>annotation: AnnotationKeyword RemainingLineContent?;
+<span class="linenos"> 50</span>scope: LBRACE statement* RBRACE;
+<span class="linenos"> 51</span>pragma: PRAGMA RemainingLineContent;
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span>statementOrScope: statement | scope;
 <span class="linenos"> 54</span>
-<span class="linenos"> 55</span>/* Start top-level statement definitions. */
-<span class="linenos"> 56</span>
-<span class="linenos"> 57</span>// Inclusion statements.
-<span class="linenos"> 58</span>calibrationGrammarStatement: DEFCALGRAMMAR StringLiteral SEMICOLON;
-<span class="linenos"> 59</span>includeStatement: INCLUDE StringLiteral SEMICOLON;
-<span class="linenos"> 60</span>
-<span class="linenos"> 61</span>// Control-flow statements.
-<span class="linenos"> 62</span>breakStatement: BREAK SEMICOLON;
-<span class="linenos"> 63</span>continueStatement: CONTINUE SEMICOLON;
-<span class="linenos"> 64</span>endStatement: END SEMICOLON;
-<span class="linenos"> 65</span>forStatement: FOR scalarType Identifier IN (setExpression | LBRACKET rangeExpression RBRACKET | Identifier) body=statementOrScope;
-<span class="linenos"> 66</span>ifStatement: IF LPAREN expression RPAREN if_body=statementOrScope (ELSE else_body=statementOrScope)?;
-<span class="linenos"> 67</span>returnStatement: RETURN (expression | measureExpression)? SEMICOLON;
-<span class="linenos"> 68</span>whileStatement: WHILE LPAREN expression RPAREN body=statementOrScope;
-<span class="linenos"> 69</span>
-<span class="linenos"> 70</span>// Quantum directive statements.
-<span class="linenos"> 71</span>barrierStatement: BARRIER gateOperandList? SEMICOLON;
-<span class="linenos"> 72</span>boxStatement: BOX designator? scope;
-<span class="linenos"> 73</span>delayStatement: DELAY designator gateOperandList? SEMICOLON;
-<span class="linenos"> 74</span>/* `gateCallStatement`  is split in two to avoid a potential ambiguity with an
-<span class="linenos"> 75</span> * `expressionStatement` that consists of a single function call.  The only
-<span class="linenos"> 76</span> * &quot;gate&quot; that can have no operands is `gphase` with no control modifiers, and
-<span class="linenos"> 77</span> * `gphase(pi);` looks grammatically identical to `fn(pi);`.  We disambiguate by
-<span class="linenos"> 78</span> * having `gphase` be its own token, and requiring that all other gate calls
-<span class="linenos"> 79</span> * grammatically have at least one qubit.  Strictly, as long as `gphase` is a
-<span class="linenos"> 80</span> * separate token, ANTLR can disambiguate the statements by the definition
-<span class="linenos"> 81</span> * order, but this is more robust. */
-<span class="linenos"> 82</span>gateCallStatement:
-<span class="linenos"> 83</span>    gateModifier* Identifier (LPAREN expressionList? RPAREN)? designator? gateOperandList SEMICOLON
-<span class="linenos"> 84</span>    | gateModifier* GPHASE (LPAREN expressionList? RPAREN)? designator? gateOperandList? SEMICOLON
-<span class="linenos"> 85</span>;
-<span class="linenos"> 86</span>// measureArrowAssignmentStatement also permits the case of not assigning the
-<span class="linenos"> 87</span>// result to any classical value too.
-<span class="linenos"> 88</span>measureArrowAssignmentStatement: measureExpression (ARROW indexedIdentifier)? SEMICOLON;
-<span class="linenos"> 89</span>resetStatement: RESET gateOperand SEMICOLON;
-<span class="linenos"> 90</span>
-<span class="linenos"> 91</span>// Primitive declaration statements.
-<span class="linenos"> 92</span>aliasDeclarationStatement: LET Identifier EQUALS aliasExpression SEMICOLON;
-<span class="linenos"> 93</span>classicalDeclarationStatement: (scalarType | arrayType) Identifier (EQUALS declarationExpression)? SEMICOLON;
-<span class="linenos"> 94</span>constDeclarationStatement: CONST scalarType Identifier EQUALS declarationExpression SEMICOLON;
-<span class="linenos"> 95</span>ioDeclarationStatement: (INPUT | OUTPUT) (scalarType | arrayType) Identifier SEMICOLON;
-<span class="linenos"> 96</span>oldStyleDeclarationStatement: (CREG | QREG) Identifier designator? SEMICOLON;
-<span class="linenos"> 97</span>quantumDeclarationStatement: qubitType Identifier SEMICOLON;
-<span class="linenos"> 98</span>
-<span class="linenos"> 99</span>// Declarations and definitions of higher-order objects.
-<span class="linenos">100</span>defStatement: DEF Identifier LPAREN argumentDefinitionList? RPAREN returnSignature? scope;
-<span class="linenos">101</span>externStatement: EXTERN Identifier LPAREN externArgumentList? RPAREN returnSignature? SEMICOLON;
-<span class="linenos">102</span>gateStatement: GATE Identifier (LPAREN params=identifierList? RPAREN)? qubits=identifierList scope;
-<span class="linenos">103</span>
-<span class="linenos">104</span>// Non-declaration assignments and calculations.
-<span class="linenos">105</span>assignmentStatement: indexedIdentifier op=(EQUALS | CompoundAssignmentOperator) (expression | measureExpression) SEMICOLON;
-<span class="linenos">106</span>expressionStatement: expression SEMICOLON;
-<span class="linenos">107</span>
-<span class="linenos">108</span>// TODO: this handling of the defcal block is incorrect, because it is not
-<span class="linenos">109</span>// constrained to consume balanced brace blocks.  This needs more attention.
-<span class="linenos">110</span>defcalStatement: DEFCAL Identifier (LPAREN argumentDefinitionList? RPAREN)?  defcalArgumentList returnSignature? LBRACE .*? RBRACE;
-<span class="linenos">111</span>
+<span class="linenos"> 55</span>
+<span class="linenos"> 56</span>/* Start top-level statement definitions. */
+<span class="linenos"> 57</span>
+<span class="linenos"> 58</span>// Inclusion statements.
+<span class="linenos"> 59</span>calibrationGrammarStatement: DEFCALGRAMMAR StringLiteral SEMICOLON;
+<span class="linenos"> 60</span>includeStatement: INCLUDE StringLiteral SEMICOLON;
+<span class="linenos"> 61</span>
+<span class="linenos"> 62</span>// Control-flow statements.
+<span class="linenos"> 63</span>breakStatement: BREAK SEMICOLON;
+<span class="linenos"> 64</span>continueStatement: CONTINUE SEMICOLON;
+<span class="linenos"> 65</span>endStatement: END SEMICOLON;
+<span class="linenos"> 66</span>forStatement: FOR scalarType Identifier IN (setExpression | LBRACKET rangeExpression RBRACKET | Identifier) body=statementOrScope;
+<span class="linenos"> 67</span>ifStatement: IF LPAREN expression RPAREN if_body=statementOrScope (ELSE else_body=statementOrScope)?;
+<span class="linenos"> 68</span>returnStatement: RETURN (expression | measureExpression)? SEMICOLON;
+<span class="linenos"> 69</span>whileStatement: WHILE LPAREN expression RPAREN body=statementOrScope;
+<span class="linenos"> 70</span>
+<span class="linenos"> 71</span>// Quantum directive statements.
+<span class="linenos"> 72</span>barrierStatement: BARRIER gateOperandList? SEMICOLON;
+<span class="linenos"> 73</span>boxStatement: BOX designator? scope;
+<span class="linenos"> 74</span>delayStatement: DELAY designator gateOperandList? SEMICOLON;
+<span class="linenos"> 75</span>/* `gateCallStatement`  is split in two to avoid a potential ambiguity with an
+<span class="linenos"> 76</span> * `expressionStatement` that consists of a single function call.  The only
+<span class="linenos"> 77</span> * &quot;gate&quot; that can have no operands is `gphase` with no control modifiers, and
+<span class="linenos"> 78</span> * `gphase(pi);` looks grammatically identical to `fn(pi);`.  We disambiguate by
+<span class="linenos"> 79</span> * having `gphase` be its own token, and requiring that all other gate calls
+<span class="linenos"> 80</span> * grammatically have at least one qubit.  Strictly, as long as `gphase` is a
+<span class="linenos"> 81</span> * separate token, ANTLR can disambiguate the statements by the definition
+<span class="linenos"> 82</span> * order, but this is more robust. */
+<span class="linenos"> 83</span>gateCallStatement:
+<span class="linenos"> 84</span>    gateModifier* Identifier (LPAREN expressionList? RPAREN)? designator? gateOperandList SEMICOLON
+<span class="linenos"> 85</span>    | gateModifier* GPHASE (LPAREN expressionList? RPAREN)? designator? gateOperandList? SEMICOLON
+<span class="linenos"> 86</span>;
+<span class="linenos"> 87</span>// measureArrowAssignmentStatement also permits the case of not assigning the
+<span class="linenos"> 88</span>// result to any classical value too.
+<span class="linenos"> 89</span>measureArrowAssignmentStatement: measureExpression (ARROW indexedIdentifier)? SEMICOLON;
+<span class="linenos"> 90</span>resetStatement: RESET gateOperand SEMICOLON;
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span>// Primitive declaration statements.
+<span class="linenos"> 93</span>aliasDeclarationStatement: LET Identifier EQUALS aliasExpression SEMICOLON;
+<span class="linenos"> 94</span>classicalDeclarationStatement: (scalarType | arrayType) Identifier (EQUALS declarationExpression)? SEMICOLON;
+<span class="linenos"> 95</span>constDeclarationStatement: CONST scalarType Identifier EQUALS declarationExpression SEMICOLON;
+<span class="linenos"> 96</span>ioDeclarationStatement: (INPUT | OUTPUT) (scalarType | arrayType) Identifier SEMICOLON;
+<span class="linenos"> 97</span>oldStyleDeclarationStatement: (CREG | QREG) Identifier designator? SEMICOLON;
+<span class="linenos"> 98</span>quantumDeclarationStatement: qubitType Identifier SEMICOLON;
+<span class="linenos"> 99</span>
+<span class="linenos">100</span>// Declarations and definitions of higher-order objects.
+<span class="linenos">101</span>defStatement: DEF Identifier LPAREN argumentDefinitionList? RPAREN returnSignature? scope;
+<span class="linenos">102</span>externStatement: EXTERN Identifier LPAREN externArgumentList? RPAREN returnSignature? SEMICOLON;
+<span class="linenos">103</span>gateStatement: GATE Identifier (LPAREN params=identifierList? RPAREN)? qubits=identifierList scope;
+<span class="linenos">104</span>
+<span class="linenos">105</span>// Non-declaration assignments and calculations.
+<span class="linenos">106</span>assignmentStatement: indexedIdentifier op=(EQUALS | CompoundAssignmentOperator) (expression | measureExpression) SEMICOLON;
+<span class="linenos">107</span>expressionStatement: expression SEMICOLON;
+<span class="linenos">108</span>
+<span class="linenos">109</span>// Statements where the bulk is in the calibration language.
+<span class="linenos">110</span>calStatement: CAL LBRACE CalibrationBlock? RBRACE;
+<span class="linenos">111</span>defcalStatement: DEFCAL defcalTarget (LPAREN defcalArgumentDefinitionList? RPAREN)? defcalOperandList returnSignature? LBRACE CalibrationBlock? RBRACE;
 <span class="linenos">112</span>
-<span class="linenos">113</span>/* End top-level statement definitions. */
-<span class="linenos">114</span>/* Start expression definitions. */
-<span class="linenos">115</span>
+<span class="linenos">113</span>
+<span class="linenos">114</span>/* End top-level statement definitions. */
+<span class="linenos">115</span>/* Start expression definitions. */
 <span class="linenos">116</span>
-<span class="linenos">117</span>// ANTLR4 can handle direct left-recursive rules, and ambiguities are guaranteed
-<span class="linenos">118</span>// to resolve in the order of definition.  This means that the order of rules
-<span class="linenos">119</span>// here defines the precedence table, from most tightly binding to least.
-<span class="linenos">120</span>expression:
-<span class="linenos">121</span>    LPAREN expression RPAREN                                  # parenthesisExpression
-<span class="linenos">122</span>    | expression indexOperator                                # indexExpression
-<span class="linenos">123</span>    | &lt;assoc=right&gt; expression op=DOUBLE_ASTERISK expression  # powerExpression
-<span class="linenos">124</span>    | op=(TILDE | EXCLAMATION_POINT | MINUS) expression       # unaryExpression
-<span class="linenos">125</span>    | expression op=(ASTERISK | SLASH | PERCENT) expression   # multiplicativeExpression
-<span class="linenos">126</span>    | expression op=(PLUS | MINUS) expression                 # additiveExpression
-<span class="linenos">127</span>    | expression op=BitshiftOperator expression               # bitshiftExpression
-<span class="linenos">128</span>    | expression op=ComparisonOperator expression             # comparisonExpression
-<span class="linenos">129</span>    | expression op=EqualityOperator expression               # equalityExpression
-<span class="linenos">130</span>    | expression op=AMPERSAND expression                      # bitwiseAndExpression
-<span class="linenos">131</span>    | expression op=CARET expression                          # bitwiseXorExpression
-<span class="linenos">132</span>    | expression op=PIPE expression                           # bitwiseOrExpression
-<span class="linenos">133</span>    | expression op=DOUBLE_AMPERSAND expression               # logicalAndExpression
-<span class="linenos">134</span>    | expression op=DOUBLE_PIPE expression                    # logicalOrExpression
-<span class="linenos">135</span>    | (scalarType | arrayType) LPAREN expression RPAREN       # castExpression
-<span class="linenos">136</span>    | DURATIONOF LPAREN scope RPAREN                          # durationofExpression
-<span class="linenos">137</span>    | Identifier LPAREN expressionList? RPAREN                # callExpression
-<span class="linenos">138</span>    | (
-<span class="linenos">139</span>        Identifier
-<span class="linenos">140</span>        | BinaryIntegerLiteral
-<span class="linenos">141</span>        | OctalIntegerLiteral
-<span class="linenos">142</span>        | DecimalIntegerLiteral
-<span class="linenos">143</span>        | HexIntegerLiteral
-<span class="linenos">144</span>        | FloatLiteral
-<span class="linenos">145</span>        | ImaginaryLiteral
-<span class="linenos">146</span>        | BooleanLiteral
-<span class="linenos">147</span>        | BitstringLiteral
-<span class="linenos">148</span>        | TimingLiteral
-<span class="linenos">149</span>        | HardwareQubit
-<span class="linenos">150</span>      )                                                       # literalExpression
-<span class="linenos">151</span>;
-<span class="linenos">152</span>
-<span class="linenos">153</span>// Special-case expressions that are only valid in certain contexts.  These are
-<span class="linenos">154</span>// not in the expression tree, but can contain elements that are within it.
-<span class="linenos">155</span>aliasExpression: expression (DOUBLE_PLUS expression)*;
-<span class="linenos">156</span>declarationExpression: arrayLiteral | expression | measureExpression;
-<span class="linenos">157</span>measureExpression: MEASURE gateOperand;
-<span class="linenos">158</span>rangeExpression: expression? COLON expression? (COLON expression)?;
-<span class="linenos">159</span>setExpression: LBRACE expression (COMMA expression)* COMMA? RBRACE;
-<span class="linenos">160</span>arrayLiteral: LBRACE (expression | arrayLiteral) (COMMA (expression | arrayLiteral))* COMMA? RBRACE;
-<span class="linenos">161</span>
-<span class="linenos">162</span>// The general form is a comma-separated list of indexing entities.
-<span class="linenos">163</span>// `setExpression` is only valid when being used as a single index: registers
-<span class="linenos">164</span>// can support it for creating aliases, but arrays cannot.
-<span class="linenos">165</span>indexOperator:
-<span class="linenos">166</span>    LBRACKET
-<span class="linenos">167</span>    (
-<span class="linenos">168</span>        setExpression
-<span class="linenos">169</span>        | (expression | rangeExpression) (COMMA (expression | rangeExpression))* COMMA?
-<span class="linenos">170</span>    )
-<span class="linenos">171</span>    RBRACKET;
-<span class="linenos">172</span>// Alternative form to `indexExpression` for cases where an obvious l-value is
-<span class="linenos">173</span>// better grammatically than a generic expression.  Some current uses of this
-<span class="linenos">174</span>// rule may be better as `expression`, leaving the semantic analysis to later
-<span class="linenos">175</span>// (for example in gate calls).
-<span class="linenos">176</span>indexedIdentifier: Identifier indexOperator*;
-<span class="linenos">177</span>
-<span class="linenos">178</span>/* End expression definitions. */
-<span class="linenos">179</span>/* Start type definitions. */
-<span class="linenos">180</span>
-<span class="linenos">181</span>returnSignature: ARROW scalarType;
-<span class="linenos">182</span>gateModifier: (
-<span class="linenos">183</span>    INV
-<span class="linenos">184</span>    | POW LPAREN expression RPAREN
-<span class="linenos">185</span>    | (CTRL | NEGCTRL) (LPAREN expression RPAREN)?
-<span class="linenos">186</span>) AT;
-<span class="linenos">187</span>
-<span class="linenos">188</span>scalarType:
-<span class="linenos">189</span>    BIT designator?
-<span class="linenos">190</span>    | INT designator?
-<span class="linenos">191</span>    | UINT designator?
-<span class="linenos">192</span>    | FLOAT designator?
-<span class="linenos">193</span>    | ANGLE designator?
-<span class="linenos">194</span>    | BOOL
-<span class="linenos">195</span>    | DURATION
-<span class="linenos">196</span>    | STRETCH
-<span class="linenos">197</span>    | COMPLEX (LBRACKET scalarType RBRACKET)?
-<span class="linenos">198</span>;
-<span class="linenos">199</span>qubitType: QUBIT designator?;
-<span class="linenos">200</span>arrayType: ARRAY LBRACKET scalarType COMMA expressionList RBRACKET;
-<span class="linenos">201</span>arrayReferenceType: (CONST | MUTABLE) ARRAY LBRACKET scalarType COMMA (expressionList | DIM EQUALS expression) RBRACKET;
-<span class="linenos">202</span>
-<span class="linenos">203</span>designator: LBRACKET expression RBRACKET;
-<span class="linenos">204</span>
-<span class="linenos">205</span>gateOperand: indexedIdentifier | HardwareQubit;
-<span class="linenos">206</span>externArgument: scalarType | arrayReferenceType | CREG designator?;
-<span class="linenos">207</span>defcalArgument: HardwareQubit | Identifier;
-<span class="linenos">208</span>argumentDefinition:
-<span class="linenos">209</span>    scalarType Identifier
-<span class="linenos">210</span>    | qubitType Identifier
-<span class="linenos">211</span>    | (CREG | QREG) Identifier designator?
-<span class="linenos">212</span>    | arrayReferenceType Identifier
-<span class="linenos">213</span>;
-<span class="linenos">214</span>
-<span class="linenos">215</span>argumentDefinitionList: argumentDefinition (COMMA argumentDefinition)* COMMA?;
-<span class="linenos">216</span>expressionList: expression (COMMA expression)* COMMA?;
-<span class="linenos">217</span>defcalArgumentList: defcalArgument (COMMA defcalArgument)* COMMA?;
-<span class="linenos">218</span>identifierList: Identifier (COMMA Identifier)* COMMA?;
-<span class="linenos">219</span>gateOperandList: gateOperand (COMMA gateOperand)* COMMA?;
-<span class="linenos">220</span>externArgumentList: externArgument (COMMA externArgument)* COMMA?;
+<span class="linenos">117</span>
+<span class="linenos">118</span>// ANTLR4 can handle direct left-recursive rules, and ambiguities are guaranteed
+<span class="linenos">119</span>// to resolve in the order of definition.  This means that the order of rules
+<span class="linenos">120</span>// here defines the precedence table, from most tightly binding to least.
+<span class="linenos">121</span>expression:
+<span class="linenos">122</span>    LPAREN expression RPAREN                                  # parenthesisExpression
+<span class="linenos">123</span>    | expression indexOperator                                # indexExpression
+<span class="linenos">124</span>    | &lt;assoc=right&gt; expression op=DOUBLE_ASTERISK expression  # powerExpression
+<span class="linenos">125</span>    | op=(TILDE | EXCLAMATION_POINT | MINUS) expression       # unaryExpression
+<span class="linenos">126</span>    | expression op=(ASTERISK | SLASH | PERCENT) expression   # multiplicativeExpression
+<span class="linenos">127</span>    | expression op=(PLUS | MINUS) expression                 # additiveExpression
+<span class="linenos">128</span>    | expression op=BitshiftOperator expression               # bitshiftExpression
+<span class="linenos">129</span>    | expression op=ComparisonOperator expression             # comparisonExpression
+<span class="linenos">130</span>    | expression op=EqualityOperator expression               # equalityExpression
+<span class="linenos">131</span>    | expression op=AMPERSAND expression                      # bitwiseAndExpression
+<span class="linenos">132</span>    | expression op=CARET expression                          # bitwiseXorExpression
+<span class="linenos">133</span>    | expression op=PIPE expression                           # bitwiseOrExpression
+<span class="linenos">134</span>    | expression op=DOUBLE_AMPERSAND expression               # logicalAndExpression
+<span class="linenos">135</span>    | expression op=DOUBLE_PIPE expression                    # logicalOrExpression
+<span class="linenos">136</span>    | (scalarType | arrayType) LPAREN expression RPAREN       # castExpression
+<span class="linenos">137</span>    | DURATIONOF LPAREN scope RPAREN                          # durationofExpression
+<span class="linenos">138</span>    | Identifier LPAREN expressionList? RPAREN                # callExpression
+<span class="linenos">139</span>    | (
+<span class="linenos">140</span>        Identifier
+<span class="linenos">141</span>        | BinaryIntegerLiteral
+<span class="linenos">142</span>        | OctalIntegerLiteral
+<span class="linenos">143</span>        | DecimalIntegerLiteral
+<span class="linenos">144</span>        | HexIntegerLiteral
+<span class="linenos">145</span>        | FloatLiteral
+<span class="linenos">146</span>        | ImaginaryLiteral
+<span class="linenos">147</span>        | BooleanLiteral
+<span class="linenos">148</span>        | BitstringLiteral
+<span class="linenos">149</span>        | TimingLiteral
+<span class="linenos">150</span>        | HardwareQubit
+<span class="linenos">151</span>      )                                                       # literalExpression
+<span class="linenos">152</span>;
+<span class="linenos">153</span>
+<span class="linenos">154</span>// Special-case expressions that are only valid in certain contexts.  These are
+<span class="linenos">155</span>// not in the expression tree, but can contain elements that are within it.
+<span class="linenos">156</span>aliasExpression: expression (DOUBLE_PLUS expression)*;
+<span class="linenos">157</span>declarationExpression: arrayLiteral | expression | measureExpression;
+<span class="linenos">158</span>measureExpression: MEASURE gateOperand;
+<span class="linenos">159</span>rangeExpression: expression? COLON expression? (COLON expression)?;
+<span class="linenos">160</span>setExpression: LBRACE expression (COMMA expression)* COMMA? RBRACE;
+<span class="linenos">161</span>arrayLiteral: LBRACE (expression | arrayLiteral) (COMMA (expression | arrayLiteral))* COMMA? RBRACE;
+<span class="linenos">162</span>
+<span class="linenos">163</span>// The general form is a comma-separated list of indexing entities.
+<span class="linenos">164</span>// `setExpression` is only valid when being used as a single index: registers
+<span class="linenos">165</span>// can support it for creating aliases, but arrays cannot.
+<span class="linenos">166</span>indexOperator:
+<span class="linenos">167</span>    LBRACKET
+<span class="linenos">168</span>    (
+<span class="linenos">169</span>        setExpression
+<span class="linenos">170</span>        | (expression | rangeExpression) (COMMA (expression | rangeExpression))* COMMA?
+<span class="linenos">171</span>    )
+<span class="linenos">172</span>    RBRACKET;
+<span class="linenos">173</span>// Alternative form to `indexExpression` for cases where an obvious l-value is
+<span class="linenos">174</span>// better grammatically than a generic expression.  Some current uses of this
+<span class="linenos">175</span>// rule may be better as `expression`, leaving the semantic analysis to later
+<span class="linenos">176</span>// (for example in gate calls).
+<span class="linenos">177</span>indexedIdentifier: Identifier indexOperator*;
+<span class="linenos">178</span>
+<span class="linenos">179</span>/* End expression definitions. */
+<span class="linenos">180</span>/* Start type definitions. */
+<span class="linenos">181</span>
+<span class="linenos">182</span>returnSignature: ARROW scalarType;
+<span class="linenos">183</span>gateModifier: (
+<span class="linenos">184</span>    INV
+<span class="linenos">185</span>    | POW LPAREN expression RPAREN
+<span class="linenos">186</span>    | (CTRL | NEGCTRL) (LPAREN expression RPAREN)?
+<span class="linenos">187</span>) AT;
+<span class="linenos">188</span>
+<span class="linenos">189</span>scalarType:
+<span class="linenos">190</span>    BIT designator?
+<span class="linenos">191</span>    | INT designator?
+<span class="linenos">192</span>    | UINT designator?
+<span class="linenos">193</span>    | FLOAT designator?
+<span class="linenos">194</span>    | ANGLE designator?
+<span class="linenos">195</span>    | BOOL
+<span class="linenos">196</span>    | DURATION
+<span class="linenos">197</span>    | STRETCH
+<span class="linenos">198</span>    | COMPLEX (LBRACKET scalarType RBRACKET)?
+<span class="linenos">199</span>;
+<span class="linenos">200</span>qubitType: QUBIT designator?;
+<span class="linenos">201</span>arrayType: ARRAY LBRACKET scalarType COMMA expressionList RBRACKET;
+<span class="linenos">202</span>arrayReferenceType: (CONST | MUTABLE) ARRAY LBRACKET scalarType COMMA (expressionList | DIM EQUALS expression) RBRACKET;
+<span class="linenos">203</span>
+<span class="linenos">204</span>designator: LBRACKET expression RBRACKET;
+<span class="linenos">205</span>
+<span class="linenos">206</span>defcalTarget: MEASURE | RESET | DELAY | Identifier;
+<span class="linenos">207</span>defcalArgumentDefinition: expression | argumentDefinition;
+<span class="linenos">208</span>defcalOperand: HardwareQubit | Identifier;
+<span class="linenos">209</span>gateOperand: indexedIdentifier | HardwareQubit;
+<span class="linenos">210</span>externArgument: scalarType | arrayReferenceType | CREG designator?;
+<span class="linenos">211</span>argumentDefinition:
+<span class="linenos">212</span>    scalarType Identifier
+<span class="linenos">213</span>    | qubitType Identifier
+<span class="linenos">214</span>    | (CREG | QREG) Identifier designator?
+<span class="linenos">215</span>    | arrayReferenceType Identifier
+<span class="linenos">216</span>;
+<span class="linenos">217</span>
+<span class="linenos">218</span>argumentDefinitionList: argumentDefinition (COMMA argumentDefinition)* COMMA?;
+<span class="linenos">219</span>defcalArgumentDefinitionList: defcalArgumentDefinition (COMMA defcalArgumentDefinition)* COMMA?;
+<span class="linenos">220</span>defcalOperandList: defcalOperand (COMMA defcalOperand)* COMMA?;
+<span class="linenos">221</span>expressionList: expression (COMMA expression)* COMMA?;
+<span class="linenos">222</span>identifierList: Identifier (COMMA Identifier)* COMMA?;
+<span class="linenos">223</span>gateOperandList: gateOperand (COMMA gateOperand)* COMMA?;
+<span class="linenos">224</span>externArgumentList: externArgument (COMMA externArgument)* COMMA?;
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="k">lexer</span><span class="w"> </span><span class="k">grammar</span><span class="w"> </span><span class="nc">qasm3Lexer</span><span class="p">;</span><span class="w"></span>
@@ -287,172 +291,244 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos"> 17</span><span class="nl">INCLUDE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;include&#39;</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 18</span><span class="nl">DEFCALGRAMMAR</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;defcalgrammar&#39;</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 19</span><span class="nl">DEF</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;def&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 20</span><span class="nl">DEFCAL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;defcal&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 21</span><span class="nl">GATE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gate&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 22</span><span class="nl">EXTERN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;extern&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 23</span><span class="nl">BOX</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;box&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 24</span><span class="nl">LET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;let&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 25</span>
-<span class="linenos"> 26</span><span class="nl">BREAK</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;break&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 27</span><span class="nl">CONTINUE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;continue&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 28</span><span class="nl">IF</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;if&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 29</span><span class="nl">ELSE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;else&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 30</span><span class="nl">END</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;end&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 31</span><span class="nl">RETURN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;return&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 32</span><span class="nl">FOR</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;for&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 33</span><span class="nl">WHILE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;while&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 34</span><span class="nl">IN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;in&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 35</span>
-<span class="linenos"> 36</span><span class="nl">PRAGMA</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;pragma&#39;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">pushMode</span><span class="o">(</span><span class="no">EAT_TO_LINE_END</span><span class="o">)</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 37</span><span class="nl">AnnotationKeyword</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;@&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">  </span><span class="nv">pushMode</span><span class="o">(</span><span class="no">EAT_TO_LINE_END</span><span class="o">)</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 38</span>
+<span class="linenos"> 20</span><span class="nl">CAL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;cal&#39;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">mode</span><span class="o">(</span><span class="no">CAL_PRELUDE</span><span class="o">)</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 21</span><span class="nl">DEFCAL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;defcal&#39;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">mode</span><span class="o">(</span><span class="no">DEFCAL_PRELUDE</span><span class="o">)</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 22</span><span class="nl">GATE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gate&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 23</span><span class="nl">EXTERN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;extern&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 24</span><span class="nl">BOX</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;box&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 25</span><span class="nl">LET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;let&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span><span class="nl">BREAK</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;break&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 28</span><span class="nl">CONTINUE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;continue&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 29</span><span class="nl">IF</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;if&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 30</span><span class="nl">ELSE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;else&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 31</span><span class="nl">END</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;end&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 32</span><span class="nl">RETURN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;return&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 33</span><span class="nl">FOR</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;for&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 34</span><span class="nl">WHILE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;while&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 35</span><span class="nl">IN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;in&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 36</span>
+<span class="linenos"> 37</span><span class="nl">PRAGMA</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;pragma&#39;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">pushMode</span><span class="o">(</span><span class="no">EAT_TO_LINE_END</span><span class="o">)</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 38</span><span class="nl">AnnotationKeyword</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;@&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">  </span><span class="nv">pushMode</span><span class="o">(</span><span class="no">EAT_TO_LINE_END</span><span class="o">)</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 39</span>
-<span class="linenos"> 40</span><span class="c">/* Types. */</span><span class="w"></span>
-<span class="linenos"> 41</span>
-<span class="linenos"> 42</span><span class="nl">INPUT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;input&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 43</span><span class="nl">OUTPUT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;output&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 44</span><span class="nl">CONST</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;const&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 45</span><span class="nl">MUTABLE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;mutable&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 46</span>
-<span class="linenos"> 47</span><span class="nl">QREG</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;qreg&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 48</span><span class="nl">QUBIT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;qubit&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 49</span>
-<span class="linenos"> 50</span><span class="nl">CREG</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;creg&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 51</span><span class="nl">BOOL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;bool&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 52</span><span class="nl">BIT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;bit&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 53</span><span class="nl">INT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;int&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 54</span><span class="nl">UINT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;uint&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 55</span><span class="nl">FLOAT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;float&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 56</span><span class="nl">ANGLE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;angle&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 57</span><span class="nl">COMPLEX</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;complex&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 58</span><span class="nl">ARRAY</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;array&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 59</span>
-<span class="linenos"> 60</span><span class="nl">DURATION</span><span class="p">:</span><span class="w">  </span><span class="s1">&#39;duration&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 61</span><span class="nl">STRETCH</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;stretch&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 62</span>
+<span class="linenos"> 40</span>
+<span class="linenos"> 41</span><span class="c">/* Types. */</span><span class="w"></span>
+<span class="linenos"> 42</span>
+<span class="linenos"> 43</span><span class="nl">INPUT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;input&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 44</span><span class="nl">OUTPUT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;output&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 45</span><span class="nl">CONST</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;const&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 46</span><span class="nl">MUTABLE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;mutable&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 47</span>
+<span class="linenos"> 48</span><span class="nl">QREG</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;qreg&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 49</span><span class="nl">QUBIT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;qubit&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 50</span>
+<span class="linenos"> 51</span><span class="nl">CREG</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;creg&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 52</span><span class="nl">BOOL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;bool&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 53</span><span class="nl">BIT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;bit&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 54</span><span class="nl">INT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;int&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 55</span><span class="nl">UINT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;uint&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 56</span><span class="nl">FLOAT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;float&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 57</span><span class="nl">ANGLE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;angle&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 58</span><span class="nl">COMPLEX</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;complex&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 59</span><span class="nl">ARRAY</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;array&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 60</span>
+<span class="linenos"> 61</span><span class="nl">DURATION</span><span class="p">:</span><span class="w">  </span><span class="s1">&#39;duration&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 62</span><span class="nl">STRETCH</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;stretch&#39;</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 63</span>
-<span class="linenos"> 64</span><span class="c">/* Builtin identifiers and operations */</span><span class="w"></span>
-<span class="linenos"> 65</span>
-<span class="linenos"> 66</span><span class="nl">GPHASE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gphase&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 67</span><span class="nl">INV</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;inv&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 68</span><span class="nl">POW</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;pow&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 69</span><span class="nl">CTRL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;ctrl&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 70</span><span class="nl">NEGCTRL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;negctrl&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 71</span>
-<span class="linenos"> 72</span><span class="nl">DIM</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;#dim&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 73</span>
-<span class="linenos"> 74</span><span class="nl">DURATIONOF</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;durationof&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 75</span>
-<span class="linenos"> 76</span><span class="nl">DELAY</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;delay&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 77</span><span class="nl">RESET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;reset&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 78</span><span class="nl">MEASURE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;measure&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 79</span><span class="nl">BARRIER</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;barrier&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 80</span>
-<span class="linenos"> 81</span><span class="nl">BooleanLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 82</span>
+<span class="linenos"> 64</span>
+<span class="linenos"> 65</span><span class="c">/* Builtin identifiers and operations */</span><span class="w"></span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span><span class="nl">GPHASE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gphase&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 68</span><span class="nl">INV</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;inv&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 69</span><span class="nl">POW</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;pow&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 70</span><span class="nl">CTRL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;ctrl&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 71</span><span class="nl">NEGCTRL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;negctrl&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 72</span>
+<span class="linenos"> 73</span><span class="nl">DIM</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;#dim&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 74</span>
+<span class="linenos"> 75</span><span class="nl">DURATIONOF</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;durationof&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span><span class="nl">DELAY</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;delay&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 78</span><span class="nl">RESET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;reset&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 79</span><span class="nl">MEASURE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;measure&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 80</span><span class="nl">BARRIER</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;barrier&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span><span class="nl">BooleanLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 83</span>
-<span class="linenos"> 84</span><span class="c">/* Symbols */</span><span class="w"></span>
-<span class="linenos"> 85</span>
-<span class="linenos"> 86</span><span class="nl">LBRACKET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 87</span><span class="nl">RBRACKET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;]&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 88</span><span class="nl">LBRACE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 89</span><span class="nl">RBRACE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;}&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 90</span><span class="nl">LPAREN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 91</span><span class="nl">RPAREN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 92</span>
-<span class="linenos"> 93</span><span class="nl">COLON</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;:&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 94</span><span class="nl">SEMICOLON</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;;&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 95</span>
-<span class="linenos"> 96</span><span class="nl">DOT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 97</span><span class="nl">COMMA</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 98</span>
-<span class="linenos"> 99</span><span class="nl">EQUALS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">100</span><span class="nl">ARROW</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;-&gt;&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">101</span><span class="nl">PLUS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;+&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">102</span><span class="nl">DOUBLE_PLUS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;++&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">103</span><span class="nl">MINUS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">104</span><span class="nl">ASTERISK</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">105</span><span class="nl">DOUBLE_ASTERISK</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;**&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">106</span><span class="nl">SLASH</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">107</span><span class="nl">PERCENT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">108</span><span class="nl">PIPE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">109</span><span class="nl">DOUBLE_PIPE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;||&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">110</span><span class="nl">AMPERSAND</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&amp;&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">111</span><span class="nl">DOUBLE_AMPERSAND</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&amp;&amp;&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">112</span><span class="nl">CARET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;^&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">113</span><span class="nl">AT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;@&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">114</span><span class="nl">TILDE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;~&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">115</span><span class="nl">EXCLAMATION_POINT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;!&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">116</span>
-<span class="linenos">117</span><span class="nl">EqualityOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;==&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;!=&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">118</span><span class="nl">CompoundAssignmentOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;+=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;-=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;*=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;/=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&amp;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;|=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;~=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;^=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&lt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;&gt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;%=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;**=&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">119</span><span class="nl">ComparisonOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&gt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;=&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">120</span><span class="nl">BitshiftOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&gt;&gt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&lt;&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">121</span>
-<span class="linenos">122</span><span class="nl">IMAG</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;im&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">123</span><span class="nl">ImaginaryLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="o">*</span><span class="w"> </span><span class="no">IMAG</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">124</span>
-<span class="linenos">125</span><span class="nl">BinaryIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="s1">&#39;0b&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;0B&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">01</span><span class="p">];</span><span class="w"></span>
-<span class="linenos">126</span><span class="nl">OctalIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0o&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-7</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">0-7</span><span class="p">];</span><span class="w"></span>
-<span class="linenos">127</span><span class="nl">DecimalIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">];</span><span class="w"></span>
-<span class="linenos">128</span><span class="nl">HexIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="s1">&#39;0x&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;0X&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-9a-fA-F</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">0-9a-fA-F</span><span class="p">];</span><span class="w"></span>
-<span class="linenos">129</span>
-<span class="linenos">130</span><span class="k">fragment</span><span class="w"> </span><span class="nl">ValidUnicode</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}</span><span class="p">];</span><span class="w"> </span><span class="c">// valid unicode chars</span><span class="w"></span>
-<span class="linenos">131</span><span class="k">fragment</span><span class="w"> </span><span class="nl">Letter</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">A-Za-z</span><span class="p">];</span><span class="w"></span>
-<span class="linenos">132</span><span class="k">fragment</span><span class="w"> </span><span class="nl">FirstIdCharacter</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">ValidUnicode</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">Letter</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">133</span><span class="k">fragment</span><span class="w"> </span><span class="nl">GeneralIdCharacter</span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">];</span><span class="w"></span>
-<span class="linenos">134</span>
-<span class="linenos">135</span><span class="nl">Identifier</span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="no">GeneralIdCharacter</span><span class="o">*</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">136</span><span class="nl">HardwareQubit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;$&#39;</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="o">+</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">137</span>
-<span class="linenos">138</span><span class="k">fragment</span><span class="w"> </span><span class="nl">FloatLiteralExponent</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">eE</span><span class="p">]</span><span class="w"> </span><span class="o">(</span><span class="no">PLUS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">)?</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">139</span><span class="nl">FloatLiteral</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">140</span><span class="w">    </span><span class="c">// 1_123e-3, 123e+4 or 123E5 (needs the exponent or it&#39;s just an integer)</span><span class="w"></span>
-<span class="linenos">141</span><span class="w">    </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="w"></span>
-<span class="linenos">142</span><span class="w">    </span><span class="c">// .1234_5678 or .1e3 (no digits before the dot)</span><span class="w"></span>
-<span class="linenos">143</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="w"></span>
-<span class="linenos">144</span><span class="w">    </span><span class="c">// 123.456, 123. or 145.32e+1_00</span><span class="w"></span>
-<span class="linenos">145</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="o">?</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">146</span>
-<span class="linenos">147</span><span class="k">fragment</span><span class="w"> </span><span class="nl">TimeUnit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;dt&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ns&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;us&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;µs&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ms&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;s&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">148</span><span class="c">// represents explicit time value in SI or backend units</span><span class="w"></span>
-<span class="linenos">149</span><span class="nl">TimingLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="no">TimeUnit</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">150</span>
+<span class="linenos"> 84</span>
+<span class="linenos"> 85</span><span class="c">/* Symbols */</span><span class="w"></span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span><span class="nl">LBRACKET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 88</span><span class="nl">RBRACKET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;]&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 89</span><span class="nl">LBRACE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 90</span><span class="nl">RBRACE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;}&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 91</span><span class="nl">LPAREN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 92</span><span class="nl">RPAREN</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="nl">COLON</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;:&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 95</span><span class="nl">SEMICOLON</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 96</span>
+<span class="linenos"> 97</span><span class="nl">DOT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 98</span><span class="nl">COMMA</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 99</span>
+<span class="linenos">100</span><span class="nl">EQUALS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">101</span><span class="nl">ARROW</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;-&gt;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">102</span><span class="nl">PLUS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;+&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">103</span><span class="nl">DOUBLE_PLUS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;++&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">104</span><span class="nl">MINUS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">105</span><span class="nl">ASTERISK</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">106</span><span class="nl">DOUBLE_ASTERISK</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;**&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">107</span><span class="nl">SLASH</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">108</span><span class="nl">PERCENT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">109</span><span class="nl">PIPE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">110</span><span class="nl">DOUBLE_PIPE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;||&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">111</span><span class="nl">AMPERSAND</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&amp;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">112</span><span class="nl">DOUBLE_AMPERSAND</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&amp;&amp;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">113</span><span class="nl">CARET</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;^&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">114</span><span class="nl">AT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;@&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">115</span><span class="nl">TILDE</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;~&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">116</span><span class="nl">EXCLAMATION_POINT</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;!&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">117</span>
+<span class="linenos">118</span><span class="nl">EqualityOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;==&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;!=&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">119</span><span class="nl">CompoundAssignmentOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;+=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;-=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;*=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;/=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&amp;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;|=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;~=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;^=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&lt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;&gt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;%=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;**=&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">120</span><span class="nl">ComparisonOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&gt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;=&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">121</span><span class="nl">BitshiftOperator</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&gt;&gt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&lt;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">122</span>
+<span class="linenos">123</span><span class="nl">IMAG</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;im&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">124</span><span class="nl">ImaginaryLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="o">*</span><span class="w"> </span><span class="no">IMAG</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">125</span>
+<span class="linenos">126</span><span class="nl">BinaryIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="s1">&#39;0b&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;0B&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">01</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">127</span><span class="nl">OctalIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0o&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-7</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">0-7</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">128</span><span class="nl">DecimalIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">129</span><span class="nl">HexIntegerLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="s1">&#39;0x&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;0X&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">0-9a-fA-F</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">0-9a-fA-F</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">130</span>
+<span class="linenos">131</span><span class="k">fragment</span><span class="w"> </span><span class="nl">ValidUnicode</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}</span><span class="p">];</span><span class="w"> </span><span class="c">// valid unicode chars</span><span class="w"></span>
+<span class="linenos">132</span><span class="k">fragment</span><span class="w"> </span><span class="nl">Letter</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">A-Za-z</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">133</span><span class="k">fragment</span><span class="w"> </span><span class="nl">FirstIdCharacter</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">ValidUnicode</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">Letter</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">134</span><span class="k">fragment</span><span class="w"> </span><span class="nl">GeneralIdCharacter</span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">135</span>
+<span class="linenos">136</span><span class="nl">Identifier</span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="no">GeneralIdCharacter</span><span class="o">*</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">137</span><span class="nl">HardwareQubit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;$&#39;</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="o">+</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">138</span>
+<span class="linenos">139</span><span class="k">fragment</span><span class="w"> </span><span class="nl">FloatLiteralExponent</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">eE</span><span class="p">]</span><span class="w"> </span><span class="o">(</span><span class="no">PLUS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">)?</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">140</span><span class="nl">FloatLiteral</span><span class="p">:</span><span class="w"></span>
+<span class="linenos">141</span><span class="w">    </span><span class="c">// 1_123e-3, 123e+4 or 123E5 (needs the exponent or it&#39;s just an integer)</span><span class="w"></span>
+<span class="linenos">142</span><span class="w">    </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="w"></span>
+<span class="linenos">143</span><span class="w">    </span><span class="c">// .1234_5678 or .1e3 (no digits before the dot)</span><span class="w"></span>
+<span class="linenos">144</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="w"></span>
+<span class="linenos">145</span><span class="w">    </span><span class="c">// 123.456, 123. or 145.32e+1_00</span><span class="w"></span>
+<span class="linenos">146</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span><span class="o">?</span><span class="w"> </span><span class="no">FloatLiteralExponent</span><span class="o">?</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">147</span>
+<span class="linenos">148</span><span class="k">fragment</span><span class="w"> </span><span class="nl">TimeUnit</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;dt&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ns&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;us&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;µs&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ms&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;s&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">149</span><span class="c">// represents explicit time value in SI or backend units</span><span class="w"></span>
+<span class="linenos">150</span><span class="nl">TimingLiteral</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">DecimalIntegerLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span><span class="o">)</span><span class="w"> </span><span class="no">TimeUnit</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">151</span>
-<span class="linenos">152</span><span class="nl">BitstringLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">153</span><span class="c">// allow ``&quot;str&quot;`` and ``&#39;str&#39;``</span><span class="w"></span>
-<span class="linenos">154</span><span class="nl">StringLiteral</span><span class="w"></span>
-<span class="linenos">155</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">~</span><span class="p">[</span><span class="x">&quot;\r\t\n]+? &#39;&quot;&#39;</span>
-<span class="linenos">156</span><span class="x">    | &#39;\&#39;&#39; ~</span><span class="p">[</span><span class="x">&#39;\r\t\n]+? &#39;\&#39;&#39;</span>
-<span class="linenos">157</span><span class="x">    ;</span>
-<span class="linenos">158</span>
-<span class="linenos">159</span><span class="x">// Ignore whitespace between tokens, and define C++-style comments.</span>
-<span class="linenos">160</span><span class="x">Whitespace: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
-<span class="linenos">161</span><span class="x">Newline: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
-<span class="linenos">162</span><span class="x">LineComment : &#39;//&#39; ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">* -&gt; skip;</span>
-<span class="linenos">163</span><span class="x">BlockComment : &#39;/*&#39; .*? &#39;*/&#39; -&gt; skip;</span>
-<span class="linenos">164</span>
+<span class="linenos">152</span>
+<span class="linenos">153</span><span class="nl">BitstringLiteral</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">(</span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="o">?)*</span><span class="w"> </span><span class="p">[</span><span class="x">01</span><span class="p">]</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">154</span><span class="c">// allow ``&quot;str&quot;`` and ``&#39;str&#39;``</span><span class="w"></span>
+<span class="linenos">155</span><span class="nl">StringLiteral</span><span class="w"></span>
+<span class="linenos">156</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">~</span><span class="p">[</span><span class="x">&quot;\r\t\n]+? &#39;&quot;&#39;</span>
+<span class="linenos">157</span><span class="x">    | &#39;\&#39;&#39; ~</span><span class="p">[</span><span class="x">&#39;\r\t\n]+? &#39;\&#39;&#39;</span>
+<span class="linenos">158</span><span class="x">    ;</span>
+<span class="linenos">159</span>
+<span class="linenos">160</span><span class="x">// Ignore whitespace between tokens, and define C++-style comments.</span>
+<span class="linenos">161</span><span class="x">Whitespace: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
+<span class="linenos">162</span><span class="x">Newline: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip ;</span>
+<span class="linenos">163</span><span class="x">LineComment : &#39;//&#39; ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">* -&gt; skip;</span>
+<span class="linenos">164</span><span class="x">BlockComment : &#39;/*&#39; .*? &#39;*/&#39; -&gt; skip;</span>
 <span class="linenos">165</span>
-<span class="linenos">166</span><span class="x">// The version identifier token would be ambiguous between itself and</span>
-<span class="linenos">167</span><span class="x">// integer/floating-point literals, so we use a special mode to ensure it&#39;s</span>
-<span class="linenos">168</span><span class="x">// lexed correctly.</span>
-<span class="linenos">169</span><span class="x">mode VERSION_IDENTIFIER;</span>
-<span class="linenos">170</span><span class="x">    VERSION_IDENTIFER_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
-<span class="linenos">171</span><span class="x">    VersionSpecifier: </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+ (&#39;.&#39; </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+)? -&gt; popMode;</span>
-<span class="linenos">172</span>
+<span class="linenos">166</span>
+<span class="linenos">167</span><span class="x">// The version identifier token would be ambiguous between itself and</span>
+<span class="linenos">168</span><span class="x">// integer/floating-point literals, so we use a special mode to ensure it&#39;s</span>
+<span class="linenos">169</span><span class="x">// lexed correctly.</span>
+<span class="linenos">170</span><span class="x">mode VERSION_IDENTIFIER;</span>
+<span class="linenos">171</span><span class="x">    VERSION_IDENTIFER_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
+<span class="linenos">172</span><span class="x">    VersionSpecifier: </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+ (&#39;.&#39; </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="x">+)? -&gt; popMode;</span>
 <span class="linenos">173</span>
-<span class="linenos">174</span><span class="x">// A different lexer mode to swap to when we need handle tokens on a line basis</span>
-<span class="linenos">175</span><span class="x">// rather than the default arbitrary-whitespace-based tokenisation.  This is</span>
-<span class="linenos">176</span><span class="x">// used by the annotation and pragma rules.</span>
-<span class="linenos">177</span><span class="x">mode EAT_TO_LINE_END;</span>
-<span class="linenos">178</span><span class="x">    EAT_INITIAL_SPACE: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
-<span class="linenos">179</span><span class="x">    EAT_LINE_END: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x"> -&gt; popMode, skip;</span>
-<span class="linenos">180</span>
-<span class="linenos">181</span><span class="x">    // The line content must be a non-empty token to satisfy ANTLR (otherwise it</span>
-<span class="linenos">182</span><span class="x">    // would be able to produce an infinite number of tokens).  We could include</span>
-<span class="linenos">183</span><span class="x">    // the line ending to guarantee that this is always non-empty, but that just</span>
-<span class="linenos">184</span><span class="x">    // puts an annoying burden on consumers to remove it again.</span>
-<span class="linenos">185</span><span class="x">    RemainingLineContent: ~</span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x"> ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">*;</span>
+<span class="linenos">174</span>
+<span class="linenos">175</span><span class="x">// A different lexer mode to swap to when we need handle tokens on a line basis</span>
+<span class="linenos">176</span><span class="x">// rather than the default arbitrary-whitespace-based tokenisation.  This is</span>
+<span class="linenos">177</span><span class="x">// used by the annotation and pragma rules.</span>
+<span class="linenos">178</span><span class="x">mode EAT_TO_LINE_END;</span>
+<span class="linenos">179</span><span class="x">    EAT_INITIAL_SPACE: </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
+<span class="linenos">180</span><span class="x">    EAT_LINE_END: </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x"> -&gt; popMode, skip;</span>
+<span class="linenos">181</span>
+<span class="linenos">182</span><span class="x">    // The line content must be a non-empty token to satisfy ANTLR (otherwise it</span>
+<span class="linenos">183</span><span class="x">    // would be able to produce an infinite number of tokens).  We could include</span>
+<span class="linenos">184</span><span class="x">    // the line ending to guarantee that this is always non-empty, but that just</span>
+<span class="linenos">185</span><span class="x">    // puts an annoying burden on consumers to remove it again.</span>
+<span class="linenos">186</span><span class="x">    RemainingLineContent: ~</span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x"> ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">*;</span>
+<span class="linenos">187</span>
+<span class="linenos">188</span>
+<span class="linenos">189</span><span class="x">// We need to do a little context-aware lexing when we hit a `cal` or `defcal`</span>
+<span class="linenos">190</span><span class="x">// token.  In both cases, there&#39;s a small interlude before the pulse grammar</span>
+<span class="linenos">191</span><span class="x">// block starts, and we need to be able to lex our way through that.  We don&#39;t</span>
+<span class="linenos">192</span><span class="x">// want to tie this grammar to one host language by injecting host code to</span>
+<span class="linenos">193</span><span class="x">// manage the state of the lexer, so instead we need to do a little duplication</span>
+<span class="linenos">194</span><span class="x">// of the tokens, because ANTLR doesn&#39;t allow us to inherit rules directly.</span>
+<span class="linenos">195</span><span class="x">mode CAL_PRELUDE;</span>
+<span class="linenos">196</span><span class="x">    CAL_PRELUDE_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
+<span class="linenos">197</span><span class="x">    CAL_PRELUDE_COMMENT: (LineComment | BlockComment) -&gt; skip;</span>
+<span class="linenos">198</span><span class="x">    CAL_PRELUDE_LBRACE: LBRACE -&gt; type(LBRACE), mode(CAL_BLOCK);</span>
+<span class="linenos">199</span>
+<span class="linenos">200</span><span class="x">mode DEFCAL_PRELUDE;</span>
+<span class="linenos">201</span><span class="x">    DEFCAL_PRELUDE_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
+<span class="linenos">202</span><span class="x">    DEFCAL_PRELUDE_COMMENT: (LineComment | BlockComment) -&gt; skip;</span>
+<span class="linenos">203</span><span class="x">    DEFCAL_PRELUDE_LBRACE: LBRACE -&gt; type(LBRACE), mode(CAL_BLOCK);</span>
+<span class="linenos">204</span>
+<span class="linenos">205</span><span class="x">    // Duplications of valid constant expression tokens that may appear in the</span>
+<span class="linenos">206</span><span class="x">    // argument list.  This is an unfortunately large number of duplications.</span>
+<span class="linenos">207</span>
+<span class="linenos">208</span><span class="x">    // Types.</span>
+<span class="linenos">209</span><span class="x">    DEFCAL_PRELUDE_QREG: QREG -&gt; type(QREG);</span>
+<span class="linenos">210</span><span class="x">    DEFCAL_PRELUDE_QUBIT: QUBIT -&gt; type(QUBIT);</span>
+<span class="linenos">211</span><span class="x">    DEFCAL_PRELUDE_CREG: CREG -&gt; type(CREG);</span>
+<span class="linenos">212</span><span class="x">    DEFCAL_PRELUDE_BOOL: BOOL -&gt; type(BOOL);</span>
+<span class="linenos">213</span><span class="x">    DEFCAL_PRELUDE_BIT: BIT -&gt; type(BIT);</span>
+<span class="linenos">214</span><span class="x">    DEFCAL_PRELUDE_INT: INT -&gt; type(INT);</span>
+<span class="linenos">215</span><span class="x">    DEFCAL_PRELUDE_UINT: UINT -&gt; type(UINT);</span>
+<span class="linenos">216</span><span class="x">    DEFCAL_PRELUDE_ANGLE: ANGLE -&gt; type(ANGLE);</span>
+<span class="linenos">217</span><span class="x">    DEFCAL_PRELUDE_FLOAT: FLOAT -&gt; type(FLOAT);</span>
+<span class="linenos">218</span><span class="x">    DEFCAL_PRELUDE_COMPLEX: COMPLEX -&gt; type(COMPLEX);</span>
+<span class="linenos">219</span><span class="x">    DEFCAL_PRELUDE_ARRAY: ARRAY -&gt; type(ARRAY);</span>
+<span class="linenos">220</span><span class="x">    DEFCAL_PRELUDE_DURATION: DURATION -&gt; type(DURATION);</span>
+<span class="linenos">221</span><span class="x">    // Punctuation.</span>
+<span class="linenos">222</span><span class="x">    DEFCAL_PRELUDE_LBRACKET: LBRACKET -&gt; type(LBRACKET);</span>
+<span class="linenos">223</span><span class="x">    DEFCAL_PRELUDE_RBRACKET: RBRACKET -&gt; type(RBRACKET);</span>
+<span class="linenos">224</span><span class="x">    DEFCAL_PRELUDE_LPAREN: LPAREN -&gt; type(LPAREN);</span>
+<span class="linenos">225</span><span class="x">    DEFCAL_PRELUDE_RPAREN: RPAREN -&gt; type(RPAREN);</span>
+<span class="linenos">226</span><span class="x">    DEFCAL_PRELUDE_ARROW: ARROW -&gt; type(ARROW);</span>
+<span class="linenos">227</span><span class="x">    DEFCAL_PRELUDE_COMMA: COMMA -&gt; type(COMMA);</span>
+<span class="linenos">228</span><span class="x">    DEFCAL_PRELUDE_PLUS: PLUS -&gt; type(PLUS);</span>
+<span class="linenos">229</span><span class="x">    DEFCAL_PRELUDE_MINUS: MINUS -&gt; type(MINUS);</span>
+<span class="linenos">230</span><span class="x">    DEFCAL_PRELUDE_ASTERISK: ASTERISK -&gt; type(ASTERISK);</span>
+<span class="linenos">231</span><span class="x">    DEFCAL_PRELUDE_SLASH: SLASH -&gt; type(SLASH);</span>
+<span class="linenos">232</span><span class="x">    DEFCAL_PRELUDE_BitshiftOperator: BitshiftOperator -&gt; type(BitshiftOperator);</span>
+<span class="linenos">233</span><span class="x">    // Literals and names.</span>
+<span class="linenos">234</span><span class="x">    DEFCAL_PRELUDE_BitstringLiteral: BitstringLiteral -&gt; type(BitstringLiteral);</span>
+<span class="linenos">235</span><span class="x">    DEFCAL_PRELUDE_BinaryIntegerLiteral: BinaryIntegerLiteral -&gt; type(BinaryIntegerLiteral);</span>
+<span class="linenos">236</span><span class="x">    DEFCAL_PRELUDE_OctalIntegerLiteral: OctalIntegerLiteral -&gt; type(OctalIntegerLiteral);</span>
+<span class="linenos">237</span><span class="x">    DEFCAL_PRELUDE_DecimalIntegerLiteral: DecimalIntegerLiteral -&gt; type(DecimalIntegerLiteral);</span>
+<span class="linenos">238</span><span class="x">    DEFCAL_PRELUDE_HexIntegerLiteral: HexIntegerLiteral -&gt; type(HexIntegerLiteral);</span>
+<span class="linenos">239</span><span class="x">    DEFCAL_PRELUDE_FloatLiteral: FloatLiteral -&gt; type(FloatLiteral);</span>
+<span class="linenos">240</span><span class="x">    DEFCAL_PRELUDE_MEASURE: MEASURE -&gt; type(MEASURE);</span>
+<span class="linenos">241</span><span class="x">    DEFCAL_PRELUDE_DELAY: DELAY -&gt; type(DELAY);</span>
+<span class="linenos">242</span><span class="x">    DEFCAL_PRELUDE_RESET: RESET -&gt; type(RESET);</span>
+<span class="linenos">243</span><span class="x">    DEFCAL_PRELUDE_Identifier: Identifier -&gt; type(Identifier);</span>
+<span class="linenos">244</span><span class="x">    DEFCAL_PRELUDE_HardwareQubit: HardwareQubit -&gt; type(HardwareQubit);</span>
+<span class="linenos">245</span>
+<span class="linenos">246</span>
+<span class="linenos">247</span><span class="x">// The meat-and-potatoes of matching a calibration block with balanced inner</span>
+<span class="linenos">248</span><span class="x">// braces.  We enter `CAL_BLOCK` with the opening brace already tokenised</span>
+<span class="linenos">249</span><span class="x">// (that&#39;s how the lexer knew to swap modes to us), and with the token left open</span>
+<span class="linenos">250</span><span class="x">// to continue to accumulate.  We want to tokenise until we hit the balancing</span>
+<span class="linenos">251</span><span class="x">// brace.  Since we have _no_ knowledge of what the inner langauge is doing,</span>
+<span class="linenos">252</span><span class="x">// things like unbalanced braces in comments will cause a failure, but there&#39;s</span>
+<span class="linenos">253</span><span class="x">// not much we can do about that without greater spec restrictions.</span>
+<span class="linenos">254</span><span class="x">mode CAL_BLOCK;</span>
+<span class="linenos">255</span><span class="x">    fragment NestedCalibrationBlock: LBRACE (NestedCalibrationBlock | ~</span><span class="p">[</span><span class="x">{}</span><span class="p">]</span><span class="x">)* RBRACE;</span>
+<span class="linenos">256</span><span class="x">    CalibrationBlock: (NestedCalibrationBlock | ~</span><span class="p">[</span><span class="x">{}</span><span class="p">]</span><span class="x">)+;</span>
+<span class="linenos">257</span><span class="x">    CAL_BLOCK_RBRACE: RBRACE -&gt; type(RBRACE), mode(DEFAULT_MODE);</span>
 </pre></div>
 </div>
 </section>
