@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Classical instructions &#8212; OpenQASM Live Specification  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -462,6 +462,7 @@ are not required to be idempotent. They may change the state of the process prov
 In our computational model, <code class="docutils literal notranslate"><span class="pre">extern</span></code> functions may run concurrently with other classical and
 quantum computations. That is, invoking an <code class="docutils literal notranslate"><span class="pre">extern</span></code> function will  <em>schedule</em> a classical
 computation, but does not wait for that computation to terminate.</p>
+<aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id5" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
 <p><code class="docutils literal notranslate"><span class="pre">popcount</span></code> computes the Hamming weight of the input register.</p>
@@ -477,6 +478,7 @@ instructions.</p>
 <p>This clearly allows users to write code that does not terminate. We
 do not discuss implementation details here, but one possibility is to
 compile into target code that imposes iteration limits.</p>
+</aside>
 </aside>
 </section>
 </section>
@@ -513,6 +515,7 @@ compile into target code that imposes iteration limits.</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="subroutines.html">Subroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scope.html">Scoping of variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="directives.html">Directives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="directives.html#input-output">Input/output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="delays.html">Circuit timing</a></li>
@@ -561,7 +564,7 @@ compile into target code that imposes iteration limits.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
