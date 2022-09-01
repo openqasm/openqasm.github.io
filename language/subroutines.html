@@ -48,9 +48,14 @@ quantum and classical arguments. Quantum bits and classical values are passed to
 the subroutine by reference or name, while classical types are passed in by value.
 All arguments are declared together with their type. For example, <code class="docutils literal notranslate"><span class="pre">qubit</span> <span class="pre">ancilla</span></code>
 defines a quantum bit argument named <code class="docutils literal notranslate"><span class="pre">ancilla</span></code>.</p>
-<p>The subroutines return up to one value of classical type, signified by the
-<code class="docutils literal notranslate"><span class="pre">return</span></code> keyword. If there is no return type, the empty <code class="docutils literal notranslate"><span class="pre">return</span></code>
-keyword may be used to immediately exit from the subroutine.</p>
+<p>Subroutines return up to one value of classical type, signified by the
+<code class="docutils literal notranslate"><span class="pre">return</span></code> keyword. If there is no return value, the empty <code class="docutils literal notranslate"><span class="pre">return</span></code>
+keyword may be used to immediately exit from the subroutine, which implicitly
+returns the <a class="reference internal" href="types.html#void-type"><span class="std std-ref">void type</span></a>. Subroutines that
+do not return a value must be declared with no output signature:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
 <p>Qubit declarations are not allowed within subroutines as those declarations are global.</p>
 <p>A subroutine is invoked with the syntax <code class="docutils literal notranslate"><span class="pre">name(parameters)</span></code> and may be assigned
 to an <code class="docutils literal notranslate"><span class="pre">output</span></code> as needed via an assignment operator (<code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">+=</span></code>, etc).</p>
