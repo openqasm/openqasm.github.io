@@ -48,6 +48,9 @@ quantum and classical arguments. Quantum bits and classical values are passed to
 the subroutine by reference or name, while classical types are passed in by value.
 All arguments are declared together with their type. For example, <code class="docutils literal notranslate"><span class="pre">qubit</span> <span class="pre">ancilla</span></code>
 defines a quantum bit argument named <code class="docutils literal notranslate"><span class="pre">ancilla</span></code>.</p>
+<p>A given qubit can be passed at most once in any subroutine call.  Different
+<code class="docutils literal notranslate"><span class="pre">qubit</span></code> arguments (whether single bits or registers) cannot refer to the same
+underlying qubit in a call.</p>
 <p>Subroutines return up to one value of classical type, signified by the
 <code class="docutils literal notranslate"><span class="pre">return</span></code> keyword. If there is no return value, the empty <code class="docutils literal notranslate"><span class="pre">return</span></code>
 keyword may be used to immediately exit from the subroutine, which implicitly
