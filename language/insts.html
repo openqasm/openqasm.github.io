@@ -45,7 +45,7 @@
 <p>The statement <code class="docutils literal notranslate"><span class="pre">reset</span> <span class="pre">qubit|qubit[];</span></code> resets a qubit or quantum register to the state
 <span class="math notranslate nohighlight">\(|0\rangle\)</span>. This corresponds to a partial trace over those qubits
 (i.e. discarding them) before replacing them with
-<span class="math notranslate nohighlight">\(|0\rangle\langle 0|\)</span>. Reset is shown in <a class="reference internal" href="#fig-prepare"><span class="std std-numref">Fig. 4</span></a>.</p>
+<span class="math notranslate nohighlight">\(|0\rangle\langle 0|\)</span>. Reset is shown in <a class="reference internal" href="#fig-prepare"><span class="std std-numref">Fig. 2</span></a>.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize and reset a register of 10 qubits</span><span class="w"></span>
 <span class="kt">qubit</span><span class="p">[</span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
 <span class="ow">reset</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
@@ -61,7 +61,7 @@
 <img alt="../_images/c9.svg" src="../_images/c9.svg" /></div>
 </div>
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">The <code class="docutils literal notranslate"><span class="pre">reset</span></code> statement prepares a qubit or quantum register in the state <span class="math notranslate nohighlight">\(|0\rangle\)</span>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">The <code class="docutils literal notranslate"><span class="pre">reset</span></code> statement prepares a qubit or quantum register in the state <span class="math notranslate nohighlight">\(|0\rangle\)</span>.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </section>
@@ -75,7 +75,7 @@ and qubit(s) are immediately available for further quantum computation.
 Both arguments must be register-type, or both must be bit-type. If both
 arguments are register-type and have the same size, the statement  <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">measure</span> <span class="pre">a;</span></code>
 broadcasts to <code class="docutils literal notranslate"><span class="pre">b[j]</span> <span class="pre">=</span> <span class="pre">measure</span> <span class="pre">a[j];</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into register <code class="docutils literal notranslate"><span class="pre">a</span></code>. Measurement is shown in
-<a class="reference internal" href="#fig-measure"><span class="std std-numref">Fig. 5</span></a>.</p>
+<a class="reference internal" href="#fig-measure"><span class="std std-numref">Fig. 3</span></a>.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize, flip and measure a register of 10 qubits</span><span class="w"></span>
 <span class="kt">qubit</span><span class="p">[</span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">qubits</span><span class="p">;</span><span class="w"></span>
 <span class="kt">bit</span><span class="p">[</span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">bits</span><span class="p">;</span><span class="w"></span>
@@ -99,7 +99,7 @@ broadcasts to <code class="docutils literal notranslate"><span class="pre">b[j]<
 <img alt="../_images/c6.svg" src="../_images/c6.svg" /></div>
 </div>
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">The <code class="docutils literal notranslate"><span class="pre">measure</span></code> statement projectively measures a qubit or each qubit of a quantum
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">The <code class="docutils literal notranslate"><span class="pre">measure</span></code> statement projectively measures a qubit or each qubit of a quantum
 register. The measurement projects onto the <span class="math notranslate nohighlight">\(Z\)</span>-basis and leaves qubits available for further
 operations. The top row of circuits depicts single-qubit measurement using the statement
 <code class="docutils literal notranslate"><span class="pre">c[0]</span> <span class="pre">=</span> <span class="pre">measure</span> <span class="pre">q[0];</span></code> while the bottom depicts measurement of an entire register using the
