@@ -11,9 +11,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -39,7 +36,7 @@
   <section id="subroutines">
 <h1>Subroutines<a class="headerlink" href="#subroutines" title="Permalink to this heading">¶</a></h1>
 <p>Subroutines are declared using the statement:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">output_type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">output_type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="p">}</span>
 </pre></div>
 </div>
 <p>Subroutines and their named arguments must be named according to the rules for
@@ -57,69 +54,69 @@ underlying qubit in a call.</p>
 keyword may be used to immediately exit from the subroutine, which implicitly
 returns the <a class="reference internal" href="types.html#void-type"><span class="std std-ref">void type</span></a>. Subroutines that
 do not return a value must be declared with no output signature:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="p">}</span>
 </pre></div>
 </div>
 <p>Qubit declarations are not allowed within subroutines as those declarations are global.</p>
 <p>A subroutine is invoked with the syntax <code class="docutils literal notranslate"><span class="pre">name(parameters)</span></code> and may be assigned
 to an <code class="docutils literal notranslate"><span class="pre">output</span></code> as needed via an assignment operator (<code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">+=</span></code>, etc).</p>
 <p>Using subroutines, we can define an X-basis measurement with the program:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">xmeasure</span><span class="p">(</span><span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">xmeasure</span><span class="p">(</span><span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 </pre></div>
 </div>
 <p>We can also define more general classes of single-qubit measurements
 as:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kd">def</span><span class="w"> </span><span class="nf">pmeasure</span><span class="p">(</span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">theta</span><span class="p">,</span><span class="w"> </span><span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kd">def</span><span class="w"> </span><span class="nf">pmeasure</span><span class="p">(</span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">theta</span><span class="p">,</span><span class="w"> </span><span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="w">   </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The type declarations are necessary if we want to mix qubit and
 register arguments. For example, we might define a parity check
 subroutine that takes qubits and registers:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">xcheck</span><span class="p">(</span><span class="kt">qubit</span><span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="kt">qubit</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="ow">reset</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="nf">cx</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">xcheck</span><span class="p">(</span><span class="kt">qubit</span><span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="kt">qubit</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="ow">reset</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="nf">cx</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Naturally we can also use subroutines to define purely classical
 operations, such as methods we can implement using low-level classical
 instructions, like:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">const</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* some size, known at compile time */</span><span class="p">;</span><span class="w"></span>
-<span class="kd">def</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="kt">bit</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="n">cin</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="kt">bit</span><span class="w"> </span><span class="n">c</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">^=</span><span class="w"> </span><span class="n">cin</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">c</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">const</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* some size, known at compile time */</span><span class="p">;</span>
+<span class="kd">def</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="kt">bit</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="n">cin</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">bit</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">^=</span><span class="w"> </span><span class="n">cin</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>We can make some measurements and call this subroutine on the results as
 follows:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">r</span><span class="p">;</span><span class="w"></span>
-<span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">r</span><span class="p">;</span><span class="w"></span>
-<span class="kt">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"></span>
-<span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">c2</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">r</span><span class="p">;</span>
+<span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">r</span><span class="p">;</span>
+<span class="kt">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">c2</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>We require that we know the signature at compile time, as we do in this
 example. We could also just as easily have used an extern function for
 this:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">const</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* size of c + size of c2 */</span><span class="p">;</span><span class="w"></span>
-<span class="kd">extern</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="kt">bit</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="p">;</span><span class="w"></span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">r</span><span class="p">;</span><span class="w"></span>
-<span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">r</span><span class="p">;</span><span class="w"></span>
-<span class="kt">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"></span>
-<span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c2</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">const</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* size of c + size of c2 */</span><span class="p">;</span>
+<span class="kd">extern</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="kt">bit</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">r</span><span class="p">;</span>
+<span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">r</span><span class="p">;</span>
+<span class="kt">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">parity</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c2</span><span class="p">);</span>
 </pre></div>
 </div>
 <section id="arrays-in-subroutines">
@@ -135,18 +132,18 @@ known until runtime. Passing multiple overlapping mutable references to the same
 array to a subroutine is forbidden. However, the compiler will not always be
 able to resolve when this happens, and if it does, then no guarantees are made
 about the order that updates are made in.</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">specified_sub</span><span class="p">(</span><span class="kt">readonly</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">arr_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="kd">def</span><span class="w"> </span><span class="nf">arr_subroutine</span><span class="p">(</span><span class="kt">readonly</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="na">#dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">arr_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="kd">def</span><span class="w"> </span><span class="nf">mut_subroutine</span><span class="p">(</span><span class="kt">mutable</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="na">#dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">arr_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">arr_arg</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">;</span><span class="w"> </span><span class="c1">// allowed</span><span class="w"></span>
-<span class="w">  </span><span class="c1">// ...</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
-<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">aa</span><span class="p">;</span><span class="w"></span>
-<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">bb</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">specified_sub</span><span class="p">(</span><span class="kt">readonly</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">arr_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">def</span><span class="w"> </span><span class="nf">arr_subroutine</span><span class="p">(</span><span class="kt">readonly</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="na">#dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">arr_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">def</span><span class="w"> </span><span class="nf">mut_subroutine</span><span class="p">(</span><span class="kt">mutable</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="na">#dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">arr_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">arr_arg</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">;</span><span class="w"> </span><span class="c1">// allowed</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">}</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">aa</span><span class="p">;</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">bb</span><span class="p">;</span>
 
-<span class="nf">arr_subroutine</span><span class="p">(</span><span class="n">aa</span><span class="p">);</span><span class="w"></span>
-<span class="nf">arr_subroutine</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">:</span><span class="m">3</span><span class="p">]);</span><span class="w"></span>
-<span class="nf">mut_subroutine</span><span class="p">(</span><span class="n">aa</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">3</span><span class="p">]);</span><span class="w"> </span><span class="c1">// aa[3] = 10</span><span class="w"></span>
+<span class="nf">arr_subroutine</span><span class="p">(</span><span class="n">aa</span><span class="p">);</span>
+<span class="nf">arr_subroutine</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">:</span><span class="m">3</span><span class="p">]);</span>
+<span class="nf">mut_subroutine</span><span class="p">(</span><span class="n">aa</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">3</span><span class="p">]);</span><span class="w"> </span><span class="c1">// aa[3] = 10</span>
 </pre></div>
 </div>
 <p>The lifetime of the array reference is limited to within the scope of the
@@ -162,17 +159,17 @@ then it defaults to <code class="docutils literal notranslate"><span class="pre"
 <code class="docutils literal notranslate"><span class="pre">sizeof()</span></code> returns a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">uint</span></code> representing the length of the
 requested dimension of the array argument. The array argument can be
 subscripted, meaning that <code class="docutils literal notranslate"><span class="pre">sizeof(arr[0],</span> <span class="pre">0)</span> <span class="pre">==</span> <span class="pre">sizeof(arr,</span> <span class="pre">1)</span></code>.</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">arr_subroutine</span><span class="p">(</span><span class="kt">readonly</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="na">#dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">twoD_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="kt">uint</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">firstDim</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">sizeof</span><span class="p">(</span><span class="n">twoD_arg</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="kt">uint</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">secondDim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">sizeof</span><span class="p">(</span><span class="n">twoD_arg</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="n">firstDim</span><span class="o">-</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">jj</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="n">secondDim</span><span class="o">-</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">](</span><span class="n">twoD_arg</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="p">]);</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="c1">// ...</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">def</span><span class="w"> </span><span class="nf">arr_subroutine</span><span class="p">(</span><span class="kt">readonly</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="na">#dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">twoD_arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">uint</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">firstDim</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">sizeof</span><span class="p">(</span><span class="n">twoD_arg</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">uint</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">secondDim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">sizeof</span><span class="p">(</span><span class="n">twoD_arg</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="n">firstDim</span><span class="o">-</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">jj</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="n">secondDim</span><span class="o">-</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">](</span><span class="n">twoD_arg</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="n">jj</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -258,7 +255,7 @@ subscripted, meaning that <code class="docutils literal notranslate"><span class
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

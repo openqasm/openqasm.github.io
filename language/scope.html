@@ -11,9 +11,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -90,18 +87,18 @@ defined in OpenQASM 3.0.</p>
 <p>A simple example of scoping between a main program file and an included file:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">Main program</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span>
 
-<span class="n">gate</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">U</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
+<span class="n">gate</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">U</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 <span class="w">   </span><span class="c1">// `U` is the single-qubit gate that is implicitly defined in the global</span>
 <span class="w">   </span><span class="c1">// scope of all OpenQASM 3.0 programs, and so is available here.</span>
 <span class="w">   </span><span class="c1">// Similarly `pi` is one of the implicitly defined constants.</span>
-<span class="p">}</span><span class="w"></span>
+<span class="p">}</span>
 
-<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w"></span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
 
-<span class="n">include</span><span class="w"> </span><span class="s">&quot;my_definitions.qasm&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="n">include</span><span class="w"> </span><span class="s">&quot;my_definitions.qasm&quot;</span><span class="p">;</span>
 
 <span class="c1">// Identifiers &#39;h&#39;, &#39;my_gate&#39;, &#39;i&#39; and &#39;j&#39; are defined and in scope.</span>
 </pre></div>
@@ -109,11 +106,11 @@ defined in OpenQASM 3.0.</p>
 </div>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">File <code class="docutils literal notranslate"><span class="pre">my_definitions.qasm</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span><span class="w"> </span><span class="n">my_gate</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">U</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span><span class="w"> </span><span class="n">my_gate</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">U</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"></span>
+<span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 <span class="c1">// This usage of `i` is valid because the scope inside the `include`</span>
 <span class="c1">// inherits all definitions from the scope that did the including.</span>
 </pre></div>
@@ -128,27 +125,27 @@ calibration definitions for different qubits.</p>
 <p class="admonition-title">Warning</p>
 <p>The following example is <em>not</em> valid OpenQASM 3.0 due to invalid scoping.</p>
 </div>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span>
 
-<span class="n">gate</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">U</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">gate</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">U</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="p">}</span>
 
 <span class="kt">int</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">// ERROR: &#39;h&#39; is already defined and cannot be re-declared.</span>
 
-<span class="n">uint</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="n">uint</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="n">uint</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="c1">// ERROR: &#39;a&#39; is already defined and cannot be re-declared.</span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="n">defcal</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="c1">// ...</span>
-<span class="p">}</span><span class="w"></span>
+<span class="p">}</span>
 <span class="c1">// No error: this is valid OpenQASM 3.0 because `defcal` statements do not</span>
 <span class="c1">// redefine, they overload quantum operations with specific pulse-level</span>
 <span class="c1">// control statements.</span>
 
-<span class="n">defcal</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="n">defcal</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">$0</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="c1">// ...</span>
-<span class="p">}</span><span class="w"></span>
+<span class="p">}</span>
 <span class="c1">// ERROR: &#39;a&#39; is already defined and cannot be re-declared.  Unlike the</span>
 <span class="c1">// previous example, this is an error because &#39;a&#39; is already declared as a</span>
 <span class="c1">// non-quantum-operation type (&#39;uint&#39;).  This `defcal` would be defining a</span>
@@ -187,20 +184,20 @@ accept variables of type <code class="docutils literal notranslate"><span class=
 declared within subroutine and gate scopes, and have the same lifetime and
 visibility as other local variables.</p>
 <p>For example:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span>
 <span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="n">qubit</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="n">all_qubits</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 3</span><span class="n">qubit</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="n">all_qubits</span><span class="p">;</span>
 <span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 6</span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 7</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 8</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 5</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
 <span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="n">def</span><span class="w"> </span><span class="nf">my_routine</span><span class="p">(</span><span class="n">uint</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">uint</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">10</span><span class="n">def</span><span class="w"> </span><span class="nf">my_routine</span><span class="p">(</span><span class="n">uint</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">uint</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">11</span><span class="w">   </span><span class="c1">// In this body, &#39;a&#39; refers to the subroutine parameter, not the external</span>
 <span class="linenos">12</span><span class="w">   </span><span class="c1">// variable, which wouldn&#39;t be visible even without the shadowing.</span>
 <span class="linenos">13</span>
-<span class="linenos">14</span><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">in_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">14</span><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">in_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span><span class="w">   </span><span class="c1">// Identifiers in scope are:</span>
 <span class="linenos">17</span><span class="w">   </span><span class="c1">//  - &#39;my_routine&#39;: the subroutine itself</span>
@@ -219,19 +216,19 @@ visibility as other local variables.</p>
 <span class="linenos">30</span><span class="w">   </span><span class="c1">// non-&#39;const&#39; type does not make it available within subroutines.  The</span>
 <span class="linenos">31</span><span class="w">   </span><span class="c1">// hardware qubit identifiers are in scope, but not the virtual qubit</span>
 <span class="linenos">32</span><span class="w">   </span><span class="c1">// identifier &#39;all_qubits&#39;.</span>
-<span class="linenos">33</span><span class="p">}</span><span class="w"></span>
+<span class="linenos">33</span><span class="p">}</span>
 <span class="linenos">34</span>
 <span class="linenos">35</span><span class="c1">// After the subroutine block, &#39;a&#39; and &#39;c&#39; once again refer to the variables</span>
 <span class="linenos">36</span><span class="c1">// of type &#39;int&#39; and &#39;const int&#39; defined on lines 3 and 5 respectively.</span>
 <span class="linenos">37</span><span class="c1">// &#39;in_body&#39; (from the subroutine body) is not in scope, while &#39;my_routine&#39;</span>
 <span class="linenos">38</span><span class="c1">// (the subroutine) is.</span>
 <span class="linenos">39</span>
-<span class="linenos">40</span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span><span class="w"> </span><span class="n">new_variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">40</span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span><span class="w"> </span><span class="n">new_variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5</span><span class="p">;</span>
 <span class="linenos">41</span>
-<span class="linenos">42</span><span class="n">def</span><span class="w"> </span><span class="nf">second_subroutine</span><span class="p">(</span><span class="n">qubit</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="linenos">43</span><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">in_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">42</span><span class="n">def</span><span class="w"> </span><span class="nf">second_subroutine</span><span class="p">(</span><span class="n">qubit</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">43</span><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">in_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
 <span class="linenos">44</span>
-<span class="linenos">45</span><span class="w">   </span><span class="n">let</span><span class="w"> </span><span class="n">some_qubits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="o">:</span><span class="mi">2</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">45</span><span class="w">   </span><span class="n">let</span><span class="w"> </span><span class="n">some_qubits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="o">:</span><span class="mi">2</span><span class="p">];</span>
 <span class="linenos">46</span>
 <span class="linenos">47</span><span class="w">   </span><span class="c1">// Identifiers in scope are:</span>
 <span class="linenos">48</span><span class="w">   </span><span class="c1">//   - &#39;second_subroutine&#39;</span>
@@ -244,7 +241,7 @@ visibility as other local variables.</p>
 <span class="linenos">55</span><span class="w">   </span><span class="c1">//   - &#39;new_variable&#39;: type &#39;const float[64]&#39;, value 1.5</span>
 <span class="linenos">56</span><span class="w">   </span><span class="c1">//   - the other built-in identifiers like &#39;U&#39; and &#39;pi&#39;</span>
 <span class="linenos">57</span><span class="w">   </span><span class="c1">//   - the available hardware qubits like &#39;$0&#39;.</span>
-<span class="linenos">58</span><span class="p">}</span><span class="w"></span>
+<span class="linenos">58</span><span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -273,28 +270,28 @@ outer scopes.  When the defining scope of a shadowing variable ends, the
 previous variable (which was shadowed) becomes accessible again.  Qubits and
 arrays cannot be declared within local block scopes, but aliases can.</p>
 <p>Some further examples:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="w"></span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kt">int</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w">         </span><span class="c1">// &#39;ii&#39; is declared in the global scope.</span>
 <span class="linenos"> 4</span><span class="n">qubit</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w">           </span><span class="c1">// &#39;q&#39; is declared in the global scope.</span>
 <span class="linenos"> 5</span><span class="n">let</span><span class="w"> </span><span class="n">some_q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="o">:</span><span class="mi">2</span><span class="p">];</span><span class="w">  </span><span class="c1">// alias &#39;some_q&#39; is declared in the global scope.</span>
 <span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 7</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos"> 8</span><span class="w">  </span><span class="n">ii</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">    </span><span class="c1">// This is the global &#39;ii&#39;, which now has the value 200.</span>
 <span class="linenos"> 9</span>
 <span class="linenos">10</span><span class="w">  </span><span class="c1">// A local variable &#39;ii&#39; is declared, which shadows the global definition.</span>
 <span class="linenos">11</span><span class="w">  </span><span class="c1">// The global &#39;ii&#39; is no longer accessible until this scope ends.</span>
-<span class="linenos">12</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">12</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="linenos">13</span><span class="w">  </span><span class="c1">// The local variable &#39;ii&#39; is modified, and now has the value 2.</span>
-<span class="linenos">14</span><span class="w">  </span><span class="n">ii</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">15</span><span class="p">}</span><span class="w"></span>
+<span class="linenos">14</span><span class="w">  </span><span class="n">ii</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="linenos">15</span><span class="p">}</span>
 <span class="linenos">16</span>
 <span class="linenos">17</span><span class="c1">// The local &#39;ii&#39; went out of scope at the conclusion of the &#39;if&#39; block, and</span>
 <span class="linenos">18</span><span class="c1">// the previous &#39;ii&#39; defined on line 3 is accessible again.</span>
 <span class="linenos">19</span><span class="n">ii</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">  </span><span class="c1">// global &#39;ii&#39; is now 400.</span>
 <span class="linenos">20</span>
-<span class="linenos">21</span><span class="n">uint</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">22</span><span class="k">for</span><span class="w"> </span><span class="n">uint</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">21</span><span class="n">uint</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">22</span><span class="k">for</span><span class="w"> </span><span class="n">uint</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">23</span><span class="w">  </span><span class="c1">// The global &#39;ii&#39; is shadowed by the iteration variable &#39;ii&#39;, which also</span>
 <span class="linenos">24</span><span class="w">  </span><span class="c1">// has a different type.  The outer &#39;sum&#39; is still accessible.</span>
 <span class="linenos">25</span>
@@ -313,12 +310,12 @@ arrays cannot be declared within local block scopes, but aliases can.</p>
 <span class="linenos">38</span><span class="w">  </span><span class="c1">//     2        3     9</span>
 <span class="linenos">39</span><span class="w">  </span><span class="c1">//     3        4     16</span>
 <span class="linenos">40</span>
-<span class="linenos">41</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">41</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">42</span><span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// For-loop iteration variable shadowed.</span>
-<span class="linenos">43</span><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">uint</span><span class="p">(</span><span class="n">ii</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">44</span><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">43</span><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">uint</span><span class="p">(</span><span class="n">ii</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span>
+<span class="linenos">44</span><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">45</span><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">ii</span><span class="p">;</span><span class="w">      </span><span class="c1">// &#39;ii&#39; is the for-loop iteration variable.</span>
-<span class="linenos">46</span><span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">46</span><span class="w">  </span><span class="p">}</span>
 <span class="linenos">47</span>
 <span class="linenos">48</span><span class="w">  </span><span class="c1">//  Iteration   ii    sum</span>
 <span class="linenos">49</span><span class="w">  </span><span class="c1">//     0        1     2</span>
@@ -327,14 +324,14 @@ arrays cannot be declared within local block scopes, but aliases can.</p>
 <span class="linenos">52</span><span class="w">  </span><span class="c1">//     3        4     36</span>
 <span class="linenos">53</span>
 <span class="linenos">54</span><span class="w">  </span><span class="n">U</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">55</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w">  </span><span class="c1">// Global-scope qubit &#39;q&#39; is in scope here.</span>
-<span class="linenos">55</span><span class="p">}</span><span class="w"></span>
+<span class="linenos">55</span><span class="p">}</span>
 <span class="linenos">56</span>
 <span class="linenos">57</span><span class="c1">// The lifetime of the local for-loop iteration variable &#39;ii&#39; ended at the</span>
 <span class="linenos">58</span><span class="c1">// conclusion of the for-loop body, and the global &#39;ii&#39; is back in scope.</span>
 <span class="linenos">59</span>
-<span class="linenos">60</span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">ii</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">60</span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">ii</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">61</span><span class="w">  </span><span class="n">let</span><span class="w"> </span><span class="n">some_q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">4</span><span class="p">];</span><span class="w">  </span><span class="c1">// local alias &#39;some_q&#39; shadows the global alias.</span>
-<span class="linenos">62</span><span class="p">}</span><span class="w"></span>
+<span class="linenos">62</span><span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -422,7 +419,7 @@ arrays cannot be declared within local block scopes, but aliases can.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

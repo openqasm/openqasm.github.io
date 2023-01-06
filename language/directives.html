@@ -11,9 +11,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -60,20 +57,20 @@ this specification, such as adding directives to a simulator.</p>
 <p>*Note: The following examples are simply possible implementations, this
 specification does not define any pragmas. Please consult your tool’s
 documentation for supported pragmas.</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">pragma</span> simulator noise model &quot;qpu1.noise&quot;<span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">pragma</span> simulator noise model &quot;qpu1.noise&quot;
 </pre></div>
 </div>
 <p>Pragmas can also be used to specify system-level information or assertions for
 the entire circuit.</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
 
-<span class="c1">// Attach billing information</span><span class="w"></span>
-<span class="cp">pragma</span> user alice account 12345678<span class="w"></span>
+<span class="c1">// Attach billing information</span>
+<span class="cp">pragma</span> user alice account 12345678
 
-<span class="c1">// Assert that the QPU is healthy to run this circuit</span><span class="w"></span>
-<span class="cp">pragma</span> max_temp qpu 0.4<span class="w"></span>
+<span class="c1">// Assert that the QPU is healthy to run this circuit</span>
+<span class="cp">pragma</span> max_temp qpu 0.4
 
-<span class="kt">qubit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -87,27 +84,27 @@ interaction between annotations are prescribed by this specification.</p>
 <p>*Note: The following examples are simply possible implementations, this
 specification does not define any annotations. Please consult your tool’s
 documentation for supported annotations.</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Manage port binding on a physical device</span><span class="w"></span>
-<span class="nd">@bind</span> IOPORT[3:2]<span class="w"></span>
-<span class="kt">input</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">control_flags</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Manage port binding on a physical device</span>
+<span class="nd">@bind</span> IOPORT[3:2]
+<span class="kt">input</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">control_flags</span><span class="p">;</span>
 
-<span class="c1">// Instruct compiler to create a reversible version of the function</span><span class="w"></span>
-<span class="nd">@reversible</span><span class="w"></span>
-<span class="kd">gate</span><span class="w"> </span><span class="nf">multiply</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="c1">// Instruct compiler to create a reversible version of the function</span>
+<span class="nd">@reversible</span>
+<span class="kd">gate</span><span class="w"> </span><span class="nf">multiply</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="c1">// Prevent swap insertion</span><span class="w"></span>
-<span class="nd">@noswap</span><span class="w"></span>
-<span class="k">box</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">   </span><span class="nf">rx</span><span class="p">(</span><span class="no">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">];</span><span class="w"></span>
-<span class="w">   </span><span class="nf">cnot</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">3</span><span class="p">];</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="c1">// Prevent swap insertion</span>
+<span class="nd">@noswap</span>
+<span class="k">box</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nf">rx</span><span class="p">(</span><span class="no">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
+<span class="w">   </span><span class="nf">cnot</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
+<span class="p">}</span>
 
-<span class="c1">// Apply multiple annotations</span><span class="w"></span>
-<span class="nd">@crosstalk</span><span class="w"></span>
-<span class="nd">@noise</span> profile &quot;gate_noise.qnf&quot;<span class="w"></span>
-<span class="kd">defcal</span><span class="w"> </span><span class="nf">noisy_gate</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="l">$1</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span><span class="w"></span>
+<span class="c1">// Apply multiple annotations</span>
+<span class="nd">@crosstalk</span>
+<span class="nd">@noise</span> profile &quot;gate_noise.qnf&quot;
+<span class="kd">defcal</span><span class="w"> </span><span class="nf">noisy_gate</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="l">$1</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -146,15 +143,15 @@ allows the programmer to communicate many different circuits with a single
 file, which only has to be compiled once, amortizing the cost of compilation
 across many runs. For an example, we may consider a parameterized circuit which
 performs a measurement in a basis given by an input parameter:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">input</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">basis</span><span class="p">;</span><span class="w"> </span><span class="c1">// 0 = X basis, 1 = Y basis, 2 = Z basis</span><span class="w"></span>
-<span class="kt">output</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"></span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">input</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">basis</span><span class="p">;</span><span class="w"> </span><span class="c1">// 0 = X basis, 1 = Y basis, 2 = Z basis</span>
+<span class="kt">output</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 
-<span class="c1">// Some complicated circuit...</span><span class="w"></span>
+<span class="c1">// Some complicated circuit...</span>
 
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">basis</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">basis</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">basis</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">basis</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>For a second example, consider the Variable Quantum Eigensolver (VQE) algorithm <span id="id1">[<a class="reference internal" href="../index.html#id54" title="Alberto Peruzzo, Jarrod McClean, Peter Shadbolt, Man-Hong Yung, Xiao-Qi Zhou, Peter J. Love, Alán Aspuru-Guzik, and Jeremy L. O’Brien. A variational eigenvalue solver on a photonic quantum processor. Nature Communications, Jul 2014. URL: http://dx.doi.org/10.1038/ncomms5213, doi:10.1038/ncomms5213.">PMS+14</a>]</span>.
@@ -162,15 +159,15 @@ In this algorithm the same circuit is repeated
 many times using different sets of free parameters to minimize an expectation
 value. The following is an example, in which there is also more than one input
 variable:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">input</span><span class="w"> </span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">param1</span><span class="p">;</span><span class="w"></span>
-<span class="kt">input</span><span class="w"> </span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">param2</span><span class="p">;</span><span class="w"></span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">input</span><span class="w"> </span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">param1</span><span class="p">;</span>
+<span class="kt">input</span><span class="w"> </span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">param2</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 
-<span class="c1">// Build an ansatz using the above free parameters, eg.</span><span class="w"></span>
-<span class="nf">rx</span><span class="p">(</span><span class="n">param1</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
-<span class="nf">ry</span><span class="p">(</span><span class="n">param2</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w"></span>
+<span class="c1">// Build an ansatz using the above free parameters, eg.</span>
+<span class="nf">rx</span><span class="p">(</span><span class="n">param1</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="nf">ry</span><span class="p">(</span><span class="n">param2</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 
-<span class="c1">// Estimate the expectation value and store in an output variable</span><span class="w"></span>
+<span class="c1">// Estimate the expectation value and store in an output variable</span>
 </pre></div>
 </div>
 <p>The following Python pseudocode illustrates the differences between using and
@@ -281,7 +278,7 @@ not using parameterized circuits in a quantum program for the case of the VQE:</
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

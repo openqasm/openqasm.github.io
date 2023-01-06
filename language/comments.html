@@ -11,9 +11,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -39,13 +36,13 @@
   <section id="comments">
 <h1>Comments<a class="headerlink" href="#comments" title="Permalink to this heading">¶</a></h1>
 <p>Comments begin with a pair of forward slashes <code class="docutils literal notranslate"><span class="pre">//</span></code> and end with a new line:</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// A comment line</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// A comment line</span>
 </pre></div>
 </div>
 <p>A comment block begins with <code class="docutils literal notranslate"><span class="pre">/*</span></code> and ends with <code class="docutils literal notranslate"><span class="pre">*/</span></code>:</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
 <span class="cm">A comment block</span>
-<span class="cm">*/</span><span class="w"></span>
+<span class="cm">*/</span>
 </pre></div>
 </div>
 </section>
@@ -66,12 +63,12 @@ permitted, nor may it appear elsewhere than the first non-comment line.</p>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">&quot;filename&quot;;</span></code> continues parsing <code class="docutils literal notranslate"><span class="pre">filename</span></code> as if the
 contents of the file were inserted at the location of the <code class="docutils literal notranslate"><span class="pre">include</span></code> statement.
 This statement can only be used at the global scope.</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// First non-comment is a version string</span><span class="w"></span>
-<span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// First non-comment is a version string</span>
+<span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
 
-<span class="kn">include</span><span class="w"> </span><span class="s">&quot;stdgates.qasm&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="kn">include</span><span class="w"> </span><span class="s">&quot;stdgates.qasm&quot;</span><span class="p">;</span>
 
-<span class="c1">// Rest of QASM program</span><span class="w"></span>
+<span class="c1">// Rest of QASM program</span>
 </pre></div>
 </div>
 </section>
@@ -153,7 +150,7 @@ This statement can only be used at the global scope.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
