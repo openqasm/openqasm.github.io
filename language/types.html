@@ -731,6 +731,11 @@ can be accessed, using the following general syntax:</p>
 <span class="n">multiDim</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// multiDim == {{0.0, 1.2}, {2.1, 2.2}, {3.1, 0.0}}</span>
 </pre></div>
 </div>
+<p>The first argument to the <code class="docutils literal notranslate"><span class="pre">array</span></code> type constructor is the base type
+of the array. The supported classical types include various sizes of <code class="docutils literal notranslate"><span class="pre">bit</span></code>,
+<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code>, and <code class="docutils literal notranslate"><span class="pre">angle</span></code>, as well as
+<code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">duration</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">stretch</span></code> is not a valid array
+base type.</p>
 <p>Arrays <em>cannot</em> be declared inside the body of a function or gate. All arrays
 <em>must</em> be declared within the global scope of the program.
 Indexing of arrays is n-based <em>i.e.</em>, negative indices are allowed.
