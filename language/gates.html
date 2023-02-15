@@ -36,145 +36,86 @@
             
   <section id="gates">
 <h1>Gates<a class="headerlink" href="#gates" title="Permalink to this heading">¶</a></h1>
-<p>In OpenQASM we refer to unitary quantum instructions as gates.</p>
-<section id="built-in-gates">
-<h2>Built-in gates<a class="headerlink" href="#built-in-gates" title="Permalink to this heading">¶</a></h2>
-<p>We define a mechanism for parameterizing unitary matrices to define new
-quantum gates. The parameterization uses a built-in universal gate set
-of single-qubit gates and a two-qubit entangling gate (CNOT)
-<span id="id1">[<a class="reference internal" href="../index.html#id45" title="A. Barenco, C. Bennett, R. Cleve, D. DiVincenzo, N. Margolus, P. Shor, T. Sleator, J. Smolin, and H. Weinfurter. Elementary gates for quantum computation. Phys. Rev. A, 1995.">BBC+95</a>]</span>. This basis is not an enforced compilation
-target but a mechanism to define other gates. For many gates of
-practical interest, there is a circuit representation with a polynomial
-number of one- and two-qubit gates, giving a more compact representation
-than requiring the programmer to express the full <span class="math notranslate nohighlight">\(2^n \times 2^n\)</span>
-matrix. However, a general <span class="math notranslate nohighlight">\(n\)</span>-qubit gate can be defined using an
-exponential number of these gates.</p>
-<p>We now describe this built-in gate set.
-All of the single-qubit unitary gates are built-in and
-parameterized as</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}U(\theta,\phi,\lambda) := \left(\begin{array}{cc}
-    \cos(\theta/2) &amp; -e^{i\lambda}\sin(\theta/2) \\
-e^{i\phi}\sin(\theta/2) &amp; e^{i(\phi+\lambda)}\cos(\theta/2) \end{array}\right).\end{split}\]</div>
-<p>When <code class="docutils literal notranslate"><span class="pre">a</span></code> is a quantum
-register, the statement <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span> <span class="pre">a;</span></code> means apply <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span> <span class="pre">a[j];</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into register <code class="docutils literal notranslate"><span class="pre">a</span></code>. The
-values <span class="math notranslate nohighlight">\(\theta\in [0,2\pi)\)</span>, <span class="math notranslate nohighlight">\(\phi\in [0,2\pi)\)</span>, and
-<span class="math notranslate nohighlight">\(\lambda\in
-[0,2\pi)\)</span> in this base gate are angles whose precision is implementation
-dependent <a class="footnote-reference brackets" href="#id3" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. This specifies any element of <span class="math notranslate nohighlight">\(U(2)\)</span> up to a
-global phase. For example <code class="docutils literal notranslate"><span class="pre">U(π/2,</span> <span class="pre">0,</span> <span class="pre">π)</span> <span class="pre">q[0];</span></code>, applies a Hadamard gate to qubit <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>.</p>
-<p>New gates are associated to a unitary transformation by defining them as a sequence of built-in or
-previously defined gates. For example the <code class="docutils literal notranslate"><span class="pre">gate</span></code> block</p>
+<p>In OpenQASM we refer to unitary quantum instructions as <em>gates</em>.</p>
+<section id="applying-gates">
+<h2>Applying gates<a class="headerlink" href="#applying-gates" title="Permalink to this heading">¶</a></h2>
+<p>Every gate applies to a fixed number of qubits.
+Assuming <code class="docutils literal notranslate"><span class="pre">g0</span></code>, <code class="docutils literal notranslate"><span class="pre">g1</span></code>, <code class="docutils literal notranslate"><span class="pre">g2</span></code>, … are gates defined on 0, 1, 2, … qubits then they can be applied as</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="n">g0</span><span class="p">;</span>
+<span class="nf">g1</span><span class="w"> </span><span class="n">q1</span><span class="p">;</span>
+<span class="nf">g2</span><span class="w"> </span><span class="n">q1</span><span class="p">,</span><span class="w"> </span><span class="n">q2</span><span class="p">;</span>
+<span class="nf">g3</span><span class="w"> </span><span class="n">q1</span><span class="p">,</span><span class="w"> </span><span class="n">q2</span><span class="p">,</span><span class="w"> </span><span class="n">q3</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="broadcasting">
+<h3>Broadcasting<a class="headerlink" href="#broadcasting" title="Permalink to this heading">¶</a></h3>
+<p>If any arguments of a gate are quantum registers instead of qubits, then all such registers must be <strong>of the same length</strong> and
+this syntax is a convenient shorthand for broadcasting over the qubits of the register. For example, the circuit</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">1</span><span class="p">];</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">qr1</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">qr2</span><span class="p">[</span><span class="m">2</span><span class="p">];</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">qr3</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
+
+<span class="nf">g4</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr1</span><span class="p">,</span><span class="w"> </span><span class="n">qr2</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr3</span><span class="p">;</span><span class="w"> </span><span class="c1">// ok</span>
+<span class="nf">g4</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr2</span><span class="p">,</span><span class="w"> </span><span class="n">qr1</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr3</span><span class="p">;</span><span class="w"> </span><span class="c1">// error! qr2 and qr3 differ in size</span>
+</pre></div>
+</div>
+<p>has a second-to-last line that is equivalent to</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>g4 qr0[0], qr1[0], qr2[0], qr3[0];
+g4 qr0[0], qr1[1], qr2[0], qr3[1];
+g4 qr0[0], qr1[2], qr2[0], qr3[2];
+</pre></div>
+</div>
+<p>Use of this syntax constitutes a promise to the compiler that the expanded set of broadcasted gates
+is mutually commuting and thus the compiler can take advantage of the opportunity to reorder the
+gates freely for optimization purposes. In certain cases a compiler might be able to detect a
+non-commutativity and raise a warning, but it is not required to do so in all cases. If the gates do
+not commute and a specific order is required by the programmer, than a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop may be used to
+set that order.</p>
+</section>
+<section id="parameterized-gates">
+<h3>Parameterized gates<a class="headerlink" href="#parameterized-gates" title="Permalink to this heading">¶</a></h3>
+<p>As well as gates that each represent a fixed unitary, OpenQASM also supports gates that represent <em>families</em> of unitaries, parameterized
+by angle variables. To distinguish the (optional) angle parameters from the (required) quantum arguments, if any angle parameters are
+present they must appear before any quantum arguments, and be delimited by parentheses. For example</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fsim(θ, ϕ) q[0], q[1];
+</pre></div>
+</div>
+</section>
+</section>
+<section id="defining-gates">
+<h2>Defining gates<a class="headerlink" href="#defining-gates" title="Permalink to this heading">¶</a></h2>
+<p>There are 3 mechanisms to construct new gates:</p>
+<ol class="arabic simple">
+<li><p>A new named gate can be introduced by a  <strong>hierarchical definition</strong> from a sequence of existing gates;</p></li>
+<li><p>Anonymous new gates may be defined by applying <strong>gate modifiers</strong> to existing gates;</p></li>
+<li><p>The <strong>built-in gates</strong> comprising the one-qubit gate <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span></code> and the zero-qubit gate <code class="docutils literal notranslate"><span class="pre">gphase(γ)</span></code>.
+The definitions of these gates is part of the language specification.</p></li>
+</ol>
+<p>The next subsections go through these cases.</p>
+<section id="hierarchical-gates-definitions">
+<h3>Hierarchical gates definitions<a class="headerlink" href="#hierarchical-gates-definitions" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">gate</span></code> statement associates an identifier with a corresponding unitary matrix (or parameterized family)
+transformation by a sequence of other (built-in or previously-defined) gates.</p>
+<p>For example the <code class="docutils literal notranslate"><span class="pre">gate</span></code> block</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">gate</span><span class="w"> </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="nb">U</span><span class="p">(</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="no">π</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="w">   </span><span class="nb">gphase</span><span class="w"> </span><span class="o">-</span><span class="no">π</span><span class="o">/</span><span class="m">4</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>defines a new gate called <code class="docutils literal notranslate"><span class="pre">h</span></code> and associates it to the unitary matrix of the Hadamard gate. Once we have
-defined <code class="docutils literal notranslate"><span class="pre">h</span></code>, we can use it in later <code class="docutils literal notranslate"><span class="pre">gate</span></code> blocks. The definition does not imply that <code class="docutils literal notranslate"><span class="pre">h</span></code> is
+defined <code class="docutils literal notranslate"><span class="pre">h</span></code>, we can use it in later <code class="docutils literal notranslate"><span class="pre">gate</span></code> blocks.</p>
+<p>The definition does not imply that <code class="docutils literal notranslate"><span class="pre">h</span></code> is
 implemented by an instruction <code class="docutils literal notranslate"><span class="pre">U(π/2,</span> <span class="pre">0,</span> <span class="pre">π)</span></code> on the quantum computer. The implementation is up to
-the user and/or compiler, given information about the instructions supported by a particular target.</p>
-<p>Controlled gates can be constructed by adding a control modifier to an existing gate. For example,
-the NOT gate is given by <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">U(π,</span> <span class="pre">0,</span> <span class="pre">π)</span></code> and the block</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">gate</span><span class="w"> </span><span class="nf">CX</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="nb">ctrl</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="nb">U</span><span class="p">(</span><span class="no">π</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="no">π</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nf">CX</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">1</span><span class="p">],</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
-</pre></div>
-</div>
-<p>defines the gate</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\mathrm{CX} := I \oplus X = \left(\begin{array}{cccc}
-1 &amp; 0 &amp; 0 &amp; 0 \\
-0 &amp; 1 &amp; 0 &amp; 0 \\
-0 &amp; 0 &amp; 0 &amp; 1 \\
-0 &amp; 0 &amp; 1 &amp; 0 \end{array}\right)\end{split}\]</div>
-<p>that applies a bit-flip <code class="docutils literal notranslate"><span class="pre">X</span></code> to <code class="docutils literal notranslate"><span class="pre">q[0]</span></code> if <code class="docutils literal notranslate"><span class="pre">q[1]</span></code> is one and otherwise applies the identity gate.
-The control modifier is described in more detail later.</p>
-<p>Throughout the document we use a tensor order with higher index qubits on the left. In this tensor order,
-<code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">q[0],</span> <span class="pre">q[1];</span></code> is represented by the matrix</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\left(\begin{array}{cccc}
-1 &amp; 0 &amp; 0 &amp; 0 \\
-0 &amp; 0 &amp; 0 &amp; 1 \\
-0 &amp; 0 &amp; 1 &amp; 0 \\
-0 &amp; 1 &amp; 0 &amp; 0 \end{array}\right)\end{split}\]</div>
-<p>Given the gate definition we have already given, the statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,</span> <span class="pre">b;</span></code> describes a CNOT gate that
-flips the target qubit <code class="docutils literal notranslate"><span class="pre">b</span></code> if and only if the control qubit <code class="docutils literal notranslate"><span class="pre">a</span></code> is one. The
-arguments cannot refer to the same qubit. For convenience, gates automatically broadcast over registers. If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are quantum registers
-<em>with the same size</em>, the statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,</span> <span class="pre">b;</span></code> means apply <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a[j],</span> <span class="pre">b[j];</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into
-register <code class="docutils literal notranslate"><span class="pre">a</span></code>. If instead <code class="docutils literal notranslate"><span class="pre">a</span></code> is a qubit and <code class="docutils literal notranslate"><span class="pre">b</span></code> is a quantum register, the
-statement means apply <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,</span> <span class="pre">b[j]</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into register <code class="docutils literal notranslate"><span class="pre">b</span></code>. Finally, if <code class="docutils literal notranslate"><span class="pre">a</span></code> is a
-quantum register and <code class="docutils literal notranslate"><span class="pre">b</span></code> is a qubit, the statement means apply <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a[j],</span> <span class="pre">b;</span></code> for each
-index <code class="docutils literal notranslate"><span class="pre">j</span></code> into register <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
-<figure class="align-default" id="id4">
-<span id="fig-cnot-dist"></span><div class="figure-content" style="display: flex; gap: 2rem 0; flex-direction: row; justify-content: center; align-items: center; flex-wrap: wrap;">
-<div class="figure-item" style="max-height: 10rem; width: 50%; display: flex; flex-direction: column;">
-<img alt="../_images/cnotqq.svg" src="../_images/cnotqq.svg" /></div>
-<div class="figure-item" style="max-height: 10rem; width: 50%; display: flex; flex-direction: column;">
-<img alt="../_images/cnotrr.svg" src="../_images/cnotrr.svg" /></div>
-<div class="figure-item" style="max-height: 10rem; width: 50%; display: flex; flex-direction: column;">
-<img alt="../_images/cnotqr.svg" src="../_images/cnotqr.svg" /></div>
-<div class="figure-item" style="max-height: 10rem; width: 50%; display: flex; flex-direction: column;">
-<img alt="../_images/cnotrq.svg" src="../_images/cnotrq.svg" /></div>
-</div>
-<figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">The two-qubit controlled-NOT gate is contructed from built-in single-qubit gates and the control modifier.
-If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are qubits, the statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,b;</span></code> applies a
-controlled-NOT (CNOT) gate that flips the target qubit <code class="docutils literal notranslate"><span class="pre">b</span></code> iff the control qubit <code class="docutils literal notranslate"><span class="pre">a</span></code>
-is one. If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are quantum registers, the statement applies CNOT gates between
-corresponding qubits of each register. There is a similar meaning when <code class="docutils literal notranslate"><span class="pre">a</span></code> is a qubit and
-<code class="docutils literal notranslate"><span class="pre">b</span></code> is a quantum register and vice versa.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-<figure class="align-default" id="id5">
-<span id="fig-u-dist"></span><div class="figure-content" style="display: flex; gap: 2rem 0; flex-direction: row; justify-content: center; align-items: center; flex-wrap: wrap;">
-<div class="figure-item" style="max-height: 10rem; width: 50%; display: flex; flex-direction: column;">
-<img alt="../_images/uq.svg" src="../_images/uq.svg" /></div>
-<div class="figure-item" style="max-height: 10rem; width: 50%; display: flex; flex-direction: column;">
-<img alt="../_images/ur.svg" src="../_images/ur.svg" /></div>
-</div>
-<figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">The single-qubit unitary gates are built-in. These gates are parameterized by three real
-parameters <span class="math notranslate nohighlight">\(\theta\)</span>, <span class="math notranslate nohighlight">\(\phi\)</span>, and <span class="math notranslate nohighlight">\(\lambda\)</span>. If the argument <code class="docutils literal notranslate"><span class="pre">q</span></code> is a quantum register, the
-statement applies <code class="docutils literal notranslate"><span class="pre">size(q)</span></code> gates in parallel to the qubits of the
-register.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-<p>From a physical perspective, the gates <span class="math notranslate nohighlight">\(e^{i\gamma}U\)</span> and <span class="math notranslate nohighlight">\(U\)</span> are equivalent although they differ by a global
-phase <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span>. When we add a control to these gates, however, the global phase becomes a relative phase
-that is applied when the control qubit is one. To capture the programmer’s intent, a built-in global phase gate
-allows the inclusion of arbitrary global phases on circuits. The instruction <code class="docutils literal notranslate"><span class="pre">gphase(γ);</span></code> adds a global phase
-of <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span> to the scope containing the instruction. For example</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">gate</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="no">tau</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nb">gphase</span><span class="p">(</span><span class="o">-</span><span class="no">tau</span><span class="o">/</span><span class="m">2</span><span class="p">);</span>
-<span class="w">  </span><span class="nb">U</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="no">tau</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nb">ctrl</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">1</span><span class="p">],</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
-</pre></div>
-</div>
-<p>constructs the gate</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}R_z(\tau) = \exp(-i\tau Z/2) = \left(\begin{array}{cc}
-e^{-i\tau/2} &amp; 0 \\
-0 &amp; e^{i\tau/2} \end{array}\right) = e^{-i\tau/2}\left(\begin{array}{cc}
-1 &amp; 0 \\
-0 &amp; e^{i\tau} \end{array}\right)\end{split}\]</div>
-<p>and applies the controlled gate</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}I\otimes R_z(\pi/2) = \left(\begin{array}{cccc}
-1 &amp; 0 &amp; 0 &amp; 0 \\
-0 &amp; 1 &amp; 0 &amp; 0 \\
-0 &amp; 0 &amp; e^{-i\tau/2} &amp; 0 \\
-0 &amp; 0 &amp; 0 &amp; e^{i\tau/2} \end{array}\right).\end{split}\]</div>
-</section>
-<section id="hierarchically-defined-unitary-gates">
-<span id="sec-macros"></span><h2>Hierarchically defined unitary gates<a class="headerlink" href="#hierarchically-defined-unitary-gates" title="Permalink to this heading">¶</a></h2>
-<p>For new gates, we associate them with a corresponding unitary
-transformation by a sequence of built-in gates. For example, a CPHASE
-operation is shown schematically in <a class="reference internal" href="#fig-gate"><span class="std std-numref">Fig. 3</span></a>
-corresponding OpenQASM code is</p>
+the user and/or compiler, given information about the instructions supported by a particular target.
+A minimal compiler implementation might simply expand <code class="docutils literal notranslate"><span class="pre">gate</span></code> definitions repeatedly until reaching
+definitions for which <a class="reference internal" href="pulses.html#pulse-gates"><span class="std std-ref">defcal blocks</span></a> are known. A more sophisticated implementation
+might use the <cite>gate</cite> definitions of the gates with associated <code class="docutils literal notranslate"><span class="pre">defcal</span></code> blocks to
+build a gate library, and use methods based on KAK decompositions to rewrite into this hardware library.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">gate</span></code> statement also allows defining parameterized families of unitaries. For example, a CPHASE
+operation is shown schematically in <a class="reference internal" href="#fig-gate"><span class="std std-numref">Fig. 1</span></a>
+and the corresponding OpenQASM code is</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">gate</span><span class="w"> </span><span class="nf">cphase</span><span class="p">(</span><span class="n">θ</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span>
 <span class="p">{</span>
 <span class="w">  </span><span class="nb">U</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">θ</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
@@ -186,22 +127,21 @@ corresponding OpenQASM code is</p>
 <span class="nf">cphase</span><span class="p">(</span><span class="no">π</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">1</span><span class="p">];</span>
 </pre></div>
 </div>
-<figure class="align-default" id="id6">
+<figure class="align-default" id="id3">
 <span id="fig-gate"></span><img alt="../_images/gate.svg" src="../_images/gate.svg" /><figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">New gates are defined from previously defined gates. The gates are applied using the statement
-<code class="docutils literal notranslate"><span class="pre">name(params)</span> <span class="pre">qargs;</span></code> just like the built-in gates. The parentheses are optional if there
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">New gates are defined from previously defined gates. The gates are applied using the statement
+<code class="docutils literal notranslate"><span class="pre">name(params)</span> <span class="pre">qargs;</span></code> The parentheses are optional if there
 are no parameters. The gate <span class="math notranslate nohighlight">\({cphase}(\theta)\)</span> corresponds to the unitary matrix
-<span class="math notranslate nohighlight">\({diag}(1,1,1,e^{i\theta})\)</span> up to a global phase.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<span class="math notranslate nohighlight">\({diag}(1,1,1,e^{i\theta})\)</span> up to a global phase.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>Note that this definition does not imply that <code class="docutils literal notranslate"><span class="pre">cphase</span></code> must be implemented with
-this series of gates. Rather, we have specified the unitary
+<p>Again, this definition does not imply that <code class="docutils literal notranslate"><span class="pre">cphase</span></code> must be implemented with
+this particular series of gates. Rather, we have specified the unitary
 transformation that corresponds to the symbol <code class="docutils literal notranslate"><span class="pre">cphase</span></code>. The particular
 implementation is up to the compiler, given information about the basis
 gate set supported by a particular target.</p>
 <p>In general, new gates are defined by statements of the form</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// comment</span>
-<span class="kd">gate</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="w"> </span><span class="n">qargs</span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">gate</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="w"> </span><span class="n">qargs</span>
 <span class="p">{</span>
 <span class="w">  </span><span class="n">body</span>
 <span class="p">}</span>
@@ -209,10 +149,13 @@ gate set supported by a particular target.</p>
 </div>
 <p>where the optional parameter list <code class="docutils literal notranslate"><span class="pre">params</span></code> is a comma-separated list of variable
 parameters, and the argument list <code class="docutils literal notranslate"><span class="pre">qargs</span></code> is a comma-separated list of qubit
-arguments. The parameters are identifiers with arbitrary-precision numeric types.
-The qubit arguments are identifiers. If there are no
-variable parameters, the parentheses are optional. At least one qubit
-argument is required. The arguments in <code class="docutils literal notranslate"><span class="pre">qargs</span></code> cannot be indexed within the body
+arguments. The parameters are identifiers that behave as <code class="docutils literal notranslate"><span class="pre">angle</span></code> type with unknown
+size. A compiler might recognize certain constructs and replace them with mathematically-
+equivalent versions that would be true for arbitrary precision, or it might do calculations
+at a fixed <code class="docutils literal notranslate"><span class="pre">angle</span></code> size, for example corresponding to the size of <code class="docutils literal notranslate"><span class="pre">angle</span></code> parameters in the corresponding
+<code class="docutils literal notranslate"><span class="pre">defcal</span></code> definitions.</p>
+<p>The qubit arguments are identifiers. If there are no
+variable parameters, the parentheses are optional. The arguments in <code class="docutils literal notranslate"><span class="pre">qargs</span></code> cannot be indexed within the body
 of the gate definition.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// this is ok:</span>
 <span class="kd">gate</span><span class="w"> </span><span class="nf">g</span><span class="w"> </span><span class="n">a</span>
@@ -226,57 +169,36 @@ of the gate definition.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Only built-in gate statements, calls to previously defined gates, and
-timing directives can appear in <code class="docutils literal notranslate"><span class="pre">body</span></code>. For example, it is not valid to
+<p>Only built-in gate statements and calls to previously defined gates can appear in <code class="docutils literal notranslate"><span class="pre">body</span></code>.
+For example, it is not valid to
 declare a classical register in a gate body. Looping constructs over these quantum
 statements are valid.</p>
 <p>The statements in the body
 can only refer to the symbols given in the parameter or argument list,
 and these symbols are scoped only to the subroutine body.</p>
 <p>An empty body corresponds to the identity gate.</p>
-<p>Gates must be declared before use and
+<p>To avoid infinite recursion, gates must be declared before use and
 cannot call themselves. The statement <code class="docutils literal notranslate"><span class="pre">name(params)</span> <span class="pre">qargs;</span></code> applies the gate,
-and the variable parameters <code class="docutils literal notranslate"><span class="pre">params</span></code> can have any numeric type.</p>
-<p>The gate can be applied to any combination of qubit registers <em>of the same size</em>, as shown in the following example.</p>
-<p>The quantum circuit given by</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">gate</span><span class="w"> </span><span class="nf">g</span><span class="w"> </span><span class="n">qb0</span><span class="p">,</span><span class="w"> </span><span class="n">qb1</span><span class="p">,</span><span class="w"> </span><span class="n">qb2</span><span class="p">,</span><span class="w"> </span><span class="n">qb3</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="c1">// body</span>
-<span class="p">}</span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">1</span><span class="p">];</span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">qr1</span><span class="p">[</span><span class="m">2</span><span class="p">];</span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">qr2</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">qr3</span><span class="p">[</span><span class="m">2</span><span class="p">];</span>
-<span class="nf">g</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr1</span><span class="p">,</span><span class="w"> </span><span class="n">qr2</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr3</span><span class="p">;</span><span class="w"> </span><span class="c1">// ok</span>
-<span class="nf">g</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr2</span><span class="p">,</span><span class="w"> </span><span class="n">qr1</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr3</span><span class="p">;</span><span class="w"> </span><span class="c1">// error! qr2 and qr3 differ in size</span>
-</pre></div>
-</div>
-<p>has a second-to-last line that means</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// FIXME: insert translation of algorithmic block from TeX source.
-
-for j ← 0, 1 do
-    g qr0[0],qr1[j],qr2[0],qr3[j];
-</pre></div>
-</div>
-<p>We provide this so that user-defined gates can be applied in parallel
-like the built-in gates.</p>
+and the variable parameters <code class="docutils literal notranslate"><span class="pre">params</span></code> can have any type that can promote to <code class="docutils literal notranslate"><span class="pre">angle</span></code> type.</p>
 </section>
 <section id="quantum-gate-modifiers">
-<h2>Quantum gate modifiers<a class="headerlink" href="#quantum-gate-modifiers" title="Permalink to this heading">¶</a></h2>
+<h3>Quantum gate modifiers<a class="headerlink" href="#quantum-gate-modifiers" title="Permalink to this heading">¶</a></h3>
 <p>A gate modifier is a keyword that applies to a gate. A modifier
 <span class="math notranslate nohighlight">\(m\)</span> transforms a gate <span class="math notranslate nohighlight">\(U\)</span> to a new gate <span class="math notranslate nohighlight">\(m(U)\)</span> acting
 on the same or larger Hilbert space. We include modifiers in OpenQASM
 both for programming convenience and compiler analysis.</p>
+<section id="control-modifiers">
+<h4>Control modifiers<a class="headerlink" href="#control-modifiers" title="Permalink to this heading">¶</a></h4>
 <p>The modifier <code class="docutils literal notranslate"><span class="pre">ctrl</span> <span class="pre">&#64;</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> by a
 controlled-<span class="math notranslate nohighlight">\(U\)</span> gate. If the control bit is 0, nothing happens to the target bit.
 If the control bit is 1, <span class="math notranslate nohighlight">\(U\)</span> acts on the target bit. Mathematically, the controlled-<span class="math notranslate nohighlight">\(U\)</span>
 gate is defined as <span class="math notranslate nohighlight">\(C_U = I \otimes U^c\)</span>, where <span class="math notranslate nohighlight">\(c\)</span> is the integer value of the control
 bit and <span class="math notranslate nohighlight">\(C_U\)</span> is the controlled-<span class="math notranslate nohighlight">\(U\)</span> gate. The new quantum argument is prepended to the
 argument list for the controlled-<span class="math notranslate nohighlight">\(U\)</span> gate. The quantum argument can be a register, and in this
-case controlled gate broadcast over it (as it shown in examples above for CNOT gate). The modified
+case controlled gate broadcast over it (as for all gates). The modified
 gate does not use any additional scratch space and may require compilation to be executed.</p>
-<p>We define a special case, the controlled <em>global</em> phase gate, as
-<span class="math notranslate nohighlight">\(ctrl &#64; gphase(a) = U(0, 0, a)\)</span>. This is a single qubit gate.</p>
+<p>As a limiting case, the controlled <em>global</em> phase gate
+<code class="docutils literal notranslate"><span class="pre">ctrl</span> <span class="pre">&#64;</span> <span class="pre">gphase(a)</span></code> is equivalent to the single-qubit gate <code class="docutils literal notranslate"><span class="pre">U(0,</span> <span class="pre">0,</span> <span class="pre">a)</span></code>.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Define a controlled Rz operation using the ctrl gate modifier.</span>
 <span class="c1">// q1 is control, q2 is target</span>
 <span class="kd">gate</span><span class="w"> </span><span class="nf">crz</span><span class="p">(</span><span class="n">θ</span><span class="p">)</span><span class="w"> </span><span class="n">q1</span><span class="p">,</span><span class="w"> </span><span class="n">q2</span><span class="w"> </span><span class="p">{</span>
@@ -315,7 +237,10 @@ respectively.</p>
 <span class="nb">negctrl</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="nb">ctrl</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="nf">x</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="m">1</span><span class="p">],</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">f</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>The modifier <code class="docutils literal notranslate"><span class="pre">inv</span> <span class="pre">&#64;</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> with its inverse
+</section>
+<section id="inverse-modifier">
+<h4>Inverse modifier<a class="headerlink" href="#inverse-modifier" title="Permalink to this heading">¶</a></h4>
+<p>The modifier <code class="docutils literal notranslate"><span class="pre">inv</span> <span class="pre">&#64;</span> <span class="pre">U</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> with its inverse
 <span class="math notranslate nohighlight">\(U^\dagger\)</span>. This can be computed from gate <span class="math notranslate nohighlight">\(U\)</span> via the following rules</p>
 <ul class="simple">
 <li><p>The inverse of any gate <span class="math notranslate nohighlight">\(U=U_m U_{m-1} ... U_1\)</span> can be defined recursively by reversing the
@@ -336,6 +261,9 @@ and <code class="docutils literal notranslate"><span class="pre">inv</span> <spa
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="power-modifier">
+<h4>Power modifier<a class="headerlink" href="#power-modifier" title="Permalink to this heading">¶</a></h4>
 <p>The modifier <code class="docutils literal notranslate"><span class="pre">pow(k)</span> <span class="pre">&#64;</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> by its <span class="math notranslate nohighlight">\(k\)</span>th
 power <span class="math notranslate nohighlight">\(U^k\)</span> for some positive integer or floating point number <span class="math notranslate nohighlight">\(k\)</span> (not necessarily
 constant). In the case that <span class="math notranslate nohighlight">\(k\)</span> is an integer, the gate can be implemented (albeit
@@ -347,12 +275,81 @@ repetitions of <code class="docutils literal notranslate"><span class="pre">inv<
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
+</section>
+<section id="built-in-gates">
+<h3>Built-in gates<a class="headerlink" href="#built-in-gates" title="Permalink to this heading">¶</a></h3>
+<section id="built-in-single-qubit-gate-u">
+<h4>Built-in single-qubit gate <code class="docutils literal notranslate"><span class="pre">U</span></code><a class="headerlink" href="#built-in-single-qubit-gate-u" title="Permalink to this heading">¶</a></h4>
+<p>The built-in single-qubit gate <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span></code> represents the unitary matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}U(\theta,\phi,\lambda) := \frac{1}{2}\left(\begin{array}{cc}
+   1+e^{i\theta} &amp; -ie^{i\lambda}(1-e^{i\theta}) \\
+   ie^{i\phi}(1-e^{i\theta}) &amp; e^{i(\phi+\lambda)}(1+e^{i\theta}) \end{array}\right).\end{split}\]</div>
+<p>This definition is <span class="math notranslate nohighlight">\(2\pi\)</span>-periodic in each of the parameters θ, ϕ, λ and
+specifies any element of <span class="math notranslate nohighlight">\(U(2)\)</span> up to a
+global phase <a class="footnote-reference brackets" href="#uphase" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . For example <code class="docutils literal notranslate"><span class="pre">U(π/2,</span> <span class="pre">0,</span> <span class="pre">π)</span> <span class="pre">q[0];</span></code>, applies a Hadamard gate to qubit <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>
+(up to a non-standard global phase).</p>
+</section>
+<section id="global-phase-gate-gphase">
+<h4>Global phase gate <code class="docutils literal notranslate"><span class="pre">gphase</span></code><a class="headerlink" href="#global-phase-gate-gphase" title="Permalink to this heading">¶</a></h4>
+<p>From a physical perspective, the unitaries <span class="math notranslate nohighlight">\(e^{i\gamma}V\)</span> and <span class="math notranslate nohighlight">\(V\)</span> are equivalent although they differ by a global
+phase <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span>. When we add a control to these gates, however, the global phase becomes a relative phase
+that is applied when the control qubit is one. A built-in global phase gate
+allows the inclusion of arbitrary global phases on circuits. The instruction <code class="docutils literal notranslate"><span class="pre">gphase(γ);</span></code> accumulates a global phase
+of <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span>.</p>
+<p>Just as every n-qubit gate can be thought of as generating a tensor product with the suitable
+identity matrix to cover all other qubits in the gate, subroutine, or global scope containing the
+instruction, similarly <code class="docutils literal notranslate"><span class="pre">gphase</span></code> behaves as a 0-qubit gate and when applied in a context with
+<cite>m</cite> qubits in scope, behaves as applying the unitary</p>
+<div class="math notranslate nohighlight">
+\[\operatorname{gphase}(\gamma) := e^{i\gamma} I_m,\]</div>
+<p>where <span class="math notranslate nohighlight">\(I_m\)</span> denotes the identity matrix with size <span class="math notranslate nohighlight">\(2^m\)</span></p>
+<p>For example</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kd">gate</span><span class="w"> </span><span class="nf">X</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nb">U</span><span class="p">(</span><span class="no">π</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="no">π</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="w">   </span><span class="nb">gphase</span><span class="w"> </span><span class="o">-</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">gate</span><span class="w"> </span><span class="nf">CX</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nb">ctrl</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="nf">X</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>defines <code class="docutils literal notranslate"><span class="pre">CX</span></code> as the standard CNOT gate.</p>
+</section>
+</section>
+</section>
+<section id="relation-of-the-built-in-gates-to-hardware-native-gates">
+<h2>Relation of the built-in gates to hardware-native gates<a class="headerlink" href="#relation-of-the-built-in-gates-to-hardware-native-gates" title="Permalink to this heading">¶</a></h2>
+<p>For <em>non-parameterized gates</em>, the choice of <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">gphase</span></code> as the built-in gates, along with one
+two-qubit entangling gate CNOT as defined gives a universal gate set that can represent general n-qubit
+unitaries with an <span class="math notranslate nohighlight">\(O(2^n)\)</span> size description <span id="id2">[<a class="reference internal" href="../index.html#id45" title="A. Barenco, C. Bennett, R. Cleve, D. DiVincenzo, N. Margolus, P. Shor, T. Sleator, J. Smolin, and H. Weinfurter. Elementary gates for quantum computation. Phys. Rev. A, 1995.">BBC+95</a>]</span>. This basis is not an enforced compilation
+target but a mechanism to define other gates. For many gates of
+practical interest, there is a circuit representation with a polynomial
+number of one- and two-qubit gates, giving a more compact representation
+than requiring the programmer to express the full <span class="math notranslate nohighlight">\(2^n \times 2^n\)</span>
+matrix. However, a general <span class="math notranslate nohighlight">\(n\)</span>-qubit gate can be defined using an
+exponential number of these gates. Thus there is no particular privilege incurred by hardware implementations
+that natively support the built-in gates.</p>
+<p>For <em>parameterized gates</em>, the choice of built-in gates <em>does</em> constrain which hardware-native gates are well-
+supported, because conversion between parameterized basis sets in general can be involved, requiring careful
+selection of branch cuts and other logic that would not likely be feasible to specify as compact mathematical
+expressions, nor to evaluate at runtime for cases where the parameters depend on quantum measurements.</p>
+<p>For many current platforms the qubits are defined relative to a
+rotating frame and the rotating wave approximation (RWA) holds. This is the domain covered by the OpenPulse
+specification. For this case, the only supported form of run-time parameterization
+will likely be via a <code class="docutils literal notranslate"><span class="pre">rz(ϕ)</span></code> implemented by specialized frame-tracking hardware.
+This gate is covered by the built-in <code class="docutils literal notranslate"><span class="pre">U</span></code> as a special case <code class="docutils literal notranslate"><span class="pre">U(0,</span> <span class="pre">0,</span> <span class="pre">ϕ)</span></code>
+However, if other forms of run-time parameterization become important, it may be necessary to revise OpenQASM,
+to give meaning to those gates, for example by adding new basis gates or additional <code class="docutils literal notranslate"><span class="pre">gate</span></code> definition syntax.</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id3" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
-<p>The intention is that the accuracy of these built-in gates is
-sufficient for the accuracy of the derived gates to not be limited by
-that of the built-in gates.</p>
+<aside class="footnote brackets" id="uphase" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>This definition of <code class="docutils literal notranslate"><span class="pre">U</span></code> has a different global phase from previous versions of the OpenQASM spec.
+Unfortunately the original definitions were 4π rather than 2π periodic in the θ parameter. A gate
+<code class="docutils literal notranslate"><span class="pre">U_old(0,</span> <span class="pre">ϕ,</span> <span class="pre">θ)</span> <span class="pre">q;</span></code> under the previous definition corresponds to <code class="docutils literal notranslate"><span class="pre">U(0,</span> <span class="pre">ϕ,</span> <span class="pre">θ)</span> <span class="pre">q;</span> <span class="pre">gphase(-0/2);</span></code> with the present
+definition.</p>
 </aside>
 </aside>
 </section>
@@ -383,9 +380,9 @@ that of the built-in gates.</p>
 <li class="toctree-l2"><a class="reference internal" href="comments.html#included-files">Included files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types.html">Types and Casting</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Gates</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#built-in-gates">Built-in gates</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hierarchically-defined-unitary-gates">Hierarchically defined unitary gates</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#quantum-gate-modifiers">Quantum gate modifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#applying-gates">Applying gates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-gates">Defining gates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#relation-of-the-built-in-gates-to-hardware-native-gates">Relation of the built-in gates to hardware-native gates</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="insts.html">Built-in quantum instructions</a></li>
@@ -440,8 +437,8 @@ that of the built-in gates.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="../_sources/language/gates.rst.txt"
