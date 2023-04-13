@@ -109,7 +109,7 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos"> 63</span>breakStatement: BREAK SEMICOLON;
 <span class="linenos"> 64</span>continueStatement: CONTINUE SEMICOLON;
 <span class="linenos"> 65</span>endStatement: END SEMICOLON;
-<span class="linenos"> 66</span>forStatement: FOR scalarType Identifier IN (setExpression | LBRACKET rangeExpression RBRACKET | Identifier) body=statementOrScope;
+<span class="linenos"> 66</span>forStatement: FOR scalarType Identifier IN (setExpression | LBRACKET rangeExpression RBRACKET | expression) body=statementOrScope;
 <span class="linenos"> 67</span>ifStatement: IF LPAREN expression RPAREN if_body=statementOrScope (ELSE else_body=statementOrScope)?;
 <span class="linenos"> 68</span>returnStatement: RETURN (expression | measureExpression)? SEMICOLON;
 <span class="linenos"> 69</span>whileStatement: WHILE LPAREN expression RPAREN body=statementOrScope;
