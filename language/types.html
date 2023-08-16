@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Types and Casting &#8212; OpenQASM Live Specification  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css?v=3aae764c" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
@@ -730,11 +730,22 @@ can be accessed, using the following general syntax:</p>
 <span class="n">multiDim</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// multiDim == {{0.0, 1.2}, {2.1, 2.2}, {3.1, 0.0}}</span>
 </pre></div>
 </div>
-<p>The first argument to the <code class="docutils literal notranslate"><span class="pre">array</span></code> type constructor is the base type
+<p>The first argument to the <code class="docutils literal notranslate"><span class="pre">array</span></code> declaration is the base type
 of the array. The supported classical types include various sizes of <code class="docutils literal notranslate"><span class="pre">bit</span></code>,
 <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code>, and <code class="docutils literal notranslate"><span class="pre">angle</span></code>, as well as
 <code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">duration</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">stretch</span></code> is not a valid array
 base type.</p>
+<p>Arrays cannot be resized or reshaped. Arrays are statically typed, and cannot
+implicitly convert to or from any other type.</p>
+<p>The size of an array is constant and immutable, and is recorded once, at
+declaration time.</p>
+<p>Array declarations allocate memory of suitable size and alignment to
+accommodate the storage of its elements.</p>
+<p>If the array declaration is direct-initialized via initializer list, its elements
+are initialized to the values provided by the initializer list.  Otherwise, the
+memory allocated is not initialized, and that memory’s content is undefined.</p>
+<p>Arrays may be passed as parameters or arguments to functions.</p>
+<p>When an array, or slice of an array, is passed as argument to a function, the behavior accords to that described in <a class="reference internal" href="subroutines.html#arrays-in-subroutines"><span class="std std-ref">Arrays in subroutines</span></a>.</p>
 <p>Arrays <em>cannot</em> be declared inside the body of a function or gate. All arrays
 <em>must</em> be declared within the global scope of the program.
 Indexing of arrays is n-based <em>i.e.</em>, negative indices are allowed.
