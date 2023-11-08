@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
@@ -9,9 +9,9 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="_static/colors.css?v=3aae764c" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Language" href="language/index.html" />
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
 <p>OpenQASM is an imperative programming language designed for near-term
 quantum computing algorithms and applications. Quantum
 programs are described using the measurement-based quantum circuit model
@@ -48,7 +48,7 @@ description to a pulse representation.</p>
 <p>This document is draft version 3.0 of the OpenQASM specification. The Qiskit development team is
 soliciting feedback on this draft for consideration prior to finalizing version 3.0.</p>
 <section id="design-goals">
-<h2>Design Goals<a class="headerlink" href="#design-goals" title="Permalink to this heading">¶</a></h2>
+<h2>Design Goals<a class="headerlink" href="#design-goals" title="Link to this heading">¶</a></h2>
 <p>Version 3.0 of the OpenQASM specification aims to extend OpenQASM to include:</p>
 <ul class="simple">
 <li><p><strong>A broader family of computation with classical logic</strong>. We introduce classical control flow,
@@ -65,14 +65,14 @@ error amplification sequences most easily described at the gate level.</p></li>
 </ul>
 </section>
 <section id="scope">
-<h2>Scope<a class="headerlink" href="#scope" title="Permalink to this heading">¶</a></h2>
+<h2>Scope<a class="headerlink" href="#scope" title="Link to this heading">¶</a></h2>
 <p>This document aims to define the OpenQASM language itself, but it does not attempt to fully explain
 the motivation for various design choices. A forthcoming paper will provide this background. This
 document also does not seek to define the execution environment that accepts OpenQASM as an input.
 For the previous versions of OpenQASM please read <a class="reference external" href="https://arxiv.org/abs/1707.03429">arXiv:1707.03429</a>.</p>
 </section>
 <section id="implementation-details">
-<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this heading">¶</a></h2>
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Link to this heading">¶</a></h2>
 <p>OpenQASM 3 is a large expansion over the previous OpenQASM 2 specification.
 Many new features for classical control flow and computation are added to make writing quantum algorithms easier, and to describe classical data processing that forms part of these algorithms.
 The language, however, is not designed to be used for general-purpose classical computation, and in the near term, any hardware that executes an OpenQASM 3 program is unlikely to support the full set of data manipulations the language can describe.</p>
@@ -91,7 +91,7 @@ If they cannot, then they <em>must not</em> accept programs that use that featur
 The user can therefore expect that if an OpenQASM 3 program accepted by two implementations, both will perform the same behaviour except in cases this document explicitly allows it to differ.</p>
 </section>
 <section id="contributors">
-<h2>Contributors<a class="headerlink" href="#contributors" title="Permalink to this heading">¶</a></h2>
+<h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">¶</a></h2>
 <p>The following individuals contributed to the OpenQASM version 3.0 specification:</p>
 <p>Hossein Ajallooiean <a class="footnote-reference brackets" href="#id14" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>,
 Thomas Alexander <a class="footnote-reference brackets" href="#id15" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>,
@@ -208,7 +208,7 @@ Ntwali Bashige Toussaint <a class="footnote-reference brackets" href="#id16" id=
       &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |

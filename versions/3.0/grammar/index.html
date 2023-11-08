@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
@@ -9,9 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css?v=3aae764c" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Release Notes" href="../release_notes.html" />
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="openqasm-3-0-grammar">
-<h1>OpenQasm 3.0 Grammar<a class="headerlink" href="#openqasm-3-0-grammar" title="Permalink to this heading">¶</a></h1>
+<h1>OpenQasm 3.0 Grammar<a class="headerlink" href="#openqasm-3-0-grammar" title="Link to this heading">¶</a></h1>
 <p>OpenQasm 3.0 Grammar specification based in <a class="reference external" href="https://www.antlr.org/">ANTLR</a> parser generator.</p>
 <p>The ANTLR grammar is intended to serve as the official reference grammar for OpenQASM3 and defines
 the set of syntactically valid statements in the language. ANTLR is used because it provides a
@@ -43,230 +43,230 @@ to check whether a source file is parseable OpenQASM3 (note this does not ensure
 <p>The ANTLR parser does not attempt to be performant or construct
 an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <p>The ANTLR grammar may serve as a guide when developing compiler tooling for OpenQASM3.</p>
-<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span>parser grammar qasm3Parser;
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="k">parser</span><span class="w"> </span><span class="k">grammar</span><span class="w"> </span><span class="nc">qasm3Parser</span><span class="p">;</span>
 <span class="linenos">  2</span>
-<span class="linenos">  3</span>options {
-<span class="linenos">  4</span>    tokenVocab = qasm3Lexer;
-<span class="linenos">  5</span>}
+<span class="linenos">  3</span><span class="k">options</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">  4</span><span class="w">    </span><span class="nv">tokenVocab</span><span class="w"> </span><span class="p">=</span><span class="w"> </span>qasm3Lexer<span class="p">;</span>
+<span class="linenos">  5</span><span class="p">}</span>
 <span class="linenos">  6</span>
-<span class="linenos">  7</span>program: version? statement* EOF;
-<span class="linenos">  8</span>version: OPENQASM VersionSpecifier SEMICOLON;
+<span class="linenos">  7</span><span class="nl">program</span><span class="p">:</span><span class="w"> </span><span class="nv">version</span><span class="o">?</span><span class="w"> </span><span class="nv">statement</span><span class="o">*</span><span class="w"> </span><span class="no">EOF</span><span class="p">;</span>
+<span class="linenos">  8</span><span class="nl">version</span><span class="p">:</span><span class="w"> </span><span class="no">OPENQASM</span><span class="w"> </span><span class="no">VersionSpecifier</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
 <span class="linenos">  9</span>
-<span class="linenos"> 10</span>// A statement is any valid single statement of an OpenQASM 3 program, with the
-<span class="linenos"> 11</span>// exception of the version-definition statement (which must be unique, and the
-<span class="linenos"> 12</span>// first statement of the file if present).  This file just defines rules for
-<span class="linenos"> 13</span>// parsing; we leave semantic analysis and rejection of invalid scopes for
-<span class="linenos"> 14</span>// compiler implementations.
-<span class="linenos"> 15</span>statement:
-<span class="linenos"> 16</span>    pragma
-<span class="linenos"> 17</span>    // All the actual statements of the language.
-<span class="linenos"> 18</span>    | annotation* (
-<span class="linenos"> 19</span>        aliasDeclarationStatement
-<span class="linenos"> 20</span>        | assignmentStatement
-<span class="linenos"> 21</span>        | barrierStatement
-<span class="linenos"> 22</span>        | boxStatement
-<span class="linenos"> 23</span>        | breakStatement
-<span class="linenos"> 24</span>        | calStatement
-<span class="linenos"> 25</span>        | calibrationGrammarStatement
-<span class="linenos"> 26</span>        | classicalDeclarationStatement
-<span class="linenos"> 27</span>        | constDeclarationStatement
-<span class="linenos"> 28</span>        | continueStatement
-<span class="linenos"> 29</span>        | defStatement
-<span class="linenos"> 30</span>        | defcalStatement
-<span class="linenos"> 31</span>        | delayStatement
-<span class="linenos"> 32</span>        | endStatement
-<span class="linenos"> 33</span>        | expressionStatement
-<span class="linenos"> 34</span>        | externStatement
-<span class="linenos"> 35</span>        | forStatement
-<span class="linenos"> 36</span>        | gateCallStatement
-<span class="linenos"> 37</span>        | gateStatement
-<span class="linenos"> 38</span>        | ifStatement
-<span class="linenos"> 39</span>        | includeStatement
-<span class="linenos"> 40</span>        | ioDeclarationStatement
-<span class="linenos"> 41</span>        | measureArrowAssignmentStatement
-<span class="linenos"> 42</span>        | oldStyleDeclarationStatement
-<span class="linenos"> 43</span>        | quantumDeclarationStatement
-<span class="linenos"> 44</span>        | resetStatement
-<span class="linenos"> 45</span>        | returnStatement
-<span class="linenos"> 46</span>        | whileStatement
-<span class="linenos"> 47</span>    )
-<span class="linenos"> 48</span>;
-<span class="linenos"> 49</span>annotation: AnnotationKeyword RemainingLineContent?;
-<span class="linenos"> 50</span>scope: LBRACE statement* RBRACE;
-<span class="linenos"> 51</span>pragma: PRAGMA RemainingLineContent;
+<span class="linenos"> 10</span><span class="c">// A statement is any valid single statement of an OpenQASM 3 program, with the</span>
+<span class="linenos"> 11</span><span class="c">// exception of the version-definition statement (which must be unique, and the</span>
+<span class="linenos"> 12</span><span class="c">// first statement of the file if present).  This file just defines rules for</span>
+<span class="linenos"> 13</span><span class="c">// parsing; we leave semantic analysis and rejection of invalid scopes for</span>
+<span class="linenos"> 14</span><span class="c">// compiler implementations.</span>
+<span class="linenos"> 15</span><span class="nl">statement</span><span class="p">:</span>
+<span class="linenos"> 16</span><span class="w">    </span><span class="nv">pragma</span>
+<span class="linenos"> 17</span><span class="w">    </span><span class="c">// All the actual statements of the language.</span>
+<span class="linenos"> 18</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">annotation</span><span class="o">*</span><span class="w"> </span><span class="o">(</span>
+<span class="linenos"> 19</span><span class="w">        </span><span class="nv">aliasDeclarationStatement</span>
+<span class="linenos"> 20</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">assignmentStatement</span>
+<span class="linenos"> 21</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">barrierStatement</span>
+<span class="linenos"> 22</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">boxStatement</span>
+<span class="linenos"> 23</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">breakStatement</span>
+<span class="linenos"> 24</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">calStatement</span>
+<span class="linenos"> 25</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">calibrationGrammarStatement</span>
+<span class="linenos"> 26</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">classicalDeclarationStatement</span>
+<span class="linenos"> 27</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">constDeclarationStatement</span>
+<span class="linenos"> 28</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">continueStatement</span>
+<span class="linenos"> 29</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">defStatement</span>
+<span class="linenos"> 30</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">defcalStatement</span>
+<span class="linenos"> 31</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">delayStatement</span>
+<span class="linenos"> 32</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">endStatement</span>
+<span class="linenos"> 33</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">expressionStatement</span>
+<span class="linenos"> 34</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">externStatement</span>
+<span class="linenos"> 35</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">forStatement</span>
+<span class="linenos"> 36</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">gateCallStatement</span>
+<span class="linenos"> 37</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">gateStatement</span>
+<span class="linenos"> 38</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">ifStatement</span>
+<span class="linenos"> 39</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">includeStatement</span>
+<span class="linenos"> 40</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">ioDeclarationStatement</span>
+<span class="linenos"> 41</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">measureArrowAssignmentStatement</span>
+<span class="linenos"> 42</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">oldStyleDeclarationStatement</span>
+<span class="linenos"> 43</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumDeclarationStatement</span>
+<span class="linenos"> 44</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">resetStatement</span>
+<span class="linenos"> 45</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">returnStatement</span>
+<span class="linenos"> 46</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nv">whileStatement</span>
+<span class="linenos"> 47</span><span class="w">    </span><span class="o">)</span>
+<span class="linenos"> 48</span><span class="p">;</span>
+<span class="linenos"> 49</span><span class="nl">annotation</span><span class="p">:</span><span class="w"> </span><span class="no">AnnotationKeyword</span><span class="w"> </span><span class="no">RemainingLineContent</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos"> 50</span><span class="nl">scope</span><span class="p">:</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="nv">statement</span><span class="o">*</span><span class="w"> </span><span class="no">RBRACE</span><span class="p">;</span>
+<span class="linenos"> 51</span><span class="nl">pragma</span><span class="p">:</span><span class="w"> </span><span class="no">PRAGMA</span><span class="w"> </span><span class="no">RemainingLineContent</span><span class="p">;</span>
 <span class="linenos"> 52</span>
-<span class="linenos"> 53</span>statementOrScope: statement | scope;
+<span class="linenos"> 53</span><span class="nl">statementOrScope</span><span class="p">:</span><span class="w"> </span><span class="nv">statement</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">scope</span><span class="p">;</span>
 <span class="linenos"> 54</span>
 <span class="linenos"> 55</span>
-<span class="linenos"> 56</span>/* Start top-level statement definitions. */
+<span class="linenos"> 56</span><span class="c">/* Start top-level statement definitions. */</span>
 <span class="linenos"> 57</span>
-<span class="linenos"> 58</span>// Inclusion statements.
-<span class="linenos"> 59</span>calibrationGrammarStatement: DEFCALGRAMMAR StringLiteral SEMICOLON;
-<span class="linenos"> 60</span>includeStatement: INCLUDE StringLiteral SEMICOLON;
+<span class="linenos"> 58</span><span class="c">// Inclusion statements.</span>
+<span class="linenos"> 59</span><span class="nl">calibrationGrammarStatement</span><span class="p">:</span><span class="w"> </span><span class="no">DEFCALGRAMMAR</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 60</span><span class="nl">includeStatement</span><span class="p">:</span><span class="w"> </span><span class="no">INCLUDE</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
 <span class="linenos"> 61</span>
-<span class="linenos"> 62</span>// Control-flow statements.
-<span class="linenos"> 63</span>breakStatement: BREAK SEMICOLON;
-<span class="linenos"> 64</span>continueStatement: CONTINUE SEMICOLON;
-<span class="linenos"> 65</span>endStatement: END SEMICOLON;
-<span class="linenos"> 66</span>forStatement: FOR scalarType Identifier IN (setExpression | LBRACKET rangeExpression RBRACKET | expression) body=statementOrScope;
-<span class="linenos"> 67</span>ifStatement: IF LPAREN expression RPAREN if_body=statementOrScope (ELSE else_body=statementOrScope)?;
-<span class="linenos"> 68</span>returnStatement: RETURN (expression | measureExpression)? SEMICOLON;
-<span class="linenos"> 69</span>whileStatement: WHILE LPAREN expression RPAREN body=statementOrScope;
+<span class="linenos"> 62</span><span class="c">// Control-flow statements.</span>
+<span class="linenos"> 63</span><span class="nl">breakStatement</span><span class="p">:</span><span class="w"> </span><span class="no">BREAK</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 64</span><span class="nl">continueStatement</span><span class="p">:</span><span class="w"> </span><span class="no">CONTINUE</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 65</span><span class="nl">endStatement</span><span class="p">:</span><span class="w"> </span><span class="no">END</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 66</span><span class="nl">forStatement</span><span class="p">:</span><span class="w"> </span><span class="no">FOR</span><span class="w"> </span><span class="nv">scalarType</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">IN</span><span class="w"> </span><span class="o">(</span><span class="nv">setExpression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">rangeExpression</span><span class="w"> </span><span class="no">RBRACKET</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="o">)</span><span class="w"> </span><span class="nv">body</span><span class="o">=</span><span class="nv">statementOrScope</span><span class="p">;</span>
+<span class="linenos"> 67</span><span class="nl">ifStatement</span><span class="p">:</span><span class="w"> </span><span class="no">IF</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="nv">if_body</span><span class="o">=</span><span class="nv">statementOrScope</span><span class="w"> </span><span class="o">(</span><span class="no">ELSE</span><span class="w"> </span><span class="nv">else_body</span><span class="o">=</span><span class="nv">statementOrScope</span><span class="o">)?</span><span class="p">;</span>
+<span class="linenos"> 68</span><span class="nl">returnStatement</span><span class="p">:</span><span class="w"> </span><span class="no">RETURN</span><span class="w"> </span><span class="o">(</span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">measureExpression</span><span class="o">)?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 69</span><span class="nl">whileStatement</span><span class="p">:</span><span class="w"> </span><span class="no">WHILE</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="nv">body</span><span class="o">=</span><span class="nv">statementOrScope</span><span class="p">;</span>
 <span class="linenos"> 70</span>
-<span class="linenos"> 71</span>// Quantum directive statements.
-<span class="linenos"> 72</span>barrierStatement: BARRIER gateOperandList? SEMICOLON;
-<span class="linenos"> 73</span>boxStatement: BOX designator? scope;
-<span class="linenos"> 74</span>delayStatement: DELAY designator gateOperandList? SEMICOLON;
-<span class="linenos"> 75</span>/* `gateCallStatement`  is split in two to avoid a potential ambiguity with an
-<span class="linenos"> 76</span> * `expressionStatement` that consists of a single function call.  The only
-<span class="linenos"> 77</span> * &quot;gate&quot; that can have no operands is `gphase` with no control modifiers, and
-<span class="linenos"> 78</span> * `gphase(pi);` looks grammatically identical to `fn(pi);`.  We disambiguate by
-<span class="linenos"> 79</span> * having `gphase` be its own token, and requiring that all other gate calls
-<span class="linenos"> 80</span> * grammatically have at least one qubit.  Strictly, as long as `gphase` is a
-<span class="linenos"> 81</span> * separate token, ANTLR can disambiguate the statements by the definition
-<span class="linenos"> 82</span> * order, but this is more robust. */
-<span class="linenos"> 83</span>gateCallStatement:
-<span class="linenos"> 84</span>    gateModifier* Identifier (LPAREN expressionList? RPAREN)? designator? gateOperandList SEMICOLON
-<span class="linenos"> 85</span>    | gateModifier* GPHASE (LPAREN expressionList? RPAREN)? designator? gateOperandList? SEMICOLON
-<span class="linenos"> 86</span>;
-<span class="linenos"> 87</span>// measureArrowAssignmentStatement also permits the case of not assigning the
-<span class="linenos"> 88</span>// result to any classical value too.
-<span class="linenos"> 89</span>measureArrowAssignmentStatement: measureExpression (ARROW indexedIdentifier)? SEMICOLON;
-<span class="linenos"> 90</span>resetStatement: RESET gateOperand SEMICOLON;
+<span class="linenos"> 71</span><span class="c">// Quantum directive statements.</span>
+<span class="linenos"> 72</span><span class="nl">barrierStatement</span><span class="p">:</span><span class="w"> </span><span class="no">BARRIER</span><span class="w"> </span><span class="nv">gateOperandList</span><span class="o">?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 73</span><span class="nl">boxStatement</span><span class="p">:</span><span class="w"> </span><span class="no">BOX</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="w"> </span><span class="nv">scope</span><span class="p">;</span>
+<span class="linenos"> 74</span><span class="nl">delayStatement</span><span class="p">:</span><span class="w"> </span><span class="no">DELAY</span><span class="w"> </span><span class="nv">designator</span><span class="w"> </span><span class="nv">gateOperandList</span><span class="o">?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 75</span><span class="c">/* `gateCallStatement`  is split in two to avoid a potential ambiguity with an</span>
+<span class="linenos"> 76</span><span class="c"> * `expressionStatement` that consists of a single function call.  The only</span>
+<span class="linenos"> 77</span><span class="c"> * &quot;gate&quot; that can have no operands is `gphase` with no control modifiers, and</span>
+<span class="linenos"> 78</span><span class="c"> * `gphase(pi);` looks grammatically identical to `fn(pi);`.  We disambiguate by</span>
+<span class="linenos"> 79</span><span class="c"> * having `gphase` be its own token, and requiring that all other gate calls</span>
+<span class="linenos"> 80</span><span class="c"> * grammatically have at least one qubit.  Strictly, as long as `gphase` is a</span>
+<span class="linenos"> 81</span><span class="c"> * separate token, ANTLR can disambiguate the statements by the definition</span>
+<span class="linenos"> 82</span><span class="c"> * order, but this is more robust. */</span>
+<span class="linenos"> 83</span><span class="nl">gateCallStatement</span><span class="p">:</span>
+<span class="linenos"> 84</span><span class="w">    </span><span class="nv">gateModifier</span><span class="o">*</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="o">)?</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="w"> </span><span class="nv">gateOperandList</span><span class="w"> </span><span class="no">SEMICOLON</span>
+<span class="linenos"> 85</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">gateModifier</span><span class="o">*</span><span class="w"> </span><span class="no">GPHASE</span><span class="w"> </span><span class="o">(</span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="o">)?</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="w"> </span><span class="nv">gateOperandList</span><span class="o">?</span><span class="w"> </span><span class="no">SEMICOLON</span>
+<span class="linenos"> 86</span><span class="p">;</span>
+<span class="linenos"> 87</span><span class="c">// measureArrowAssignmentStatement also permits the case of not assigning the</span>
+<span class="linenos"> 88</span><span class="c">// result to any classical value too.</span>
+<span class="linenos"> 89</span><span class="nl">measureArrowAssignmentStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">measureExpression</span><span class="w"> </span><span class="o">(</span><span class="no">ARROW</span><span class="w"> </span><span class="nv">indexedIdentifier</span><span class="o">)?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 90</span><span class="nl">resetStatement</span><span class="p">:</span><span class="w"> </span><span class="no">RESET</span><span class="w"> </span><span class="nv">gateOperand</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
 <span class="linenos"> 91</span>
-<span class="linenos"> 92</span>// Primitive declaration statements.
-<span class="linenos"> 93</span>aliasDeclarationStatement: LET Identifier EQUALS aliasExpression SEMICOLON;
-<span class="linenos"> 94</span>classicalDeclarationStatement: (scalarType | arrayType) Identifier (EQUALS declarationExpression)? SEMICOLON;
-<span class="linenos"> 95</span>constDeclarationStatement: CONST scalarType Identifier EQUALS declarationExpression SEMICOLON;
-<span class="linenos"> 96</span>ioDeclarationStatement: (INPUT | OUTPUT) (scalarType | arrayType) Identifier SEMICOLON;
-<span class="linenos"> 97</span>oldStyleDeclarationStatement: (CREG | QREG) Identifier designator? SEMICOLON;
-<span class="linenos"> 98</span>quantumDeclarationStatement: qubitType Identifier SEMICOLON;
+<span class="linenos"> 92</span><span class="c">// Primitive declaration statements.</span>
+<span class="linenos"> 93</span><span class="nl">aliasDeclarationStatement</span><span class="p">:</span><span class="w"> </span><span class="no">LET</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">EQUALS</span><span class="w"> </span><span class="nv">aliasExpression</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 94</span><span class="nl">classicalDeclarationStatement</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="nv">scalarType</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">arrayType</span><span class="o">)</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">EQUALS</span><span class="w"> </span><span class="nv">declarationExpression</span><span class="o">)?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 95</span><span class="nl">constDeclarationStatement</span><span class="p">:</span><span class="w"> </span><span class="no">CONST</span><span class="w"> </span><span class="nv">scalarType</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">EQUALS</span><span class="w"> </span><span class="nv">declarationExpression</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 96</span><span class="nl">ioDeclarationStatement</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">INPUT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">OUTPUT</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="nv">scalarType</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">arrayType</span><span class="o">)</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 97</span><span class="nl">oldStyleDeclarationStatement</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">CREG</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">QREG</span><span class="o">)</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos"> 98</span><span class="nl">quantumDeclarationStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">qubitType</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
 <span class="linenos"> 99</span>
-<span class="linenos">100</span>// Declarations and definitions of higher-order objects.
-<span class="linenos">101</span>defStatement: DEF Identifier LPAREN argumentDefinitionList? RPAREN returnSignature? scope;
-<span class="linenos">102</span>externStatement: EXTERN Identifier LPAREN externArgumentList? RPAREN returnSignature? SEMICOLON;
-<span class="linenos">103</span>gateStatement: GATE Identifier (LPAREN params=identifierList? RPAREN)? qubits=identifierList scope;
+<span class="linenos">100</span><span class="c">// Declarations and definitions of higher-order objects.</span>
+<span class="linenos">101</span><span class="nl">defStatement</span><span class="p">:</span><span class="w"> </span><span class="no">DEF</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">argumentDefinitionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="nv">returnSignature</span><span class="o">?</span><span class="w"> </span><span class="nv">scope</span><span class="p">;</span>
+<span class="linenos">102</span><span class="nl">externStatement</span><span class="p">:</span><span class="w"> </span><span class="no">EXTERN</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">externArgumentList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="nv">returnSignature</span><span class="o">?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos">103</span><span class="nl">gateStatement</span><span class="p">:</span><span class="w"> </span><span class="no">GATE</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">params</span><span class="o">=</span><span class="nv">identifierList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="o">)?</span><span class="w"> </span><span class="nv">qubits</span><span class="o">=</span><span class="nv">identifierList</span><span class="w"> </span><span class="nv">scope</span><span class="p">;</span>
 <span class="linenos">104</span>
-<span class="linenos">105</span>// Non-declaration assignments and calculations.
-<span class="linenos">106</span>assignmentStatement: indexedIdentifier op=(EQUALS | CompoundAssignmentOperator) (expression | measureExpression) SEMICOLON;
-<span class="linenos">107</span>expressionStatement: expression SEMICOLON;
+<span class="linenos">105</span><span class="c">// Non-declaration assignments and calculations.</span>
+<span class="linenos">106</span><span class="nl">assignmentStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">indexedIdentifier</span><span class="w"> </span><span class="nv">op</span><span class="o">=(</span><span class="no">EQUALS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">CompoundAssignmentOperator</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">measureExpression</span><span class="o">)</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
+<span class="linenos">107</span><span class="nl">expressionStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="p">;</span>
 <span class="linenos">108</span>
-<span class="linenos">109</span>// Statements where the bulk is in the calibration language.
-<span class="linenos">110</span>calStatement: CAL LBRACE CalibrationBlock? RBRACE;
-<span class="linenos">111</span>defcalStatement: DEFCAL defcalTarget (LPAREN defcalArgumentDefinitionList? RPAREN)? defcalOperandList returnSignature? LBRACE CalibrationBlock? RBRACE;
+<span class="linenos">109</span><span class="c">// Statements where the bulk is in the calibration language.</span>
+<span class="linenos">110</span><span class="nl">calStatement</span><span class="p">:</span><span class="w"> </span><span class="no">CAL</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="no">CalibrationBlock</span><span class="o">?</span><span class="w"> </span><span class="no">RBRACE</span><span class="p">;</span>
+<span class="linenos">111</span><span class="nl">defcalStatement</span><span class="p">:</span><span class="w"> </span><span class="no">DEFCAL</span><span class="w"> </span><span class="nv">defcalTarget</span><span class="w"> </span><span class="o">(</span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">defcalArgumentDefinitionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="o">)?</span><span class="w"> </span><span class="nv">defcalOperandList</span><span class="w"> </span><span class="nv">returnSignature</span><span class="o">?</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="no">CalibrationBlock</span><span class="o">?</span><span class="w"> </span><span class="no">RBRACE</span><span class="p">;</span>
 <span class="linenos">112</span>
 <span class="linenos">113</span>
-<span class="linenos">114</span>/* End top-level statement definitions. */
-<span class="linenos">115</span>/* Start expression definitions. */
+<span class="linenos">114</span><span class="c">/* End top-level statement definitions. */</span>
+<span class="linenos">115</span><span class="c">/* Start expression definitions. */</span>
 <span class="linenos">116</span>
 <span class="linenos">117</span>
-<span class="linenos">118</span>// ANTLR4 can handle direct left-recursive rules, and ambiguities are guaranteed
-<span class="linenos">119</span>// to resolve in the order of definition.  This means that the order of rules
-<span class="linenos">120</span>// here defines the precedence table, from most tightly binding to least.
-<span class="linenos">121</span>expression:
-<span class="linenos">122</span>    LPAREN expression RPAREN                                  # parenthesisExpression
-<span class="linenos">123</span>    | expression indexOperator                                # indexExpression
-<span class="linenos">124</span>    | &lt;assoc=right&gt; expression op=DOUBLE_ASTERISK expression  # powerExpression
-<span class="linenos">125</span>    | op=(TILDE | EXCLAMATION_POINT | MINUS) expression       # unaryExpression
-<span class="linenos">126</span>    | expression op=(ASTERISK | SLASH | PERCENT) expression   # multiplicativeExpression
-<span class="linenos">127</span>    | expression op=(PLUS | MINUS) expression                 # additiveExpression
-<span class="linenos">128</span>    | expression op=BitshiftOperator expression               # bitshiftExpression
-<span class="linenos">129</span>    | expression op=ComparisonOperator expression             # comparisonExpression
-<span class="linenos">130</span>    | expression op=EqualityOperator expression               # equalityExpression
-<span class="linenos">131</span>    | expression op=AMPERSAND expression                      # bitwiseAndExpression
-<span class="linenos">132</span>    | expression op=CARET expression                          # bitwiseXorExpression
-<span class="linenos">133</span>    | expression op=PIPE expression                           # bitwiseOrExpression
-<span class="linenos">134</span>    | expression op=DOUBLE_AMPERSAND expression               # logicalAndExpression
-<span class="linenos">135</span>    | expression op=DOUBLE_PIPE expression                    # logicalOrExpression
-<span class="linenos">136</span>    | (scalarType | arrayType) LPAREN expression RPAREN       # castExpression
-<span class="linenos">137</span>    | DURATIONOF LPAREN scope RPAREN                          # durationofExpression
-<span class="linenos">138</span>    | Identifier LPAREN expressionList? RPAREN                # callExpression
-<span class="linenos">139</span>    | (
-<span class="linenos">140</span>        Identifier
-<span class="linenos">141</span>        | BinaryIntegerLiteral
-<span class="linenos">142</span>        | OctalIntegerLiteral
-<span class="linenos">143</span>        | DecimalIntegerLiteral
-<span class="linenos">144</span>        | HexIntegerLiteral
-<span class="linenos">145</span>        | FloatLiteral
-<span class="linenos">146</span>        | ImaginaryLiteral
-<span class="linenos">147</span>        | BooleanLiteral
-<span class="linenos">148</span>        | BitstringLiteral
-<span class="linenos">149</span>        | TimingLiteral
-<span class="linenos">150</span>        | HardwareQubit
-<span class="linenos">151</span>      )                                                       # literalExpression
-<span class="linenos">152</span>;
+<span class="linenos">118</span><span class="c">// ANTLR4 can handle direct left-recursive rules, and ambiguities are guaranteed</span>
+<span class="linenos">119</span><span class="c">// to resolve in the order of definition.  This means that the order of rules</span>
+<span class="linenos">120</span><span class="c">// here defines the precedence table, from most tightly binding to least.</span>
+<span class="linenos">121</span><span class="nl">expression</span><span class="p">:</span>
+<span class="linenos">122</span><span class="w">    </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="w">                                  </span><span class="o">#</span><span class="w"> </span><span class="nv">parenthesisExpression</span>
+<span class="linenos">123</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">indexOperator</span><span class="w">                                </span><span class="o">#</span><span class="w"> </span><span class="nv">indexExpression</span>
+<span class="linenos">124</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="err">&lt;</span><span class="nv">assoc</span><span class="o">=</span><span class="nv">right</span><span class="err">&gt;</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">DOUBLE_ASTERISK</span><span class="w"> </span><span class="nv">expression</span><span class="w">  </span><span class="o">#</span><span class="w"> </span><span class="nv">powerExpression</span>
+<span class="linenos">125</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">op</span><span class="o">=(</span><span class="no">TILDE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">EXCLAMATION_POINT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">)</span><span class="w"> </span><span class="nv">expression</span><span class="w">       </span><span class="o">#</span><span class="w"> </span><span class="nv">unaryExpression</span>
+<span class="linenos">126</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=(</span><span class="no">ASTERISK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">SLASH</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">PERCENT</span><span class="o">)</span><span class="w"> </span><span class="nv">expression</span><span class="w">   </span><span class="o">#</span><span class="w"> </span><span class="nv">multiplicativeExpression</span>
+<span class="linenos">127</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=(</span><span class="no">PLUS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">)</span><span class="w"> </span><span class="nv">expression</span><span class="w">                 </span><span class="o">#</span><span class="w"> </span><span class="nv">additiveExpression</span>
+<span class="linenos">128</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">BitshiftOperator</span><span class="w"> </span><span class="nv">expression</span><span class="w">               </span><span class="o">#</span><span class="w"> </span><span class="nv">bitshiftExpression</span>
+<span class="linenos">129</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">ComparisonOperator</span><span class="w"> </span><span class="nv">expression</span><span class="w">             </span><span class="o">#</span><span class="w"> </span><span class="nv">comparisonExpression</span>
+<span class="linenos">130</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">EqualityOperator</span><span class="w"> </span><span class="nv">expression</span><span class="w">               </span><span class="o">#</span><span class="w"> </span><span class="nv">equalityExpression</span>
+<span class="linenos">131</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">AMPERSAND</span><span class="w"> </span><span class="nv">expression</span><span class="w">                      </span><span class="o">#</span><span class="w"> </span><span class="nv">bitwiseAndExpression</span>
+<span class="linenos">132</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">CARET</span><span class="w"> </span><span class="nv">expression</span><span class="w">                          </span><span class="o">#</span><span class="w"> </span><span class="nv">bitwiseXorExpression</span>
+<span class="linenos">133</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">PIPE</span><span class="w"> </span><span class="nv">expression</span><span class="w">                           </span><span class="o">#</span><span class="w"> </span><span class="nv">bitwiseOrExpression</span>
+<span class="linenos">134</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">DOUBLE_AMPERSAND</span><span class="w"> </span><span class="nv">expression</span><span class="w">               </span><span class="o">#</span><span class="w"> </span><span class="nv">logicalAndExpression</span>
+<span class="linenos">135</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">op</span><span class="o">=</span><span class="no">DOUBLE_PIPE</span><span class="w"> </span><span class="nv">expression</span><span class="w">                    </span><span class="o">#</span><span class="w"> </span><span class="nv">logicalOrExpression</span>
+<span class="linenos">136</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="nv">scalarType</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">arrayType</span><span class="o">)</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="w">       </span><span class="o">#</span><span class="w"> </span><span class="nv">castExpression</span>
+<span class="linenos">137</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DURATIONOF</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">scope</span><span class="w"> </span><span class="no">RPAREN</span><span class="w">                          </span><span class="o">#</span><span class="w"> </span><span class="nv">durationofExpression</span>
+<span class="linenos">138</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w">                </span><span class="o">#</span><span class="w"> </span><span class="nv">callExpression</span>
+<span class="linenos">139</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="o">(</span>
+<span class="linenos">140</span><span class="w">        </span><span class="no">Identifier</span>
+<span class="linenos">141</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">BinaryIntegerLiteral</span>
+<span class="linenos">142</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">OctalIntegerLiteral</span>
+<span class="linenos">143</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">DecimalIntegerLiteral</span>
+<span class="linenos">144</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">HexIntegerLiteral</span>
+<span class="linenos">145</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">FloatLiteral</span>
+<span class="linenos">146</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">ImaginaryLiteral</span>
+<span class="linenos">147</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">BooleanLiteral</span>
+<span class="linenos">148</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">BitstringLiteral</span>
+<span class="linenos">149</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">TimingLiteral</span>
+<span class="linenos">150</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">HardwareQubit</span>
+<span class="linenos">151</span><span class="w">      </span><span class="o">)</span><span class="w">                                                       </span><span class="o">#</span><span class="w"> </span><span class="nv">literalExpression</span>
+<span class="linenos">152</span><span class="p">;</span>
 <span class="linenos">153</span>
-<span class="linenos">154</span>// Special-case expressions that are only valid in certain contexts.  These are
-<span class="linenos">155</span>// not in the expression tree, but can contain elements that are within it.
-<span class="linenos">156</span>aliasExpression: expression (DOUBLE_PLUS expression)*;
-<span class="linenos">157</span>declarationExpression: arrayLiteral | expression | measureExpression;
-<span class="linenos">158</span>measureExpression: MEASURE gateOperand;
-<span class="linenos">159</span>rangeExpression: expression? COLON expression? (COLON expression)?;
-<span class="linenos">160</span>setExpression: LBRACE expression (COMMA expression)* COMMA? RBRACE;
-<span class="linenos">161</span>arrayLiteral: LBRACE (expression | arrayLiteral) (COMMA (expression | arrayLiteral))* COMMA? RBRACE;
+<span class="linenos">154</span><span class="c">// Special-case expressions that are only valid in certain contexts.  These are</span>
+<span class="linenos">155</span><span class="c">// not in the expression tree, but can contain elements that are within it.</span>
+<span class="linenos">156</span><span class="nl">aliasExpression</span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="o">(</span><span class="no">DOUBLE_PLUS</span><span class="w"> </span><span class="nv">expression</span><span class="o">)*</span><span class="p">;</span>
+<span class="linenos">157</span><span class="nl">declarationExpression</span><span class="p">:</span><span class="w"> </span><span class="nv">arrayLiteral</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">measureExpression</span><span class="p">;</span>
+<span class="linenos">158</span><span class="nl">measureExpression</span><span class="p">:</span><span class="w"> </span><span class="no">MEASURE</span><span class="w"> </span><span class="nv">gateOperand</span><span class="p">;</span>
+<span class="linenos">159</span><span class="nl">rangeExpression</span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="o">?</span><span class="w"> </span><span class="no">COLON</span><span class="w"> </span><span class="nv">expression</span><span class="o">?</span><span class="w"> </span><span class="o">(</span><span class="no">COLON</span><span class="w"> </span><span class="nv">expression</span><span class="o">)?</span><span class="p">;</span>
+<span class="linenos">160</span><span class="nl">setExpression</span><span class="p">:</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="nv">expression</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="w"> </span><span class="no">RBRACE</span><span class="p">;</span>
+<span class="linenos">161</span><span class="nl">arrayLiteral</span><span class="p">:</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="o">(</span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">arrayLiteral</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="o">(</span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">arrayLiteral</span><span class="o">))*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="w"> </span><span class="no">RBRACE</span><span class="p">;</span>
 <span class="linenos">162</span>
-<span class="linenos">163</span>// The general form is a comma-separated list of indexing entities.
-<span class="linenos">164</span>// `setExpression` is only valid when being used as a single index: registers
-<span class="linenos">165</span>// can support it for creating aliases, but arrays cannot.
-<span class="linenos">166</span>indexOperator:
-<span class="linenos">167</span>    LBRACKET
-<span class="linenos">168</span>    (
-<span class="linenos">169</span>        setExpression
-<span class="linenos">170</span>        | (expression | rangeExpression) (COMMA (expression | rangeExpression))* COMMA?
-<span class="linenos">171</span>    )
-<span class="linenos">172</span>    RBRACKET;
-<span class="linenos">173</span>// Alternative form to `indexExpression` for cases where an obvious l-value is
-<span class="linenos">174</span>// better grammatically than a generic expression.  Some current uses of this
-<span class="linenos">175</span>// rule may be better as `expression`, leaving the semantic analysis to later
-<span class="linenos">176</span>// (for example in gate calls).
-<span class="linenos">177</span>indexedIdentifier: Identifier indexOperator*;
+<span class="linenos">163</span><span class="c">// The general form is a comma-separated list of indexing entities.</span>
+<span class="linenos">164</span><span class="c">// `setExpression` is only valid when being used as a single index: registers</span>
+<span class="linenos">165</span><span class="c">// can support it for creating aliases, but arrays cannot.</span>
+<span class="linenos">166</span><span class="nl">indexOperator</span><span class="p">:</span>
+<span class="linenos">167</span><span class="w">    </span><span class="no">LBRACKET</span>
+<span class="linenos">168</span><span class="w">    </span><span class="o">(</span>
+<span class="linenos">169</span><span class="w">        </span><span class="nv">setExpression</span>
+<span class="linenos">170</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">rangeExpression</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="o">(</span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">rangeExpression</span><span class="o">))*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span>
+<span class="linenos">171</span><span class="w">    </span><span class="o">)</span>
+<span class="linenos">172</span><span class="w">    </span><span class="no">RBRACKET</span><span class="p">;</span>
+<span class="linenos">173</span><span class="c">// Alternative form to `indexExpression` for cases where an obvious l-value is</span>
+<span class="linenos">174</span><span class="c">// better grammatically than a generic expression.  Some current uses of this</span>
+<span class="linenos">175</span><span class="c">// rule may be better as `expression`, leaving the semantic analysis to later</span>
+<span class="linenos">176</span><span class="c">// (for example in gate calls).</span>
+<span class="linenos">177</span><span class="nl">indexedIdentifier</span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="nv">indexOperator</span><span class="o">*</span><span class="p">;</span>
 <span class="linenos">178</span>
-<span class="linenos">179</span>/* End expression definitions. */
-<span class="linenos">180</span>/* Start type definitions. */
+<span class="linenos">179</span><span class="c">/* End expression definitions. */</span>
+<span class="linenos">180</span><span class="c">/* Start type definitions. */</span>
 <span class="linenos">181</span>
-<span class="linenos">182</span>returnSignature: ARROW scalarType;
-<span class="linenos">183</span>gateModifier: (
-<span class="linenos">184</span>    INV
-<span class="linenos">185</span>    | POW LPAREN expression RPAREN
-<span class="linenos">186</span>    | (CTRL | NEGCTRL) (LPAREN expression RPAREN)?
-<span class="linenos">187</span>) AT;
+<span class="linenos">182</span><span class="nl">returnSignature</span><span class="p">:</span><span class="w"> </span><span class="no">ARROW</span><span class="w"> </span><span class="nv">scalarType</span><span class="p">;</span>
+<span class="linenos">183</span><span class="nl">gateModifier</span><span class="p">:</span><span class="w"> </span><span class="o">(</span>
+<span class="linenos">184</span><span class="w">    </span><span class="no">INV</span>
+<span class="linenos">185</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">POW</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span>
+<span class="linenos">186</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="no">CTRL</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">NEGCTRL</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="o">)?</span>
+<span class="linenos">187</span><span class="o">)</span><span class="w"> </span><span class="no">AT</span><span class="p">;</span>
 <span class="linenos">188</span>
-<span class="linenos">189</span>scalarType:
-<span class="linenos">190</span>    BIT designator?
-<span class="linenos">191</span>    | INT designator?
-<span class="linenos">192</span>    | UINT designator?
-<span class="linenos">193</span>    | FLOAT designator?
-<span class="linenos">194</span>    | ANGLE designator?
-<span class="linenos">195</span>    | BOOL
-<span class="linenos">196</span>    | DURATION
-<span class="linenos">197</span>    | STRETCH
-<span class="linenos">198</span>    | COMPLEX (LBRACKET scalarType RBRACKET)?
-<span class="linenos">199</span>;
-<span class="linenos">200</span>qubitType: QUBIT designator?;
-<span class="linenos">201</span>arrayType: ARRAY LBRACKET scalarType COMMA expressionList RBRACKET;
-<span class="linenos">202</span>arrayReferenceType: (READONLY | MUTABLE) ARRAY LBRACKET scalarType COMMA (expressionList | DIM EQUALS expression) RBRACKET;
+<span class="linenos">189</span><span class="nl">scalarType</span><span class="p">:</span>
+<span class="linenos">190</span><span class="w">    </span><span class="no">BIT</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span>
+<span class="linenos">191</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">INT</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span>
+<span class="linenos">192</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">UINT</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span>
+<span class="linenos">193</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">FLOAT</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span>
+<span class="linenos">194</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">ANGLE</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span>
+<span class="linenos">195</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">BOOL</span>
+<span class="linenos">196</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">DURATION</span>
+<span class="linenos">197</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">STRETCH</span>
+<span class="linenos">198</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">COMPLEX</span><span class="w"> </span><span class="o">(</span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">scalarType</span><span class="w"> </span><span class="no">RBRACKET</span><span class="o">)?</span>
+<span class="linenos">199</span><span class="p">;</span>
+<span class="linenos">200</span><span class="nl">qubitType</span><span class="p">:</span><span class="w"> </span><span class="no">QUBIT</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">201</span><span class="nl">arrayType</span><span class="p">:</span><span class="w"> </span><span class="no">ARRAY</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">scalarType</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="nv">expressionList</span><span class="w"> </span><span class="no">RBRACKET</span><span class="p">;</span>
+<span class="linenos">202</span><span class="nl">arrayReferenceType</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">READONLY</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">MUTABLE</span><span class="o">)</span><span class="w"> </span><span class="no">ARRAY</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">scalarType</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="o">(</span><span class="nv">expressionList</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">DIM</span><span class="w"> </span><span class="no">EQUALS</span><span class="w"> </span><span class="nv">expression</span><span class="o">)</span><span class="w"> </span><span class="no">RBRACKET</span><span class="p">;</span>
 <span class="linenos">203</span>
-<span class="linenos">204</span>designator: LBRACKET expression RBRACKET;
+<span class="linenos">204</span><span class="nl">designator</span><span class="p">:</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RBRACKET</span><span class="p">;</span>
 <span class="linenos">205</span>
-<span class="linenos">206</span>defcalTarget: MEASURE | RESET | DELAY | Identifier;
-<span class="linenos">207</span>defcalArgumentDefinition: expression | argumentDefinition;
-<span class="linenos">208</span>defcalOperand: HardwareQubit | Identifier;
-<span class="linenos">209</span>gateOperand: indexedIdentifier | HardwareQubit;
-<span class="linenos">210</span>externArgument: scalarType | arrayReferenceType | CREG designator?;
-<span class="linenos">211</span>argumentDefinition:
-<span class="linenos">212</span>    scalarType Identifier
-<span class="linenos">213</span>    | qubitType Identifier
-<span class="linenos">214</span>    | (CREG | QREG) Identifier designator?
-<span class="linenos">215</span>    | arrayReferenceType Identifier
-<span class="linenos">216</span>;
+<span class="linenos">206</span><span class="nl">defcalTarget</span><span class="p">:</span><span class="w"> </span><span class="no">MEASURE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">RESET</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">DELAY</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="p">;</span>
+<span class="linenos">207</span><span class="nl">defcalArgumentDefinition</span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">argumentDefinition</span><span class="p">;</span>
+<span class="linenos">208</span><span class="nl">defcalOperand</span><span class="p">:</span><span class="w"> </span><span class="no">HardwareQubit</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="p">;</span>
+<span class="linenos">209</span><span class="nl">gateOperand</span><span class="p">:</span><span class="w"> </span><span class="nv">indexedIdentifier</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">HardwareQubit</span><span class="p">;</span>
+<span class="linenos">210</span><span class="nl">externArgument</span><span class="p">:</span><span class="w"> </span><span class="nv">scalarType</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">arrayReferenceType</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">CREG</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">211</span><span class="nl">argumentDefinition</span><span class="p">:</span>
+<span class="linenos">212</span><span class="w">    </span><span class="nv">scalarType</span><span class="w"> </span><span class="no">Identifier</span>
+<span class="linenos">213</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">qubitType</span><span class="w"> </span><span class="no">Identifier</span>
+<span class="linenos">214</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="no">CREG</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">QREG</span><span class="o">)</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span>
+<span class="linenos">215</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">arrayReferenceType</span><span class="w"> </span><span class="no">Identifier</span>
+<span class="linenos">216</span><span class="p">;</span>
 <span class="linenos">217</span>
-<span class="linenos">218</span>argumentDefinitionList: argumentDefinition (COMMA argumentDefinition)* COMMA?;
-<span class="linenos">219</span>defcalArgumentDefinitionList: defcalArgumentDefinition (COMMA defcalArgumentDefinition)* COMMA?;
-<span class="linenos">220</span>defcalOperandList: defcalOperand (COMMA defcalOperand)* COMMA?;
-<span class="linenos">221</span>expressionList: expression (COMMA expression)* COMMA?;
-<span class="linenos">222</span>identifierList: Identifier (COMMA Identifier)* COMMA?;
-<span class="linenos">223</span>gateOperandList: gateOperand (COMMA gateOperand)* COMMA?;
-<span class="linenos">224</span>externArgumentList: externArgument (COMMA externArgument)* COMMA?;
+<span class="linenos">218</span><span class="nl">argumentDefinitionList</span><span class="p">:</span><span class="w"> </span><span class="nv">argumentDefinition</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="nv">argumentDefinition</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">219</span><span class="nl">defcalArgumentDefinitionList</span><span class="p">:</span><span class="w"> </span><span class="nv">defcalArgumentDefinition</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="nv">defcalArgumentDefinition</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">220</span><span class="nl">defcalOperandList</span><span class="p">:</span><span class="w"> </span><span class="nv">defcalOperand</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="nv">defcalOperand</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">221</span><span class="nl">expressionList</span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="nv">expression</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">222</span><span class="nl">identifierList</span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="no">Identifier</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">223</span><span class="nl">gateOperandList</span><span class="p">:</span><span class="w"> </span><span class="nv">gateOperand</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="nv">gateOperand</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="p">;</span>
+<span class="linenos">224</span><span class="nl">externArgumentList</span><span class="p">:</span><span class="w"> </span><span class="nv">externArgument</span><span class="w"> </span><span class="o">(</span><span class="no">COMMA</span><span class="w"> </span><span class="nv">externArgument</span><span class="o">)*</span><span class="w"> </span><span class="no">COMMA</span><span class="o">?</span><span class="p">;</span>
 </pre></div>
 </div>
 <div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="k">lexer</span><span class="w"> </span><span class="k">grammar</span><span class="w"> </span><span class="nc">qasm3Lexer</span><span class="p">;</span>
@@ -600,7 +600,7 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
       &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
@@ -9,9 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css?v=3aae764c" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +34,7 @@
           <div class="body" role="main">
             
   <section id="openpulse-grammar">
-<h1>OpenPulse Grammar<a class="headerlink" href="#openpulse-grammar" title="Permalink to this heading">¶</a></h1>
+<h1>OpenPulse Grammar<a class="headerlink" href="#openpulse-grammar" title="Link to this heading">¶</a></h1>
 <p><em>The OpenPulse grammar is still in active development and is liable to change. If you are working on an implementation and find this specification unclear or not supporting your use-cases, please join our community effort to improve pulse-level support in OpenQasm.</em></p>
 <p>OpenQASM allows users to provide the target system’s implementation of quantum operations
 with <code class="docutils literal notranslate"><span class="pre">cal</span></code> and <code class="docutils literal notranslate"><span class="pre">defcal</span></code> blocks . Calibration grammars are open to extension for system implementors. In
@@ -72,7 +72,7 @@ the defcal. However, it is possible for pulse-level resources to manipulate qubi
 resources are acted upon by a <code class="docutils literal notranslate"><span class="pre">defcal</span></code>  such that the scheduler may faithfully schedule the target program to
 hardware resources.</p>
 <section id="ports">
-<h2>Ports<a class="headerlink" href="#ports" title="Permalink to this heading">¶</a></h2>
+<h2>Ports<a class="headerlink" href="#ports" title="Link to this heading">¶</a></h2>
 <p>A port is a software abstraction representing any input or output component meant to manipulate and observe qubits. Ports
 are ultimately mapped to some combination of hardware resources, and there are varying versions of
 this mapping with differing granularity. For instance, a port may directly map to a digital-to-analog converter.
@@ -104,7 +104,7 @@ supplied translation units.</p>
 functionality of a port (e.g. <cite>drive_port0</cite> referse to the XY control line of a qubit 0).</p>
 </section>
 <section id="frames">
-<h2>Frames<a class="headerlink" href="#frames" title="Permalink to this heading">¶</a></h2>
+<h2>Frames<a class="headerlink" href="#frames" title="Link to this heading">¶</a></h2>
 <p>When interacting with qubits, it is necessary to keep track of a frame of reference, akin to the rotating
 frame of a Hamiltonian, throughout the execution of a program. Openpulse provides a software abstraction of
 <code class="docutils literal notranslate"><span class="pre">frame</span></code> type which is responsible for tracking two properties:</p>
@@ -137,7 +137,7 @@ The time increment is determined by the port on which the frame is played (see <
 to choose how to implement the required transformations to physical resources in hardware during the machine code
 generation phase.</p>
 <section id="frame-initialization">
-<h3>Frame Initialization<a class="headerlink" href="#frame-initialization" title="Permalink to this heading">¶</a></h3>
+<h3>Frame Initialization<a class="headerlink" href="#frame-initialization" title="Link to this heading">¶</a></h3>
 <p>Frames can be initialized using the <code class="docutils literal notranslate"><span class="pre">newframe</span></code> command by providing the <code class="docutils literal notranslate"><span class="pre">port</span></code>, <code class="docutils literal notranslate"><span class="pre">frequency</span></code>, and <code class="docutils literal notranslate"><span class="pre">phase</span></code> e.g.</p>
 <div class="highlight-openpulse notranslate"><div class="highlight"><pre><span></span><span class="kt">extern</span><span class="w"> </span><span class="kt">port</span><span class="w"> </span><span class="n">drive0</span><span class="p">;</span>
 <span class="kt">frame</span><span class="w"> </span><span class="n">driveframe0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">newframe</span><span class="p">(</span><span class="n">drive0</span><span class="p">,</span><span class="w"> </span><span class="mf">5e9</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w"> </span><span class="c1">// newframe(port pr, float[size] frequency, angle[size] phase)</span>
@@ -162,7 +162,7 @@ For example, a hardware vendor may choose to collapse all <code class="docutils 
 NCO in analogy to virtual to physical register allocation.</p>
 </section>
 <section id="frame-manipulation">
-<h3>Frame Manipulation<a class="headerlink" href="#frame-manipulation" title="Permalink to this heading">¶</a></h3>
+<h3>Frame Manipulation<a class="headerlink" href="#frame-manipulation" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">phase</span></code> and <code class="docutils literal notranslate"><span class="pre">frequency</span></code> states of a frame can be manipulated throughout the program
 by using <code class="docutils literal notranslate"><span class="pre">set</span></code> and <code class="docutils literal notranslate"><span class="pre">shift</span></code> instructions and read using a <code class="docutils literal notranslate"><span class="pre">get</span></code> instruction. In particular,
 the <cite>set_phase</cite> and <cite>shift_phase</cite> instructions allow one to supply the frame and a value of type
@@ -228,7 +228,7 @@ is set to an out of bounds value, the compiler shall raise a compile-time error.
 </section>
 </section>
 <section id="waveforms">
-<h2>Waveforms<a class="headerlink" href="#waveforms" title="Permalink to this heading">¶</a></h2>
+<h2>Waveforms<a class="headerlink" href="#waveforms" title="Link to this heading">¶</a></h2>
 <p>Waveforms are of type <code class="docutils literal notranslate"><span class="pre">waveform</span></code> and can either be:</p>
 <ul class="simple">
 <li><p>An array of complex samples (note this syntax is still under [active development](<a class="reference external" href="https://github.com/Qiskit/openqasm/pull/301">https://github.com/Qiskit/openqasm/pull/301</a>) and is subject to change.) which define the points for the waveform envelope</p></li>
@@ -307,7 +307,7 @@ new waveforms (this list may be updated as more functionality is required).</p>
 </div>
 </section>
 <section id="play-instruction">
-<h2>Play instruction<a class="headerlink" href="#play-instruction" title="Permalink to this heading">¶</a></h2>
+<h2>Play instruction<a class="headerlink" href="#play-instruction" title="Link to this heading">¶</a></h2>
 <p>Waveforms are scheduled using the <code class="docutils literal notranslate"><span class="pre">play</span></code> instruction. These instructions may
 only appear inside a <code class="docutils literal notranslate"><span class="pre">defcal</span></code> block and have two required parameters:</p>
 <ul class="simple">
@@ -335,7 +335,7 @@ and its phase offset (i.e. via the frame’s current <code class="docutils liter
 the compiler shall raise a compile-time error.</p>
 </section>
 <section id="capture-instruction">
-<h2>Capture Instruction<a class="headerlink" href="#capture-instruction" title="Permalink to this heading">¶</a></h2>
+<h2>Capture Instruction<a class="headerlink" href="#capture-instruction" title="Link to this heading">¶</a></h2>
 <p>Acquisition is scheduled by a <code class="docutils literal notranslate"><span class="pre">capture</span></code> instruction. This is a special
 <code class="docutils literal notranslate"><span class="pre">extern</span></code> function which is specified by a hardware vendor. The measurement
 process is difficult to describe generically due to the wide variety of
@@ -418,11 +418,11 @@ discriminated using user-defined boxcar and discrimination <code class="docutils
 the associated <code class="docutils literal notranslate"><span class="pre">port</span></code>, the compiler shall raise a compile-time error.</p>
 </section>
 <section id="timing">
-<h2>Timing<a class="headerlink" href="#timing" title="Permalink to this heading">¶</a></h2>
+<h2>Timing<a class="headerlink" href="#timing" title="Link to this heading">¶</a></h2>
 <p>Each frame maintains its own “clock” of type <code class="docutils literal notranslate"><span class="pre">duration</span></code>, which can only be manipulated implicitly
 through the existing timing instructions of <code class="docutils literal notranslate"><span class="pre">delay</span></code>, <code class="docutils literal notranslate"><span class="pre">play</span></code>, <code class="docutils literal notranslate"><span class="pre">capture</span></code>,  and <code class="docutils literal notranslate"><span class="pre">barrier</span></code>.</p>
 <section id="initial-time">
-<h3>Initial Time<a class="headerlink" href="#initial-time" title="Permalink to this heading">¶</a></h3>
+<h3>Initial Time<a class="headerlink" href="#initial-time" title="Link to this heading">¶</a></h3>
 <p>As briefly discussed in the <span class="xref std std-ref">Frame Initialization</span> section, a <code class="docutils literal notranslate"><span class="pre">frame</span></code> initialized via a
 <code class="docutils literal notranslate"><span class="pre">newframe</span></code> command has its <code class="docutils literal notranslate"><span class="pre">.time</span></code> set to the time at the beginning of the containing
 <code class="docutils literal notranslate"><span class="pre">cal</span></code> or <code class="docutils literal notranslate"><span class="pre">defcal</span></code> block. Since a <code class="docutils literal notranslate"><span class="pre">cal</span></code> block is globally scoped in OpenPulse, this time
@@ -463,7 +463,7 @@ would be absolute 0. Meanwhile, a <code class="docutils literal notranslate"><sp
 </div>
 </section>
 <section id="delay">
-<h3>Delay<a class="headerlink" href="#delay" title="Permalink to this heading">¶</a></h3>
+<h3>Delay<a class="headerlink" href="#delay" title="Link to this heading">¶</a></h3>
 <p>When a <code class="docutils literal notranslate"><span class="pre">delay</span></code> instruction is issued for a list of <code class="docutils literal notranslate"><span class="pre">frame</span></code>s, the <code class="docutils literal notranslate"><span class="pre">frame</span></code> clocks advance
 by the requested duration.</p>
 <div class="highlight-openpulse notranslate"><div class="highlight"><pre><span></span><span class="c1">// driveframe advances by 13ns</span>
@@ -474,7 +474,7 @@ by the requested duration.</p>
 the underlying <code class="docutils literal notranslate"><span class="pre">port</span></code>, the compiler shall raise a compile-time error.</p>
 </section>
 <section id="play-and-capture">
-<h3>Play and Capture<a class="headerlink" href="#play-and-capture" title="Permalink to this heading">¶</a></h3>
+<h3>Play and Capture<a class="headerlink" href="#play-and-capture" title="Link to this heading">¶</a></h3>
 <p>When a <code class="docutils literal notranslate"><span class="pre">play</span></code> or <code class="docutils literal notranslate"><span class="pre">capture</span></code> instruction is issued, the <code class="docutils literal notranslate"><span class="pre">frame</span></code> clock advances
 by the duration of the associated <code class="docutils literal notranslate"><span class="pre">waveform</span></code> argument.</p>
 <div class="highlight-openpulse notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="w"> </span><span class="p">{</span>
@@ -492,7 +492,7 @@ by the duration of the associated <code class="docutils literal notranslate"><sp
 </div>
 </section>
 <section id="barrier">
-<h3>Barrier<a class="headerlink" href="#barrier" title="Permalink to this heading">¶</a></h3>
+<h3>Barrier<a class="headerlink" href="#barrier" title="Link to this heading">¶</a></h3>
 <p>When a <code class="docutils literal notranslate"><span class="pre">barrier</span></code> instruction is issued for a list of <code class="docutils literal notranslate"><span class="pre">frame</span></code>s, the <code class="docutils literal notranslate"><span class="pre">frame</span></code> clocks are
 aligned to the latest time of the all <code class="docutils literal notranslate"><span class="pre">frame</span></code>s listed.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span>
@@ -544,7 +544,7 @@ aligned to the latest time of the all <code class="docutils literal notranslate"
 </div>
 </section>
 <section id="phase-tracking">
-<h3>Phase tracking<a class="headerlink" href="#phase-tracking" title="Permalink to this heading">¶</a></h3>
+<h3>Phase tracking<a class="headerlink" href="#phase-tracking" title="Link to this heading">¶</a></h3>
 <p>As discussed in the <span class="xref std std-ref">Frame Manipulation</span> section, the accrued phase of a frame can be
 manipulated throughout a program via <code class="docutils literal notranslate"><span class="pre">set_phase</span></code> and <code class="docutils literal notranslate"><span class="pre">shift_phase</span></code> instructions. In addition,
 the phase is implicitly manipulated when the time of the frame is advanced using a <code class="docutils literal notranslate"><span class="pre">delay</span></code>,
@@ -586,7 +586,7 @@ the phase is implicitly manipulated when the time of the frame is advanced using
 being an equivalent application in the lab frame.</p>
 </section>
 <section id="collisions">
-<h3>Collisions<a class="headerlink" href="#collisions" title="Permalink to this heading">¶</a></h3>
+<h3>Collisions<a class="headerlink" href="#collisions" title="Link to this heading">¶</a></h3>
 <p>If a frame is scheduled or referenced simultaneously in two <code class="docutils literal notranslate"><span class="pre">defcal</span></code> or <code class="docutils literal notranslate"><span class="pre">cal</span></code> blocks, it is
 considered a compile-time error e.g.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span>
@@ -606,9 +606,9 @@ considered a compile-time error e.g.</p>
 </section>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
 <section id="rabi-spectroscopy">
-<h3>Rabi Spectroscopy<a class="headerlink" href="#rabi-spectroscopy" title="Permalink to this heading">¶</a></h3>
+<h3>Rabi Spectroscopy<a class="headerlink" href="#rabi-spectroscopy" title="Link to this heading">¶</a></h3>
 <p>Rabi spectroscopy experiments consist of a pulse that drives the qubit transition followed by a
 measurement. Exploring the response to sweeps of pulse frequency, time, amplitude, or even
 multi-dimensional sweeps reveals spectroscopic information about the qubit transition frequencies
@@ -671,7 +671,7 @@ the program.</p>
 </div>
 </section>
 <section id="cross-resonance-gate">
-<h3>Cross-resonance gate<a class="headerlink" href="#cross-resonance-gate" title="Permalink to this heading">¶</a></h3>
+<h3>Cross-resonance gate<a class="headerlink" href="#cross-resonance-gate" title="Link to this heading">¶</a></h3>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span>
 
 <span class="k">cal</span><span class="w"> </span><span class="p">{</span>
@@ -701,7 +701,7 @@ the program.</p>
 </div>
 </section>
 <section id="geometric-gate">
-<h3>Geometric gate<a class="headerlink" href="#geometric-gate" title="Permalink to this heading">¶</a></h3>
+<h3>Geometric gate<a class="headerlink" href="#geometric-gate" title="Link to this heading">¶</a></h3>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span>
 
 <span class="k">cal</span><span class="w"> </span><span class="p">{</span>
@@ -732,7 +732,7 @@ the program.</p>
 </div>
 </section>
 <section id="neutral-atoms">
-<h3>Neutral atoms<a class="headerlink" href="#neutral-atoms" title="Permalink to this heading">¶</a></h3>
+<h3>Neutral atoms<a class="headerlink" href="#neutral-atoms" title="Link to this heading">¶</a></h3>
 <p>In this example, the signal chain is composed of two electro-optic modulators (EOM) and
 an acousto-optic deflector (AOD). The EOMs put sidebands on the laser light while the AOD diffracts
 the light in an amount proportional to the frequency of the RF drive. This example was chosen
@@ -843,7 +843,7 @@ sideband).</p>
 </div>
 </section>
 <section id="multiplexed-readout-and-capture">
-<h3>Multiplexed readout and capture<a class="headerlink" href="#multiplexed-readout-and-capture" title="Permalink to this heading">¶</a></h3>
+<h3>Multiplexed readout and capture<a class="headerlink" href="#multiplexed-readout-and-capture" title="Link to this heading">¶</a></h3>
 <p>In this example, we want to perform readout and capture of a pair of qubits, but mediated by a
 single physical transmission and capture port. The example is for just two qubits, but works the same for
 many (just adding more frames, waveforms, plays, and captures).</p>
@@ -893,7 +893,7 @@ many (just adding more frames, waveforms, plays, and captures).</p>
 </div>
 </section>
 <section id="open-questions">
-<h3>Open Questions<a class="headerlink" href="#open-questions" title="Permalink to this heading">¶</a></h3>
+<h3>Open Questions<a class="headerlink" href="#open-questions" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>How do we handle mapping wildcarded qubits to arbitrary pulse-level resources?</p></li>
 <li><p>Is timing on frames, and ports as resources clear?</p></li>
@@ -998,7 +998,7 @@ many (just adding more frames, waveforms, plays, and captures).</p>
       &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |

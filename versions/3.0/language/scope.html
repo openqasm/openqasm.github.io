@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
@@ -9,9 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css?v=3aae764c" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Directives" href="directives.html" />
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="scoping-of-variables">
-<h1>Scoping of variables<a class="headerlink" href="#scoping-of-variables" title="Permalink to this heading">¶</a></h1>
+<h1>Scoping of variables<a class="headerlink" href="#scoping-of-variables" title="Link to this heading">¶</a></h1>
 <p>This section describes the rules surrounding scoping of variables in OpenQASM.</p>
 <p>OpenQASM 3.0 has four types of scoping constructs, and the visibility of some
 symbols can differ slightly between these.  The types of scope are:</p>
@@ -75,7 +75,7 @@ and variables defined in that file will be available in the containing file’s
 scope once the inclusion has been parsed.  There is no separate namespacing
 defined in OpenQASM 3.0.</p>
 <section id="global-scope">
-<span id="scope-global"></span><h2>Global scope<a class="headerlink" href="#global-scope" title="Permalink to this heading">¶</a></h2>
+<span id="scope-global"></span><h2>Global scope<a class="headerlink" href="#global-scope" title="Link to this heading">¶</a></h2>
 <p>The global scope is active when no other scopes are active.  Several OpenQASM
 3.0 statements are only valid in the global scope, such as (non-exhaustive):</p>
 <ul class="simple">
@@ -85,7 +85,7 @@ defined in OpenQASM 3.0.</p>
 </ul>
 <p>A simple example of scoping between a main program file and an included file:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">Main program</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">Main program</span><a class="headerlink" href="#id1" title="Link to this code">¶</a></div>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span>
 
 <span class="n">gate</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
@@ -104,7 +104,7 @@ defined in OpenQASM 3.0.</p>
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">File <code class="docutils literal notranslate"><span class="pre">my_definitions.qasm</span></code></span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">File <code class="docutils literal notranslate"><span class="pre">my_definitions.qasm</span></code></span><a class="headerlink" href="#id2" title="Link to this code">¶</a></div>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span><span class="w"> </span><span class="n">my_gate</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="n">U</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 <span class="p">}</span>
@@ -153,7 +153,7 @@ calibration definitions for different qubits.</p>
 </div>
 </section>
 <section id="subroutine-and-gate-scope">
-<span id="scope-subroutine"></span><h2>Subroutine and gate scope<a class="headerlink" href="#subroutine-and-gate-scope" title="Permalink to this heading">¶</a></h2>
+<span id="scope-subroutine"></span><h2>Subroutine and gate scope<a class="headerlink" href="#subroutine-and-gate-scope" title="Link to this heading">¶</a></h2>
 <p>The definitions of subroutines (<code class="docutils literal notranslate"><span class="pre">def</span></code>) and gates (<code class="docutils literal notranslate"><span class="pre">gate</span></code>) introduce a new
 scope.  The <code class="docutils literal notranslate"><span class="pre">def</span></code> and <code class="docutils literal notranslate"><span class="pre">gate</span></code> statements are only valid directly within the
 global scope of the program.</p>
@@ -245,7 +245,7 @@ visibility as other local variables.</p>
 </div>
 </section>
 <section id="block-scope">
-<span id="scope-block"></span><h2>Block scope<a class="headerlink" href="#block-scope" title="Permalink to this heading">¶</a></h2>
+<span id="scope-block"></span><h2>Block scope<a class="headerlink" href="#block-scope" title="Link to this heading">¶</a></h2>
 <p>Certain control-flow operations introduce their own local scope.  These
 operations are:</p>
 <ul class="simple">
@@ -427,7 +427,7 @@ arrays cannot be declared within local block scopes, but aliases can.</p>
       &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |

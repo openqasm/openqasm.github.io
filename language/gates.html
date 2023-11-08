@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
@@ -9,9 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="../_static/colors.css?v=3aae764c" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,10 +34,10 @@
           <div class="body" role="main">
             
   <section id="gates">
-<h1>Gates<a class="headerlink" href="#gates" title="Permalink to this heading">¶</a></h1>
+<h1>Gates<a class="headerlink" href="#gates" title="Link to this heading">¶</a></h1>
 <p>In OpenQASM we refer to unitary quantum instructions as <em>gates</em>.</p>
 <section id="applying-gates">
-<h2>Applying gates<a class="headerlink" href="#applying-gates" title="Permalink to this heading">¶</a></h2>
+<h2>Applying gates<a class="headerlink" href="#applying-gates" title="Link to this heading">¶</a></h2>
 <p>Every gate applies to a fixed number of qubits.
 Assuming <code class="docutils literal notranslate"><span class="pre">g0</span></code>, <code class="docutils literal notranslate"><span class="pre">g1</span></code>, <code class="docutils literal notranslate"><span class="pre">g2</span></code>, … are gates defined on 0, 1, 2, … qubits then they can be applied as</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="n">g0</span><span class="p">;</span>
@@ -47,7 +47,7 @@ Assuming <code class="docutils literal notranslate"><span class="pre">g0</span><
 </pre></div>
 </div>
 <section id="broadcasting">
-<h3>Broadcasting<a class="headerlink" href="#broadcasting" title="Permalink to this heading">¶</a></h3>
+<h3>Broadcasting<a class="headerlink" href="#broadcasting" title="Link to this heading">¶</a></h3>
 <p>If any arguments of a gate are quantum registers instead of qubits, then all such registers must be <strong>of the same length</strong> and
 this syntax is a convenient shorthand for broadcasting over the qubits of the register. For example, the circuit</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">1</span><span class="p">];</span>
@@ -73,7 +73,7 @@ not commute and a specific order is required by the programmer, than a <code cla
 set that order.</p>
 </section>
 <section id="parameterized-gates">
-<h3>Parameterized gates<a class="headerlink" href="#parameterized-gates" title="Permalink to this heading">¶</a></h3>
+<h3>Parameterized gates<a class="headerlink" href="#parameterized-gates" title="Link to this heading">¶</a></h3>
 <p>As well as gates that each represent a fixed unitary, OpenQASM also supports gates that represent <em>families</em> of unitaries, parameterized
 by angle variables. To distinguish the (optional) angle parameters from the (required) quantum arguments, if any angle parameters are
 present they must appear before any quantum arguments, and be delimited by parentheses. For example</p>
@@ -83,7 +83,7 @@ present they must appear before any quantum arguments, and be delimited by paren
 </section>
 </section>
 <section id="defining-gates">
-<h2>Defining gates<a class="headerlink" href="#defining-gates" title="Permalink to this heading">¶</a></h2>
+<h2>Defining gates<a class="headerlink" href="#defining-gates" title="Link to this heading">¶</a></h2>
 <p>There are 3 mechanisms to construct new gates:</p>
 <ol class="arabic simple">
 <li><p>A new named gate can be introduced by a  <strong>hierarchical definition</strong> from a sequence of existing gates;</p></li>
@@ -93,7 +93,7 @@ The definitions of these gates is part of the language specification.</p></li>
 </ol>
 <p>The next subsections go through these cases.</p>
 <section id="hierarchical-gates-definitions">
-<h3>Hierarchical gates definitions<a class="headerlink" href="#hierarchical-gates-definitions" title="Permalink to this heading">¶</a></h3>
+<h3>Hierarchical gates definitions<a class="headerlink" href="#hierarchical-gates-definitions" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">gate</span></code> statement associates an identifier with a corresponding unitary matrix (or parameterized family)
 transformation by a sequence of other (built-in or previously-defined) gates.</p>
 <p>For example the <code class="docutils literal notranslate"><span class="pre">gate</span></code> block</p>
@@ -131,7 +131,7 @@ and the corresponding OpenQASM code is</p>
 <p><span class="caption-number">Fig. 1 </span><span class="caption-text">New gates are defined from previously defined gates. The gates are applied using the statement
 <code class="docutils literal notranslate"><span class="pre">name(params)</span> <span class="pre">qargs;</span></code> The parentheses are optional if there
 are no parameters. The gate <span class="math notranslate nohighlight">\({cphase}(\theta)\)</span> corresponds to the unitary matrix
-<span class="math notranslate nohighlight">\({diag}(1,1,1,e^{i\theta})\)</span> up to a global phase.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<span class="math notranslate nohighlight">\({diag}(1,1,1,e^{i\theta})\)</span> up to a global phase.</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>Again, this definition does not imply that <code class="docutils literal notranslate"><span class="pre">cphase</span></code> must be implemented with
@@ -181,13 +181,13 @@ cannot call themselves. The statement <code class="docutils literal notranslate"
 and the variable parameters <code class="docutils literal notranslate"><span class="pre">params</span></code> can have any type that can promote to <code class="docutils literal notranslate"><span class="pre">angle</span></code> type.</p>
 </section>
 <section id="quantum-gate-modifiers">
-<h3>Quantum gate modifiers<a class="headerlink" href="#quantum-gate-modifiers" title="Permalink to this heading">¶</a></h3>
+<h3>Quantum gate modifiers<a class="headerlink" href="#quantum-gate-modifiers" title="Link to this heading">¶</a></h3>
 <p>A gate modifier is a keyword that applies to a gate. A modifier
 <span class="math notranslate nohighlight">\(m\)</span> transforms a gate <span class="math notranslate nohighlight">\(U\)</span> to a new gate <span class="math notranslate nohighlight">\(m(U)\)</span> acting
 on the same or larger Hilbert space. We include modifiers in OpenQASM
 both for programming convenience and compiler analysis.</p>
 <section id="control-modifiers">
-<h4>Control modifiers<a class="headerlink" href="#control-modifiers" title="Permalink to this heading">¶</a></h4>
+<h4>Control modifiers<a class="headerlink" href="#control-modifiers" title="Link to this heading">¶</a></h4>
 <p>The modifier <code class="docutils literal notranslate"><span class="pre">ctrl</span> <span class="pre">&#64;</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> by a
 controlled-<span class="math notranslate nohighlight">\(U\)</span> gate. If the control bit is 0, nothing happens to the target bit.
 If the control bit is 1, <span class="math notranslate nohighlight">\(U\)</span> acts on the target bit. Mathematically, the controlled-<span class="math notranslate nohighlight">\(U\)</span>
@@ -238,7 +238,7 @@ respectively.</p>
 </div>
 </section>
 <section id="inverse-modifier">
-<h4>Inverse modifier<a class="headerlink" href="#inverse-modifier" title="Permalink to this heading">¶</a></h4>
+<h4>Inverse modifier<a class="headerlink" href="#inverse-modifier" title="Link to this heading">¶</a></h4>
 <p>The modifier <code class="docutils literal notranslate"><span class="pre">inv</span> <span class="pre">&#64;</span> <span class="pre">U</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> with its inverse
 <span class="math notranslate nohighlight">\(U^\dagger\)</span>. This can be computed from gate <span class="math notranslate nohighlight">\(U\)</span> via the following rules</p>
 <ul class="simple">
@@ -262,7 +262,7 @@ and <code class="docutils literal notranslate"><span class="pre">inv</span> <spa
 </div>
 </section>
 <section id="power-modifier">
-<h4>Power modifier<a class="headerlink" href="#power-modifier" title="Permalink to this heading">¶</a></h4>
+<h4>Power modifier<a class="headerlink" href="#power-modifier" title="Link to this heading">¶</a></h4>
 <p>The modifier <code class="docutils literal notranslate"><span class="pre">pow(k)</span> <span class="pre">&#64;</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> by its <span class="math notranslate nohighlight">\(k\)</span>th
 power <span class="math notranslate nohighlight">\(U^k\)</span> for some positive integer or floating point number <span class="math notranslate nohighlight">\(k\)</span> (not necessarily
 constant). In the case that <span class="math notranslate nohighlight">\(k\)</span> is an integer, the gate can be implemented (albeit
@@ -277,9 +277,9 @@ repetitions of <code class="docutils literal notranslate"><span class="pre">inv<
 </section>
 </section>
 <section id="built-in-gates">
-<h3>Built-in gates<a class="headerlink" href="#built-in-gates" title="Permalink to this heading">¶</a></h3>
+<h3>Built-in gates<a class="headerlink" href="#built-in-gates" title="Link to this heading">¶</a></h3>
 <section id="built-in-single-qubit-gate-u">
-<h4>Built-in single-qubit gate <code class="docutils literal notranslate"><span class="pre">U</span></code><a class="headerlink" href="#built-in-single-qubit-gate-u" title="Permalink to this heading">¶</a></h4>
+<h4>Built-in single-qubit gate <code class="docutils literal notranslate"><span class="pre">U</span></code><a class="headerlink" href="#built-in-single-qubit-gate-u" title="Link to this heading">¶</a></h4>
 <p>The built-in single-qubit gate <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span></code> represents the unitary matrix</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}U(\theta,\phi,\lambda) := \frac{1}{2}\left(\begin{array}{cc}
@@ -291,7 +291,7 @@ global phase <a class="footnote-reference brackets" href="#uphase" id="id1" role
 (up to a non-standard global phase).</p>
 </section>
 <section id="global-phase-gate-gphase">
-<h4>Global phase gate <code class="docutils literal notranslate"><span class="pre">gphase</span></code><a class="headerlink" href="#global-phase-gate-gphase" title="Permalink to this heading">¶</a></h4>
+<h4>Global phase gate <code class="docutils literal notranslate"><span class="pre">gphase</span></code><a class="headerlink" href="#global-phase-gate-gphase" title="Link to this heading">¶</a></h4>
 <p>From a physical perspective, the unitaries <span class="math notranslate nohighlight">\(e^{i\gamma}V\)</span> and <span class="math notranslate nohighlight">\(V\)</span> are equivalent although they differ by a global
 phase <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span>. When we add a control to these gates, however, the global phase becomes a relative phase
 that is applied when the control qubit is one. A built-in global phase gate
@@ -320,7 +320,7 @@ instruction, similarly <code class="docutils literal notranslate"><span class="p
 </section>
 </section>
 <section id="relation-of-the-built-in-gates-to-hardware-native-gates">
-<h2>Relation of the built-in gates to hardware-native gates<a class="headerlink" href="#relation-of-the-built-in-gates-to-hardware-native-gates" title="Permalink to this heading">¶</a></h2>
+<h2>Relation of the built-in gates to hardware-native gates<a class="headerlink" href="#relation-of-the-built-in-gates-to-hardware-native-gates" title="Link to this heading">¶</a></h2>
 <p>For <em>non-parameterized gates</em>, the choice of <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">gphase</span></code> as the built-in gates, along with one
 two-qubit entangling gate CNOT as defined gives a universal gate set that can represent general n-qubit
 unitaries with an <span class="math notranslate nohighlight">\(O(2^n)\)</span> size description <span id="id2">[<a class="reference internal" href="../index.html#id45" title="A. Barenco, C. Bennett, R. Cleve, D. DiVincenzo, N. Margolus, P. Shor, T. Sleator, J. Smolin, and H. Weinfurter. Elementary gates for quantum computation. Phys. Rev. A, 1995.">BBC+95</a>]</span>. This basis is not an enforced compilation
@@ -445,7 +445,7 @@ definition.</p>
       &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
