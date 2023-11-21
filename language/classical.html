@@ -280,10 +280,11 @@ hardware-dependent rounding mode and subnormal handling.</p>
 </table>
 </div></blockquote>
 </section>
+</section>
 <section id="looping-and-branching">
-<h3>Looping and branching<a class="headerlink" href="#looping-and-branching" title="Link to this heading">¶</a></h3>
+<h2>Looping and branching<a class="headerlink" href="#looping-and-branching" title="Link to this heading">¶</a></h2>
 <section id="if-else-statements">
-<h4>If-else statements<a class="headerlink" href="#if-else-statements" title="Link to this heading">¶</a></h4>
+<h3>If-else statements<a class="headerlink" href="#if-else-statements" title="Link to this heading">¶</a></h3>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">&lt;true-body&gt;</span></code> branches to program if the Boolean evaluates to true and
 may optionally be followed by <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">&lt;false-body&gt;</span></code>.  Both <code class="docutils literal notranslate"><span class="pre">true-body</span></code> and
 <code class="docutils literal notranslate"><span class="pre">false-body</span></code> can be a single statement terminated by a semicolon, or a program
@@ -303,7 +304,7 @@ block of several statements <code class="docutils literal notranslate"><span cla
 </div>
 </section>
 <section id="for-loops">
-<h4>For loops<a class="headerlink" href="#for-loops" title="Link to this heading">¶</a></h4>
+<h3>For loops<a class="headerlink" href="#for-loops" title="Link to this heading">¶</a></h3>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">&lt;type&gt;</span> <span class="pre">&lt;name&gt;</span> <span class="pre">in</span> <span class="pre">&lt;values&gt;</span> <span class="pre">&lt;body&gt;</span></code> loops over the
 items in <code class="docutils literal notranslate"><span class="pre">values</span></code>, assigning each value to the variable <code class="docutils literal notranslate"><span class="pre">name</span></code> in subsequent
 iterations of the loop <code class="docutils literal notranslate"><span class="pre">body</span></code>.  <code class="docutils literal notranslate"><span class="pre">values</span></code> can be:</p>
@@ -370,7 +371,7 @@ accessible after the loop.</p>
 </div>
 </section>
 <section id="while-loops">
-<h4>While loops<a class="headerlink" href="#while-loops" title="Link to this heading">¶</a></h4>
+<h3>While loops<a class="headerlink" href="#while-loops" title="Link to this heading">¶</a></h3>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">(</span> <span class="pre">bool</span> <span class="pre">)</span> <span class="pre">&lt;body&gt;</span></code> executes program until the Boolean evaluates to
 false <a class="footnote-reference brackets" href="#id7" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Variables in the loop condition statement may be modified
 within the while loop body.  The <code class="docutils literal notranslate"><span class="pre">body</span></code> can be either a single statement
@@ -393,7 +394,7 @@ statements:</p>
 </div>
 </section>
 <section id="breaking-and-continuing-loops">
-<h4>Breaking and continuing loops<a class="headerlink" href="#breaking-and-continuing-loops" title="Link to this heading">¶</a></h4>
+<h3>Breaking and continuing loops<a class="headerlink" href="#breaking-and-continuing-loops" title="Link to this heading">¶</a></h3>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">break;</span></code> moves control to the statement immediately following
 the closest containing <code class="docutils literal notranslate"><span class="pre">for</span></code> or <code class="docutils literal notranslate"><span class="pre">while</span></code> loop.</p>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">continue;</span></code> causes execution to jump to the next step in the
@@ -434,10 +435,9 @@ such as at the top level of the main circuit or of a subroutine.</p>
 </div>
 </section>
 <section id="terminating-the-program-early">
-<h4>Terminating the program early<a class="headerlink" href="#terminating-the-program-early" title="Link to this heading">¶</a></h4>
+<h3>Terminating the program early<a class="headerlink" href="#terminating-the-program-early" title="Link to this heading">¶</a></h3>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">end;</span></code> immediately terminates the program, no matter what scope
 it is called from.</p>
-</section>
 </section>
 </section>
 <section id="extern-function-calls">
@@ -513,6 +513,7 @@ compile into target code that imposes iteration limits.</p>
 <li class="toctree-l2"><a class="reference internal" href="insts.html">Built-in quantum instructions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Classical instructions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#low-level-classical-instructions">Low-level classical instructions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#looping-and-branching">Looping and branching</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#extern-function-calls">Extern function calls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#further-reserved-keywords">Further reserved keywords</a></li>
 </ul>
