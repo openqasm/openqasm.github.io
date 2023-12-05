@@ -231,7 +231,7 @@ is set to an out of bounds value, the compiler shall raise a compile-time error.
 <h2>Waveforms<a class="headerlink" href="#waveforms" title="Link to this heading">¶</a></h2>
 <p>Waveforms are of type <code class="docutils literal notranslate"><span class="pre">waveform</span></code> and can either be:</p>
 <ul class="simple">
-<li><p>An array of complex samples (note this syntax is still under [active development](<a class="reference external" href="https://github.com/Qiskit/openqasm/pull/301">https://github.com/Qiskit/openqasm/pull/301</a>) and is subject to change.) which define the points for the waveform envelope</p></li>
+<li><p>An array of complex samples which define the points for the waveform envelope</p></li>
 <li><p>An abstract mathematical function representing a waveform. This will later be
 materialized into a list of complex samples, either by the compiler or the
 hardware using the parameters provided to the <code class="docutils literal notranslate"><span class="pre">extern</span></code> declared waveform template.</p></li>
