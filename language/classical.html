@@ -440,6 +440,167 @@ such as at the top level of the main circuit or of a subroutine.</p>
 it is called from.</p>
 </section>
 </section>
+<section id="the-switch-statement">
+<h2>The Switch statement<a class="headerlink" href="#the-switch-statement" title="Link to this heading">¶</a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement is a form of flow control that provides for a predicated selection of zero, one or more statements to be executed based on a discriminating controlling value. The discriminating controlling value can be either <em>explicit</em> - as it is the case for <code class="docutils literal notranslate"><span class="pre">case</span></code> statements - or <em>none of the above</em> - which is the case for <code class="docutils literal notranslate"><span class="pre">default</span></code> statements.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement is not a loop. It does not iterate over a sequence of values.</p>
+<p><code class="docutils literal notranslate"><span class="pre">switch</span></code> statements may appear anywhere in a program where statements are allowed.</p>
+<p>An OpenQASM3 <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement shall use the following keywords:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">switch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">case</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">default</span></code></p></li>
+</ul>
+<p>An OpenQASM3 <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement shall be the following grammar:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">switch</span></code> keyword.</p></li>
+<li><p>A right paren <code class="docutils literal notranslate"><span class="pre">(</span></code> literal.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">controlling</span> <span class="pre">expression</span></code>.</p></li>
+<li><p>A left paren <code class="docutils literal notranslate"><span class="pre">)</span></code> literal.</p></li>
+<li><p>A left brace <code class="docutils literal notranslate"><span class="pre">{</span></code> literal.</p></li>
+<li><p>A sequence of one or more <code class="docutils literal notranslate"><span class="pre">case</span></code> statements (defined below).</p></li>
+<li><p>Either zero or one <code class="docutils literal notranslate"><span class="pre">default</span></code> statement(s) (defined below).</p></li>
+<li><p>A right brace <code class="docutils literal notranslate"><span class="pre">}</span></code> literal.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">controlling</span> <span class="pre">expression</span></code> of a <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement shall be of integer type. Implicit conversions to an integer type are not allowed.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">case</span></code> statement shall be the following grammar:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">case</span></code> keyword.</p></li>
+<li><p>An <code class="docutils literal notranslate"><span class="pre">integer-constant-list-expression</span></code> controlling label.</p></li>
+<li><p>A left-brace literal: <code class="docutils literal notranslate"><span class="pre">{</span></code>.</p></li>
+<li><p>A sequence of zero, one or more OpenQASM3 statements.</p></li>
+<li><p>A right-brace literal: <code class="docutils literal notranslate"><span class="pre">}</span></code>.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">integer-constant-list-expression</span></code> is a sequence of one or more integer <cite>const</cite> expressions separated by comma <code class="docutils literal notranslate"><span class="pre">,</span></code> literals.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">default</span></code> statement shall be the following grammar:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> keyword.</p></li>
+<li><p>A left-brace literal: <code class="docutils literal notranslate"><span class="pre">{</span></code>.</p></li>
+<li><p>A sequence of zero, one or more OpenQASM3 statements.</p></li>
+<li><p>A right-brace literal: <code class="docutils literal notranslate"><span class="pre">}</span></code>.</p></li>
+</ul>
+<p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement shall be in scope only within the scope where it is defined.</p>
+<p>The left and right braces of a <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement shall not create brace-enclosed scope.</p>
+<p>Declarations or statements at <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement scope but outside of a <code class="docutils literal notranslate"><span class="pre">case</span></code> or <code class="docutils literal notranslate"><span class="pre">default</span></code> statement are ill-formed. The compiler shall raise an error diagnostic for such cases.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">case</span></code> or <code class="docutils literal notranslate"><span class="pre">default</span></code> statement creates brace-enclosed scope.</p>
+<p>Declarations of types that automatically acquire global scope in OpenQASM3 - such as gates, functions, arrays, qubits and defcals - are not allowed at <code class="docutils literal notranslate"><span class="pre">case</span></code> or <code class="docutils literal notranslate"><span class="pre">default</span></code> <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement scope. Use of such declarations is ill-formed and requires a compiler diagnostic.</p>
+<p>Duplicate values within any <code class="docutils literal notranslate"><span class="pre">integer-constant-list-expression</span></code> for controlling labels of <code class="docutils literal notranslate"><span class="pre">case</span></code> statements are not allowed. The compiler shall issue an error diagnostic in such cases.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">case</span></code> or <code class="docutils literal notranslate"><span class="pre">default</span></code> statement ending with a right-brace <code class="docutils literal notranslate"><span class="pre">}</span></code> terminates the execution of the <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement. After executing all the statements of the <code class="docutils literal notranslate"><span class="pre">case</span></code> or <code class="docutils literal notranslate"><span class="pre">default</span></code> statement, control is then transferred to the first statement following the closing right brace of the enclosing <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement shall contain at least one <code class="docutils literal notranslate"><span class="pre">case</span></code> statement. A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement with no <code class="docutils literal notranslate"><span class="pre">case</span></code> statements shall raise an error diagnostic.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement is not required to contain a <code class="docutils literal notranslate"><span class="pre">default</span></code> statement. If a <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement does not contain a <code class="docutils literal notranslate"><span class="pre">default</span></code> statement and a runtime value is provided to the controlling expression that does not match any case, then the <code class="docutils literal notranslate"><span class="pre">switch</span></code> becomes effectively a no-op.</p>
+<p>Examples:</p>
+<ol class="arabic simple">
+<li><p>A simple <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement with <code class="docutils literal notranslate"><span class="pre">case</span></code> and <code class="docutils literal notranslate"><span class="pre">default</span></code> statements:</p></li>
+</ol>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span><span class="p">;</span>
+
+<span class="nf">switch</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">case</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="o">-</span><span class="m">1</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="n">default</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>A switch statement with binary literals in the <code class="docutils literal notranslate"><span class="pre">case</span></code> statements:</p></li>
+</ol>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
+
+<span class="kt">bit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="nf">switch</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">b</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="n">case</span><span class="w"> </span><span class="mb">0b00</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="mb">0b01</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="mb">0b10</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="mb">0b11</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="err">```</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement containing declarations at <code class="docutils literal notranslate"><span class="pre">case</span></code> statement scope, and a function call, also at <code class="docutils literal notranslate"><span class="pre">case</span></code> statement scope:</p></li>
+</ol>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
+
+<span class="kd">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="kt">qubit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">;</span>
+
+<span class="kt">bit</span><span class="w"> </span><span class="n">c1</span><span class="p">;</span>
+
+<span class="kt">qubit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">q0</span><span class="p">;</span>
+
+<span class="nf">switch</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">case</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">q0</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="n">default</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement containing a nested <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement.</p></li>
+</ol>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
+
+<span class="kd">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">qubit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bit</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">7</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">measure</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">        </span><span class="n">r</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">r</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">qubit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+
+<span class="nf">switch</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">case</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="n">case</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">switch</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">case</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="m">15</span><span class="p">,</span><span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">h</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 <section id="extern-function-calls">
 <h2>Extern function calls<a class="headerlink" href="#extern-function-calls" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">extern</span></code> functions are declared by giving their signature using the
@@ -514,6 +675,7 @@ compile into target code that imposes iteration limits.</p>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Classical instructions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#low-level-classical-instructions">Low-level classical instructions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#looping-and-branching">Looping and branching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-switch-statement">The Switch statement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#extern-function-calls">Extern function calls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#further-reserved-keywords">Further reserved keywords</a></li>
 </ul>
