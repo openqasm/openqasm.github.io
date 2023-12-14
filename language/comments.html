@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Comments &#8212; OpenQASM Live Specification  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../_static/colors.css?v=3aae764c" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Types and Casting" href="types.html" />
+    <link rel="prev" title="Language" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="comments">
+<h1>Comments<a class="headerlink" href="#comments" title="Link to this heading">¶</a></h1>
+<p>Comments begin with a pair of forward slashes <code class="docutils literal notranslate"><span class="pre">//</span></code> and end with a new line:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// A comment line</span>
+</pre></div>
+</div>
+<p>A comment block begins with <code class="docutils literal notranslate"><span class="pre">/*</span></code> and ends with <code class="docutils literal notranslate"><span class="pre">*/</span></code>:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm">A comment block</span>
+<span class="cm">*/</span>
+</pre></div>
+</div>
+</section>
+<section id="version-string">
+<h1>Version string<a class="headerlink" href="#version-string" title="Link to this heading">¶</a></h1>
+<p>The first non-comment line of an OpenQASM program may optionally be
+<code class="docutils literal notranslate"><span class="pre">OPENQASM</span></code> <em>M.m</em> <code class="docutils literal notranslate"><span class="pre">;</span></code> indicating a major version <em>M</em> and minor version <em>m</em>.
+More details on versioning and the release cycle for OpenQASM may be found
+<a class="reference external" href="https://github.com/openqasm/openqasm/blob/main/CONTRIBUTING.md">here</a>.</p>
+<p>The minor version number, expressed as a decimal point after the major version
+number followed by a number, is optional. If not present, the minor version
+number is assumed to be zero.</p>
+<p>Multiple occurrences of the version string (outside of comments) are not
+permitted, nor may it appear elsewhere than the first non-comment line.</p>
+</section>
+<section id="included-files">
+<h1>Included files<a class="headerlink" href="#included-files" title="Link to this heading">¶</a></h1>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">&quot;filename&quot;;</span></code> continues parsing <code class="docutils literal notranslate"><span class="pre">filename</span></code> as if the
+contents of the file were inserted at the location of the <code class="docutils literal notranslate"><span class="pre">include</span></code> statement.
+This statement can only be used at the global scope.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// First non-comment is a version string</span>
+<span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
+
+<span class="kn">include</span><span class="w"> </span><span class="s">&quot;stdgates.qasm&quot;</span><span class="p">;</span>
+
+<span class="c1">// Rest of QASM program</span>
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">OpenQASM Live Specification</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Language</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-string">Version string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#included-files">Included files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Types and Casting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gates.html">Gates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="insts.html">Built-in quantum instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classical.html">Classical instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subroutines.html">Subroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scope.html">Scoping of variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#input-output">Input/output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="delays.html">Circuit timing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pulses.html">Pulse-level descriptions of gates and measurement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openpulse.html">OpenPulse Grammar</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">OpenQasm 3.0 Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="/index.html">Live Version</a></li>
+    
+    <li class="toctree-l1"><a href="/versions/3.0/index.html">Version 3.0</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Language</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Language</a></li>
+      <li>Next: <a href="types.html" title="next chapter">Types and Casting</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/language/comments.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Types and Casting &#8212; OpenQASM 3.0 Specification  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../_static/colors.css?v=3aae764c" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gates" href="gates.html" />
+    <link rel="prev" title="Comments" href="comments.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="types-and-casting">
+<h1>Types and Casting<a class="headerlink" href="#types-and-casting" title="Link to this heading">¶</a></h1>
+<section id="identifiers">
+<span id="id1"></span><h2>Identifiers<a class="headerlink" href="#identifiers" title="Link to this heading">¶</a></h2>
+<p>Identifiers must begin with a letter [A-Za-z], an underscore or an element from
+the Unicode character categories Lu/Ll/Lt/Lm/Lo/Nl <span id="id2">[<a class="reference internal" href="../index.html#id51" title="Wikipedia contributors. Unicode character property, general category — Wikipedia, the free encyclopedia. 2022. [Online; accessed 14-December-2022]. URL: https://en.wikipedia.org/w/index.php?title=Unicode_character_property&amp;oldid=1114571327#General_Category.">con22</a>]</span>.
+The set of permissible continuation characters consists of all members of the
+aforementioned character sets with the addition of decimal numerals [0-9].
+Identifiers may not override a reserved identifier.</p>
+</section>
+<section id="variables">
+<span id="id3"></span><h2>Variables<a class="headerlink" href="#variables" title="Link to this heading">¶</a></h2>
+<p>Variables must be named according to the rules for identifiers (See <a class="reference internal" href="#identifiers"><span class="std std-ref">Identifiers</span></a>).
+Variables may be assigned values within a program. Variables representing any classical type
+can be initialized on declaration. Any classical variable or Boolean that is not explicitly
+initialized is undefined. Classical types can be mutually cast to one another using the typename.
+See <a class="reference internal" href="#castingspecifics"><span class="std std-ref">Casting specifics</span></a> for more details on casting.</p>
+<p>Declaration and initialization must be done one variable at a time for both quantum and classical
+types. Comma seperated declaration/initialization (<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z</span></code>) is NOT allowed for any type. For
+example, to declare a set of qubits one must do</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="w"> </span><span class="n">q0</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">q1</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">q2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>and to declare a set of classical variables</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.5</span><span class="p">;</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">my_bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">false</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>We use the notation <code class="docutils literal notranslate"><span class="pre">s:m:f</span></code> to denote the width and precision of fixed point numbers,
+where <code class="docutils literal notranslate"><span class="pre">s</span></code> is the number of sign bits, <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of integer bits, and <code class="docutils literal notranslate"><span class="pre">f</span></code> is the
+number of fractional bits. It is necessary to specify low-level
+classical representations since OpenQASM operates at the intersection of
+gates/analog control and digital feedback and we need to be able to
+explicitly transform types to cross these boundaries. Classical types
+are scoped to the braces within which they are declared.</p>
+</section>
+<section id="quantum-types">
+<h2>Quantum types<a class="headerlink" href="#quantum-types" title="Link to this heading">¶</a></h2>
+<section id="qubits">
+<h3>Qubits<a class="headerlink" href="#qubits" title="Link to this heading">¶</a></h3>
+<p>There is a quantum bit (<code class="docutils literal notranslate"><span class="pre">qubit</span></code>) type that is interpreted as a reference to a
+two-level subsystem of a quantum state. The statement <code class="docutils literal notranslate"><span class="pre">qubit</span> <span class="pre">name;</span></code>
+declares a reference to a quantum bit. These qubits are referred
+to as “virtual qubits” (in distinction to “physical qubits” on
+actual hardware; see below). The statement <code class="docutils literal notranslate"><span class="pre">qubit[size]</span> <span class="pre">name;</span></code>
+declares a quantum register with <code class="docutils literal notranslate"><span class="pre">size</span></code> qubits.
+Sizes must always be <a class="reference internal" href="#const-expression"><span class="std std-ref">compile-time constant</span></a> positive
+integers.
+Quantum registers are static arrays of qubits
+that cannot be dynamically resized.</p>
+<p>The label <code class="docutils literal notranslate"><span class="pre">name[j]</span></code> refers to a qubit of this register, where
+<span class="math notranslate nohighlight">\(j\in \{0,1,\dots,\mathrm{size}(\mathrm{name})-1\}\)</span> is an integer.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To be compliant with the base OpenQASM 3.0 specification, an implementation
+is only required to allow this “quantum-register indexing” with a
+<a class="reference internal" href="#const-expression"><span class="std std-ref">compile-time constant value</span></a> (those with <code class="docutils literal notranslate"><span class="pre">const</span></code>
+types).  Implementations are permitted to treat indexing into a quantum
+register with a value of non-<code class="docutils literal notranslate"><span class="pre">const</span></code> type as an error.  Consult your
+compiler and hardware documentation for details.</p>
+</div>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Valid statements</span>
+
+<span class="kn">include</span><span class="w"> </span><span class="s">&quot;stdgates.inc&quot;</span><span class="p">;</span>
+
+<span class="kt">qubit</span><span class="p">[</span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">q1</span><span class="p">;</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">;</span>
+<span class="kt">uint</span><span class="w"> </span><span class="n">runtime_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="p">[</span><span class="n">SIZE</span><span class="p">]</span><span class="w"> </span><span class="n">q2</span><span class="p">;</span><span class="w">  </span><span class="c1">// Declare a 4-qubit register.</span>
+
+<span class="nf">x</span><span class="w"> </span><span class="n">q1</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
+<span class="nf">z</span><span class="w"> </span><span class="n">q2</span><span class="p">[</span><span class="n">SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">2</span><span class="p">];</span><span class="w">  </span><span class="c1">// The index operand is of type `const uint`.</span>
+
+
+<span class="c1">// Validity is implementation-defined.</span>
+
+<span class="nf">x</span><span class="w"> </span><span class="n">q1</span><span class="p">[</span><span class="n">runtime_u</span><span class="p">];</span>
+<span class="c1">// Indexing with a value with a non-`const` type (`uint`, in this case) is</span>
+<span class="c1">// not guaranteed to be supported.</span>
+</pre></div>
+</div>
+<p>The keyword <code class="docutils literal notranslate"><span class="pre">qreg</span></code> is included
+for backwards compatibility and will be removed in the future.</p>
+<p>Qubits are initially in an undefined state. A quantum <code class="docutils literal notranslate"><span class="pre">reset</span></code> operation is one
+way to initialize qubit states.</p>
+<p>All qubits are global variables.
+Qubits cannot be declared within gates or subroutines. This simplifies OpenQASM
+significantly since there is no need for quantum memory management.
+However, it also means that users or compiler have to explicitly manage
+the quantum memory.</p>
+</section>
+<section id="physical-qubits">
+<h3>Physical Qubits<a class="headerlink" href="#physical-qubits" title="Link to this heading">¶</a></h3>
+<p>While program qubits can be named, hardware qubits are referenced only
+by the syntax <code class="docutils literal notranslate"><span class="pre">$[NUM]</span></code>. For an <code class="docutils literal notranslate"><span class="pre">n</span></code> qubit system, we have physical qubit
+references given by <code class="docutils literal notranslate"><span class="pre">$0</span></code>, <code class="docutils literal notranslate"><span class="pre">$1</span></code>, …, <code class="docutils literal notranslate"><span class="pre">$n-1</span></code>. These qubit types are
+used in lower parts of the compilation stack when emitting physical
+circuits. Physical qubits must not be declared and they are, as all the qubits, global variables.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declare a qubit</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">gamma</span><span class="p">;</span>
+<span class="c1">// Declare a qubit with a Unicode name</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">γ</span><span class="p">;</span>
+<span class="c1">// Declare a qubit register with 20 qubits</span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">20</span><span class="p">]</span><span class="w"> </span><span class="n">qubit_array</span><span class="p">;</span>
+<span class="c1">// CNOT gate between physical qubits 0 and 1</span>
+<span class="n">CX</span><span class="w"> </span><span class="l">$0</span><span class="p">,</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="classical-scalar-types">
+<h2>Classical scalar types<a class="headerlink" href="#classical-scalar-types" title="Link to this heading">¶</a></h2>
+<section id="classical-bits-and-registers">
+<h3>Classical bits and registers<a class="headerlink" href="#classical-bits-and-registers" title="Link to this heading">¶</a></h3>
+<p>There is a classical bit type that takes values 0 or 1. Classical
+registers are static arrays of bits. The classical registers model part
+of the controller state that is exposed within the OpenQASM program. The
+statement <code class="docutils literal notranslate"><span class="pre">bit</span> <span class="pre">name;</span></code> declares a classical bit, and or <code class="docutils literal notranslate"><span class="pre">bit[size]</span> <span class="pre">name;</span></code> declares a register of
+<code class="docutils literal notranslate"><span class="pre">size</span></code> bits. The label <code class="docutils literal notranslate"><span class="pre">name[j]</span></code> refers to a bit of this register, where <span class="math notranslate nohighlight">\(j\in
+\{0,1,\dots,\mathrm{size}(\mathrm{name})-1\}\)</span> is an integer.</p>
+<p>Bit registers may also be declared as <code class="docutils literal notranslate"><span class="pre">creg</span> <span class="pre">name[size]</span></code>. This is included for backwards
+compatibility and may be removed in the future.</p>
+<p>For convenience, classical registers can be assigned a text string
+containing zeros and ones of the same length as the size of the
+register. It is interpreted to assign each bit of the register to
+corresponding value 0 or 1 in the string, where the least-significant
+bit is on the right.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declare a register of 20 bits</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">20</span><span class="p">]</span><span class="w"> </span><span class="n">bit_array</span><span class="p">;</span>
+<span class="c1">// Declare and assign a register of bits with decimal value of 15</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">&quot;00001111&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="integers">
+<h3>Integers<a class="headerlink" href="#integers" title="Link to this heading">¶</a></h3>
+<p>There are n-bit signed and unsigned integers. The statements <code class="docutils literal notranslate"><span class="pre">int[size]</span> <span class="pre">name;</span></code> and <code class="docutils literal notranslate"><span class="pre">uint[size]</span> <span class="pre">name;</span></code> declare
+signed 1:n-1:0 and unsigned 0:n:0 integers of the given size. The sizes
+and the surrounding brackets can be omitted (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">name;</span></code>) to use
+a precision that is specified by the particular target architecture.
+Bit-level operations cannot be used on types without a specified width, and
+unspecified-width types are different to <em>all</em> specified-width types for
+the purposes of casting.
+Because register indices are integers, they
+can be cast from classical registers containing measurement outcomes and
+may only be known at run time. An n-bit classical register containing
+bits can also be reinterpreted as an integer, and these types can be
+mutually cast to one another using the type name, e.g. <code class="docutils literal notranslate"><span class="pre">int[16](c)</span></code>. As noted, this
+conversion will be done assuming little-endian bit ordering. The example
+below demonstrates how to declare, assign and cast integer types amongst
+one another.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declare a 32-bit unsigned integer</span>
+<span class="kt">uint</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">my_uint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">;</span>
+<span class="c1">// Declare a 16 bit signed integer</span>
+<span class="kt">int</span><span class="p">[</span><span class="m">16</span><span class="p">]</span><span class="w"> </span><span class="n">my_int</span><span class="p">;</span>
+<span class="n">my_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">16</span><span class="p">](</span><span class="n">my_uint</span><span class="p">);</span>
+<span class="c1">// Declare a machine-sized integer</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">my_machine_int</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="floating-point-numbers">
+<h3>Floating point numbers<a class="headerlink" href="#floating-point-numbers" title="Link to this heading">¶</a></h3>
+<p>IEEE 754 floating point registers may be declared with <code class="docutils literal notranslate"><span class="pre">float[size]</span> <span class="pre">name;</span></code>, where <code class="docutils literal notranslate"><span class="pre">float[64]</span></code> would
+indicate a standard double-precision float. Note that some hardware
+vendors may not support manipulating these values at run-time.</p>
+<p>Similar to integers, floating-point registers can be declared with an
+unspecified size.  The resulting precision is then set by the particular target
+architecture, and the unspecified-width type is different to all specified-width
+types for the purposes of casting.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declare a single-precision 32-bit float</span>
+<span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">my_float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">π</span><span class="p">;</span>
+<span class="c1">// Declare a machine-precision float.</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">my_machine_float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.3</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="void-type">
+<span id="id4"></span><h3>Void type<a class="headerlink" href="#void-type" title="Link to this heading">¶</a></h3>
+<p>Subroutines and externs that do not return a value implicitly return <code class="docutils literal notranslate"><span class="pre">void</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">void</span></code> type is unrealizable and uninstantiable, and thus cannot be
+attached to an identifier or used as a cast operator. The keyword <code class="docutils literal notranslate"><span class="pre">void</span></code> is
+reserved for potential future use.</p>
+</section>
+<section id="angles">
+<span id="angle-type"></span><h3>Angles<a class="headerlink" href="#angles" title="Link to this heading">¶</a></h3>
+<p>OpenQASM 3 includes a new type to represent classical angles: <code class="docutils literal notranslate"><span class="pre">angle</span></code>.
+This type is intended to make manipulations of angles more efficient at runtime,
+when the hardware executing the program does not have built-in support for
+floating-point operations.  The manipulations on <code class="docutils literal notranslate"><span class="pre">angle</span></code> values are designed
+to be significantly less expensive when done using integer hardware than the
+equivalent software emulation of floating-point operations, by using the
+equivalence of angles modulo <span class="math notranslate nohighlight">\(2\pi\)</span> to remove the need for large dynamic
+range.</p>
+<p>In brief, the type <code class="docutils literal notranslate"><span class="pre">angle[size]</span></code> is manipulated very similarly to a single
+unsigned integer, where the value <code class="docutils literal notranslate"><span class="pre">1</span></code> represents an angle of
+<span class="math notranslate nohighlight">\(2\pi/2^{\text{size}}\)</span>, and the largest representable value is
+this subtracted from <span class="math notranslate nohighlight">\(2\pi\)</span>.  Addition with other angles, and
+multiplication and division by unsigned integers is defined by standard
+unsigned-integer arithmetic, with more details found in <a class="reference internal" href="classical.html#classical-instructions"><span class="std std-ref">the section on
+classical instructions</span></a>.</p>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">angle[size]</span> <span class="pre">name;</span></code> statement declares a new angle called
+<code class="docutils literal notranslate"><span class="pre">name</span></code> with <code class="docutils literal notranslate"><span class="pre">size</span></code> bits in its representation.  Angles can be assigned
+values using the constant <code class="docutils literal notranslate"><span class="pre">π</span></code> or <code class="docutils literal notranslate"><span class="pre">pi</span></code>, such as:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declare a 20-bit angle with the value of &quot;π/2&quot;</span>
+<span class="kt">angle</span><span class="p">[</span><span class="m">20</span><span class="p">]</span><span class="w"> </span><span class="n">my_angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">π</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">;</span>
+<span class="c1">// Declare a machine-sized angle</span>
+<span class="kt">angle</span><span class="w"> </span><span class="n">my_machine_angle</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The bit representation of the type <code class="docutils literal notranslate"><span class="pre">angle[size]</span></code> is such that if
+<code class="docutils literal notranslate"><span class="pre">angle_as_uint</span></code> is the integer whose representation as a <code class="docutils literal notranslate"><span class="pre">uint[size]</span></code> has
+the same bit pattern, the value of the angle (using exact mathematical
+operations on the field of real numbers) would be</p>
+<div class="math notranslate nohighlight">
+\[2\pi \times \frac{\text{angle_as_uint}}{2^{\text{size}}}\]</div>
+<p>This “mathematical” value is the value used in casts from floating-point values
+(if available), whereas casts to and from <code class="docutils literal notranslate"><span class="pre">bit[size]</span></code> types reinterpret the
+bits directly.  This means that, unless <code class="docutils literal notranslate"><span class="pre">a</span></code> is sufficiently small:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">](</span><span class="kt">bit</span><span class="p">[</span><span class="m">32</span><span class="p">](</span><span class="kt">uint</span><span class="p">[</span><span class="m">32</span><span class="p">](</span><span class="n">a</span><span class="p">)))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">](</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Explicitly, the most significant bit (bit index <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">-</span> <span class="pre">1</span></code>) correpsonds to
+<span class="math notranslate nohighlight">\(\pi\)</span>, and the least significant bit (bit index <code class="docutils literal notranslate"><span class="pre">0</span></code>) corresponds to
+<span class="math notranslate nohighlight">\(2^{-\text{size} + 1}\pi\)</span>.  For example, with the most-significant bit on
+the left in the bitstrings:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">angle</span><span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="n">my_pi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">π</span><span class="p">;</span><span class="w">  </span><span class="c1">// &quot;1000&quot;</span>
+<span class="kt">angle</span><span class="p">[</span><span class="m">6</span><span class="p">]</span><span class="w"> </span><span class="n">my_pi_over_two</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">;</span><span class="w">  </span><span class="c1">// &quot;010000&quot;</span>
+<span class="kt">angle</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">my_angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="no">π</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">8</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;01110000&quot;</span>
+</pre></div>
+</div>
+<p>Angles outside the interval <span class="math notranslate nohighlight">\([0, 2\pi)\)</span> are represented by their values
+modulo <span class="math notranslate nohighlight">\(2\pi\)</span>.  Up to this modulo operation, the closest <code class="docutils literal notranslate"><span class="pre">angle[size]</span></code>
+representation of an exact mathematical value is different from the true value
+by at most <span class="math notranslate nohighlight">\(\epsilon\leq \pi/2^{\text{size}}\)</span>.</p>
+</section>
+<section id="complex-numbers">
+<h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Link to this heading">¶</a></h3>
+<p>Complex numbers may be declared as <code class="docutils literal notranslate"><span class="pre">complex[float[size]]</span> <span class="pre">name</span></code>, where <code class="docutils literal notranslate"><span class="pre">size</span></code>
+is the size of the IEEE-754 floating-point number used to store the real and
+imaginary components.  Each component behaves as a <code class="docutils literal notranslate"><span class="pre">float[size]</span></code> type.  The
+designator <code class="docutils literal notranslate"><span class="pre">[size]</span></code> can be omitted to use the default hardware <code class="docutils literal notranslate"><span class="pre">float</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> with no arguments is a synonym for <code class="docutils literal notranslate"><span class="pre">complex[float]</span></code>.</p>
+<p>Imaginary literals are written as a decimal-integer or floating-point literal
+followed by the letters <code class="docutils literal notranslate"><span class="pre">im</span></code>.  There may be zero or more spaces between the
+numeric component and the <code class="docutils literal notranslate"><span class="pre">im</span></code> component.  The type of this token is
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> (its value has zero real component), and the component type is as
+normal given the floating-point literal, or the machine-size <code class="docutils literal notranslate"><span class="pre">float</span></code> if the
+numeric component is an integer.</p>
+<p>The real and imaginary components of a complex number can be extracted using the
+builtin functions <code class="docutils literal notranslate"><span class="pre">real()</span></code> and <code class="docutils literal notranslate"><span class="pre">imag()</span></code> respectively.  The output types of
+these functions is the component type specified in the type declaration.  For
+example, given a declaration <code class="docutils literal notranslate"><span class="pre">complex[float[64]]</span> <span class="pre">c;</span></code> the output type of
+<code class="docutils literal notranslate"><span class="pre">imag(c)</span></code> would be <code class="docutils literal notranslate"><span class="pre">float[64]</span></code>.  The <code class="docutils literal notranslate"><span class="pre">real()</span></code> and <code class="docutils literal notranslate"><span class="pre">imag()</span></code> functions
+can be used in compile-time constant expressions when called on compile-time
+constant values.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]]</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.5</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">3.5im</span><span class="p">;</span>
+<span class="kt">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">]</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="o">+</span><span class="nb">sin</span><span class="p">(</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="mf">3.1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">5.5 im</span><span class="p">);</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">d_real</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">real</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w">  </span><span class="c1">// equal to 3.0</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Real-world hardware may not support run-time manipulation of <code class="docutils literal notranslate"><span class="pre">complex</span></code>
+values.  Consult your hardware’s documentation to determine whether these
+language features will be available at run time.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The OpenQASM 3.0 specification only directly permits complex numbers with
+floating-point component types.  Individually language implementations may
+choose to make other component types available, but this version of the
+specification prescribes no portable semantics in these cases.  It is
+possible that a later version of the OpenQASM specification will define
+semantics for non-<code class="docutils literal notranslate"><span class="pre">float</span></code> component types.</p>
+</div>
+</section>
+<section id="boolean-types">
+<h3>Boolean types<a class="headerlink" href="#boolean-types" title="Link to this heading">¶</a></h3>
+<p>There is a Boolean type <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">name;</span></code> that takes values <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>. Qubit measurement results
+can be converted from a classical <code class="docutils literal notranslate"><span class="pre">bit</span></code> type to a Boolean using <code class="docutils literal notranslate"><span class="pre">bool(c)</span></code>, where 1 will
+be true and 0 will be false.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">bit</span><span class="w"> </span><span class="n">my_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">my_bool</span><span class="p">;</span>
+<span class="c1">// Assign a cast bit to a boolean</span>
+<span class="n">my_bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span><span class="p">(</span><span class="n">my_bit</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="compile-time-constants">
+<span id="const-expression"></span><h2>Compile-time constants<a class="headerlink" href="#compile-time-constants" title="Link to this heading">¶</a></h2>
+<p>A typed declaration of a scalar type may be modified by the <code class="docutils literal notranslate"><span class="pre">const</span></code> keyword,
+such as <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">int</span> <span class="pre">a</span> <span class="pre">=</span> <span class="pre">1;</span></code>.  This defines a compile-time constant.  Values of
+type <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">T</span></code> may be used in all locations where a value of type <code class="docutils literal notranslate"><span class="pre">T</span></code> is
+valid.  <code class="docutils literal notranslate"><span class="pre">const</span></code>-typed values are required when specifying the widths of types
+(e.g. in <code class="docutils literal notranslate"><span class="pre">float[SIZE]</span> <span class="pre">f;</span></code>, <code class="docutils literal notranslate"><span class="pre">SIZE</span></code> must have a <code class="docutils literal notranslate"><span class="pre">const</span></code> unsigned integer
+type).  All scalar literals are <code class="docutils literal notranslate"><span class="pre">const</span></code> types.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Valid statements</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">32</span><span class="p">;</span><span class="w">  </span><span class="c1">// Declares a compile-time unsigned integer.</span>
+
+<span class="kt">qubit</span><span class="p">[</span><span class="n">SIZE</span><span class="p">]</span><span class="w"> </span><span class="n">q1</span><span class="p">;</span><span class="w">  </span><span class="c1">// Declares a 32-qubit register called `q1`.</span>
+<span class="kt">int</span><span class="p">[</span><span class="n">SIZE</span><span class="p">]</span><span class="w"> </span><span class="n">i1</span><span class="p">;</span><span class="w">    </span><span class="c1">// Declares a signed integer called `i1` with 32 bits.</span>
+
+
+<span class="c1">// Invalid statements</span>
+
+<span class="kt">uint</span><span class="w"> </span><span class="n">runtime_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">32</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="p">[</span><span class="n">runtime_size</span><span class="p">]</span><span class="w"> </span><span class="n">q2</span><span class="p">;</span><span class="w">  </span><span class="c1">// Invalid; runtime_size is not a `const` type.</span>
+<span class="kt">int</span><span class="p">[</span><span class="n">runtime_size</span><span class="p">]</span><span class="w"> </span><span class="n">i2</span><span class="p">;</span><span class="w">    </span><span class="c1">// Invalid for the same reason.</span>
+</pre></div>
+</div>
+<p id="const-expression-initialization">Identifiers whose type is <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">T</span></code> must be initialized, and may not be
+assigned to in subsequent statements.  The type of the result of the
+initialization expression for a <code class="docutils literal notranslate"><span class="pre">const</span></code> declaration must be <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">S</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">S</span></code> is a type that is either <code class="docutils literal notranslate"><span class="pre">T</span></code> or can be <a class="reference internal" href="#implicit-promotion-rules"><span class="std std-ref">implicitly promoted</span></a> to <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Valid statements</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">;</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">;</span>
+<span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">runtime_f1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">u2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u1</span><span class="p">;</span><span class="w">       </span><span class="c1">// `u1` is of type `const uint`.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">f2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u1</span><span class="p">;</span><span class="w">  </span><span class="c1">// `const uint` is implicitly promoted to `const float[32]`.</span>
+
+
+<span class="c1">// Invalid statements</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f2</span><span class="p">;</span><span class="w">  </span><span class="c1">// `const float[32]` cannot be implicitly promoted to `const int[64]`.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runtime_f1</span><span class="p">;</span><span class="w">  </span><span class="c1">// `runtime_f1` is not `const`.</span>
+</pre></div>
+</div>
+<p id="const-expression-operator">Operator expressions, e.g. <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> (addition), <code class="docutils literal notranslate"><span class="pre">a[b]</span></code> (bit-level indexing)
+and <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">==</span> <span class="pre">b</span></code> (equality), and <a class="reference internal" href="#const-expression-functions"><span class="std std-ref">certain built-in functions</span></a> acting only on <code class="docutils literal notranslate"><span class="pre">const</span></code> operands will be
+evaluated at compile time.  The resulting values are of type <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">T</span></code>, where
+the type <code class="docutils literal notranslate"><span class="pre">T</span></code> is the type of the result when acting on non-<code class="docutils literal notranslate"><span class="pre">const</span></code>
+operands.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Valid statements</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">;</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="p">[</span><span class="m">16</span><span class="p">]</span><span class="w"> </span><span class="n">u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">SIZE</span><span class="p">;</span><span class="w">  </span><span class="c1">// Compile-time value 10.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">SIZE</span><span class="p">;</span><span class="w">  </span><span class="c1">// Compile-time value 25.0.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="n">b1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u1</span><span class="p">[</span><span class="m">1</span><span class="p">];</span><span class="w">  </span><span class="c1">// Compile-time value `&quot;1&quot;`.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="n">SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">b2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u1</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">3</span><span class="p">];</span><span class="w">  </span><span class="c1">// Compile-time value `&quot;1010&quot;`.</span>
+</pre></div>
+</div>
+<p id="const-expression-cast">The resultant type of a cast to type <code class="docutils literal notranslate"><span class="pre">T</span></code> is <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">T</span></code> if the input value has
+a type <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">S</span></code>, where values of type <code class="docutils literal notranslate"><span class="pre">S</span></code> can be cast to type <code class="docutils literal notranslate"><span class="pre">T</span></code>.  If
+<code class="docutils literal notranslate"><span class="pre">S</span></code> cannot be cast to <code class="docutils literal notranslate"><span class="pre">T</span></code>, the expression is invalid.  The cast operator
+does not contain the keyword <code class="docutils literal notranslate"><span class="pre">const</span></code>.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Valid statements</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.5</span><span class="p">;</span>
+<span class="kt">uint</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">runtime_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">;</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">](</span><span class="n">f1</span><span class="p">);</span><span class="w">  </span><span class="c1">// `i1` has compile-time value 2.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kt">uint</span><span class="p">(</span><span class="n">f1</span><span class="p">);</span><span class="w">  </span><span class="c1">// `u1` has compile-time value 4.</span>
+
+
+<span class="c1">// Invalid statements</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">b1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">2</span><span class="p">](</span><span class="n">f1</span><span class="p">);</span><span class="w">  </span><span class="c1">// `float[64]` cannot be cast to `bit[2]`.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">16</span><span class="p">]</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">16</span><span class="p">](</span><span class="n">runtime_u</span><span class="p">);</span><span class="w">  </span><span class="c1">// Casting runtime values is not `const`.</span>
+</pre></div>
+</div>
+<p id="const-expression-nonconst">The resultant type of any expression involving a value that is not <code class="docutils literal notranslate"><span class="pre">const</span></code> is
+not <code class="docutils literal notranslate"><span class="pre">const</span></code>.  The output type of a call to a subroutine defined by a <code class="docutils literal notranslate"><span class="pre">def</span></code>,
+or a call to a subroutine linked by an <code class="docutils literal notranslate"><span class="pre">extern</span></code> statement is not <code class="docutils literal notranslate"><span class="pre">const</span></code>.
+In these cases, values of type <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">T</span></code> are converted to type <code class="docutils literal notranslate"><span class="pre">T</span></code> (which
+has no runtime cost and no effect on the value), then evaluation continues as
+usual.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Valid statements</span>
+
+<span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">runtime_i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">;</span>
+
+<span class="kd">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="c1">// Invalid statements</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">runtime_i1</span><span class="p">;</span>
+<span class="c1">// Initialization expression has type `int[8]`, not `const int[8]`.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">i3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">runtime_i1</span><span class="p">);</span>
+<span class="c1">// User-defined function calls do not propagate `const` values.</span>
+</pre></div>
+</div>
+<section id="built-in-constants">
+<h3>Built-in constants<a class="headerlink" href="#built-in-constants" title="Link to this heading">¶</a></h3>
+<p>Six identifiers are automatically defined in the global scope at the beginning
+of all OpenQASM 3 programs.  There are two identifiers for each of the
+mathematical constants <span class="math notranslate nohighlight">\(\pi\)</span>, <span class="math notranslate nohighlight">\(\tau = 2\pi\)</span> and Euler’s number
+<span class="math notranslate nohighlight">\(e\)</span>.  Each of these values has one ASCII-only identifier and one
+single-Unicode-character identifier.</p>
+<div class="docutils container" id="tab-real-constants">
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">[tab:real-constants] Built-in real constants in OpenQASM3 of type <code class="docutils literal notranslate"><span class="pre">float[64]</span></code>.</span><a class="headerlink" href="#id5" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Constant</p></th>
+<th class="head"><p>ASCII</p></th>
+<th class="head"><p>Unicode</p></th>
+<th class="head"><p>Approximate Base 10</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\pi\)</span></p></td>
+<td><p>pi</p></td>
+<td><p>π</p></td>
+<td><p>3.1415926535…</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\tau = 2\pi\)</span></p></td>
+<td><p>tau</p></td>
+<td><p>τ</p></td>
+<td><p>6.283185…</p></td>
+</tr>
+<tr class="row-even"><td><p>Euler’s number <span class="math notranslate nohighlight">\(e\)</span></p></td>
+<td><p>euler</p></td>
+<td><p>ℇ</p></td>
+<td><p>2.7182818284…</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="built-in-constant-expression-functions">
+<span id="const-expression-functions"></span><h3>Built-in constant expression functions<a class="headerlink" href="#built-in-constant-expression-functions" title="Link to this heading">¶</a></h3>
+<p>The following identifiers are compile-time functions that take <code class="docutils literal notranslate"><span class="pre">const</span></code> inputs
+and have a <code class="docutils literal notranslate"><span class="pre">const</span></code> output.  The normal implicit casting rules apply to the
+inputs of these functions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These functions may not be available for use on runtime values; consult your
+compiler and hardware documentation for details.</p>
+</div>
+<div class="docutils container" id="tab-built-in-math">
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Built-in mathematical functions in OpenQASM3.</span><a class="headerlink" href="#id6" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Input Range/Type, […]</p></th>
+<th class="head"><p>Output Range/Type</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>arccos</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code> on <span class="math notranslate nohighlight">\([-1, 1]\)</span></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code> on <span class="math notranslate nohighlight">\([0, \pi]\)</span></p></td>
+<td><p>Inverse cosine.</p></td>
+</tr>
+<tr class="row-odd"><td><p>arcsin</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code> on <span class="math notranslate nohighlight">\([-1, 1]\)</span></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code> on <span class="math notranslate nohighlight">\([-\pi/2, \pi/2]\)</span></p></td>
+<td><p>Inverse sine.</p></td>
+</tr>
+<tr class="row-even"><td><p>arctan</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code> on <span class="math notranslate nohighlight">\([-\pi/2, \pi/2]\)</span></p></td>
+<td><p>Inverse tangent.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ceiling</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Round to the nearest representable
+integer equal or greater in value.</p></td>
+</tr>
+<tr class="row-even"><td><p>cos</p></td>
+<td><p>(<code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Cosine.</p></td>
+</tr>
+<tr class="row-odd"><td><p>exp</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
+</td>
+<td><p>Exponential <span class="math notranslate nohighlight">\(e^x\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p>floor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Round to the nearest representable
+integer equal or lesser in value.</p></td>
+</tr>
+<tr class="row-odd"><td><p>log</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Logarithm base <span class="math notranslate nohighlight">\(e\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p>mod</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+</td>
+<td><p>Modulus.  The remainder from the
+integer division of the first argument
+by the second argument.</p></td>
+</tr>
+<tr class="row-odd"><td><p>popcount</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bit[_]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint</span></code></p></td>
+<td><p>Number of set (1) bits.</p></td>
+</tr>
+<tr class="row-even"><td><p>pow</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">complex</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
+</td>
+<td><p><span class="math notranslate nohighlight">\(\texttt{pow(a, b)} = a^b\)</span>.</p>
+<p>For floating-point and complex values,
+the principal value is returned.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>rotl</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bit[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">uint[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bit[n]</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">uint[n]</span></code></p>
+</td>
+<td><p>Rotate the bits in the representation
+of <code class="docutils literal notranslate"><span class="pre">value</span></code> by <code class="docutils literal notranslate"><span class="pre">distance</span></code> places
+to the left (towards higher
+indices).  This is similar to a bit
+shift operation, except the vacated
+bits are filled from the overflow,
+rather than being set to zero.  The
+width of the output is set equal to
+the width of the input.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rotl(a,</span> <span class="pre">n)</span> <span class="pre">==</span> <span class="pre">rotr(a,</span> <span class="pre">-n)</span></code>.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>rotr</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bit[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">uint[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bit[n]</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">uint[n]</span></code></p>
+</td>
+<td><p>Rotate the bits in the representation
+of <code class="docutils literal notranslate"><span class="pre">value</span></code> by <code class="docutils literal notranslate"><span class="pre">distance</span></code> places to
+the right (towards lower indices).</p></td>
+</tr>
+<tr class="row-odd"><td><p>sin</p></td>
+<td><p>(<code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Sine.</p></td>
+</tr>
+<tr class="row-even"><td><p>sqrt</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
+</td>
+<td><p>Square root.  This always returns the
+principal root.</p></td>
+</tr>
+<tr class="row-odd"><td><p>tan</p></td>
+<td><p>(<code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Tangent.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For each built-in function, the chosen overload is the first one to appear in
+the list above where all given operands can be implicitly cast to the valid
+input types.  The output type is not considered when choosing an overload.  It
+is an error if there is no valid overload for a given sequence of operands.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Valid statements.</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.5</span><span class="p">;</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">;</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">uint</span><span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="n">u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">;</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">b1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">&quot;0010_1010&quot;</span><span class="p">;</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]]</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">2.0im</span><span class="p">;</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="n">f1</span><span class="p">);</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">exp</span><span class="p">(</span><span class="n">i1</span><span class="p">);</span>
+<span class="c1">// The ``float -&gt; float`` overload of ``exp`` is chosen in both of these</span>
+<span class="c1">// cases; in the first, there is an exact type match, in the second the</span>
+<span class="c1">// ``int[8]`` input can be implicitly promoted to ``float``.</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pow</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span><span class="w"> </span><span class="n">u1</span><span class="p">);</span>
+<span class="c1">// Value 64, expression has type `const int`.  The first overload of `pow`</span>
+<span class="c1">// is chosen, because `i1` can be implicitly promoted to `const int` and</span>
+<span class="c1">// `u1` to `const uint`.</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pow</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="m">2</span><span class="p">);</span>
+<span class="c1">// Value 0.0625, expression has type `const float`.  The second,</span>
+<span class="c1">// `(float, float) -&gt; float`, overload is chosen, because `-2` (type</span>
+<span class="c1">// `const int`) cannot be implicitly promoted to `const uint`, but both</span>
+<span class="c1">// input types can be implicitly promoted to `float`.  The `complex` overload</span>
+<span class="c1">// is not attempted, because it has lower priority.</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">b2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">rotl</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">);</span>
+<span class="c1">// Value &quot;0101_0001&quot;, expression has type `const bit[8]`.</span>
+
+
+<span class="c1">// Invalid statements.</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]]</span><span class="w"> </span><span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">mod</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">);</span>
+<span class="c1">// No valid overload is possible; the first given operand has type</span>
+<span class="c1">// `const complex[float[64]]`, which cannot be implicitly promoted to</span>
+<span class="c1">// `int` or `float`.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="literals">
+<h2>Literals<a class="headerlink" href="#literals" title="Link to this heading">¶</a></h2>
+<p>There are five types of literals in OpenQASM 3, integer, float, boolean,
+bit string, and timing.  These literals have <code class="docutils literal notranslate"><span class="pre">const</span></code> types.</p>
+<p>Integer literals can be written in decimal without a prefix, or as a hex, octal, or
+binary number, as denoted by a leading <code class="docutils literal notranslate"><span class="pre">0x/0X</span></code>, <code class="docutils literal notranslate"><span class="pre">0o</span></code>, or <code class="docutils literal notranslate"><span class="pre">0b/0B</span></code> prefix.
+Non-consecutive underscores <code class="docutils literal notranslate"><span class="pre">_</span></code> may be inserted between the first and last
+digit of the literal to improve readability for large values.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// decimal</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xff</span><span class="p">;</span><span class="w"> </span><span class="c1">// hex</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xffff_ffff</span><span class="w"> </span><span class="c1">// hex with _ for readability</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0XBEEF</span><span class="p">;</span><span class="w"> </span><span class="c1">// uppercase HEX</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mo">0o73</span><span class="p">;</span><span class="w"> </span><span class="c1">// octal</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">0b1101</span><span class="p">;</span><span class="w"> </span><span class="c1">// binary</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">0B0110_1001</span><span class="p">;</span><span class="w"> </span><span class="c1">// uppercase B binary with _ for readability</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1_000_000</span><span class="w"> </span><span class="c1">// 1 million with _ for readability</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Float literals contain either</dt><dd><ul class="simple">
+<li><p>one or more digits followed by a <code class="docutils literal notranslate"><span class="pre">.</span></code> and zero or more digits,</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">.</span></code> followed by one or more digits.</p></li>
+</ul>
+</dd>
+</dl>
+<p>In addition, scientific notation can be used with a signed or unsigned integer
+exponent.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">float</span><span class="w"> </span><span class="n">f1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">f2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">.1</span><span class="p">;</span><span class="w"> </span><span class="c1">// leading dot</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">f3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.</span><span class="p">;</span><span class="w"> </span><span class="c1">// trailing dot</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">f4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2e10</span><span class="p">;</span><span class="w"> </span><span class="c1">// scientific</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">f5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2e+1</span><span class="p">;</span><span class="w"> </span><span class="c1">// scientific with positive signed exponent</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">f6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0E-1</span><span class="p">;</span><span class="w"> </span><span class="c1">// uppercase scientific with signed exponent</span>
+</pre></div>
+</div>
+<p>The two boolean literals are <code class="docutils literal notranslate"><span class="pre">true</span></code> and <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Bit string literals are denoted by double quotes <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> surrounding a number of
+zero and one digits, and may include non-consecutive underscores to improve
+readability for large strings.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">bit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">b1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">&quot;00010001&quot;</span><span class="p">;</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">b2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">&quot;0001_0001&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// underscore for readability</span>
+</pre></div>
+</div>
+<p>Timing literals are float or integer literals with a unit of time.
+<code class="docutils literal notranslate"><span class="pre">ns,</span> <span class="pre">μs,</span> <span class="pre">us,</span> <span class="pre">ms,</span> <span class="pre">and</span> <span class="pre">s</span></code> are used for SI time units. <code class="docutils literal notranslate"><span class="pre">dt</span></code> is a
+backend-dependent unit equivalent to one waveform sample.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">duration</span><span class="w"> </span><span class="n">one_second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000ms</span><span class="p">;</span>
+<span class="kt">duration</span><span class="w"> </span><span class="n">thousand_cycles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000dt</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="arrays">
+<span id="types-arrays"></span><h2>Arrays<a class="headerlink" href="#arrays" title="Link to this heading">¶</a></h2>
+<p>Statically-sized arrays of values can be created and initialized, and individual elements
+can be accessed, using the following general syntax:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">],</span><span class="w"> </span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">myArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">};</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">],</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">multiDim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="mf">1.1</span><span class="p">,</span><span class="w"> </span><span class="mf">1.2</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mf">2.1</span><span class="p">,</span><span class="w"> </span><span class="mf">2.2</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mf">3.1</span><span class="p">,</span><span class="w"> </span><span class="mf">3.2</span><span class="p">}};</span>
+
+<span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">firstElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myArray</span><span class="p">[</span><span class="m">0</span><span class="p">];</span><span class="w"> </span><span class="c1">// 0</span>
+<span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">lastElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myArray</span><span class="p">[</span><span class="m">4</span><span class="p">];</span><span class="w"> </span><span class="c1">// 4</span>
+<span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">alsoLastElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myArray</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// 4</span>
+<span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">firstLastElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">multiDim</span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// 1.2</span>
+<span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">lastLastElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">multiDim</span><span class="p">[</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// 3.2</span>
+<span class="kt">float</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">alsoLastLastElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">multiDim</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// 3.2</span>
+
+<span class="n">myArray</span><span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">;</span><span class="w"> </span><span class="c1">// myArray == {0, 1, 2, 3, 10}</span>
+<span class="n">multiDim</span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// multiDim == {{0.0, 1.2}, {2.1, 2.2}, {3.1, 3.2}}</span>
+<span class="n">multiDim</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// multiDim == {{0.0, 1.2}, {2.1, 2.2}, {3.1, 0.0}}</span>
+</pre></div>
+</div>
+<p>The first argument to the <code class="docutils literal notranslate"><span class="pre">array</span></code> type constructor is the base type
+of the array. The supported classical types include various sizes of <code class="docutils literal notranslate"><span class="pre">bit</span></code>,
+<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code>, and <code class="docutils literal notranslate"><span class="pre">angle</span></code>, as well as
+<code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">duration</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">stretch</span></code> is not a valid array
+base type.</p>
+<p>Arrays <em>cannot</em> be declared inside the body of a function or gate. All arrays
+<em>must</em> be declared within the global scope of the program.
+Indexing of arrays is n-based <em>i.e.</em>, negative indices are allowed.
+The index <code class="docutils literal notranslate"><span class="pre">-1</span></code> means the last element of the array, <code class="docutils literal notranslate"><span class="pre">-2</span></code> is the second to
+last, and so on, with <code class="docutils literal notranslate"><span class="pre">-n</span></code> being the first element of an n-element array.
+Multi-dimensional arrays (as in the example above) are allowed, with a maximum
+of 7 total dimensions. The subscript operator <code class="docutils literal notranslate"><span class="pre">[]</span></code> is used for element access,
+and for multi-dimensional arrays subarray accesses can be specified using a
+comma-delimited list of indices (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">myArr[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>), with the outer
+dimension specified first.</p>
+<p>For interoperability, the standard
+ways of declaring quantum registers and bit registers are equivalent to the
+array syntax version (<em>i.e.</em> <code class="docutils literal notranslate"><span class="pre">qubit[5]</span> <span class="pre">q1;</span></code> is the same as
+<code class="docutils literal notranslate"><span class="pre">array[qubit,</span> <span class="pre">5]</span> <span class="pre">q1;</span></code>).
+Assignment to elements of arrays, as in the examples above, acts as expected,
+with the left-hand side of the assignment operating as a reference, thereby
+updating the values inside the original array. For multi-dimensional arrays,
+the shape and type of the assigned value must match that of the reference.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="n">aa</span><span class="p">;</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="n">bb</span><span class="p">;</span>
+
+<span class="n">bb</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aa</span><span class="p">;</span><span class="w"> </span><span class="c1">// all of aa is copied to first element of bb</span>
+<span class="n">bb</span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aa</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="c1">// last element of aa is copied to one element of bb</span>
+
+<span class="n">bb</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="c1">// error - shape mismatch</span>
+</pre></div>
+</div>
+<p>Arrays may be passed to subroutines and externs. For more details, see
+<a class="reference internal" href="subroutines.html#arrays-in-subroutines"><span class="std std-ref">Arrays in subroutines</span></a>.</p>
+</section>
+<section id="types-related-to-timing">
+<h2>Types related to timing<a class="headerlink" href="#types-related-to-timing" title="Link to this heading">¶</a></h2>
+<section id="duration">
+<h3>Duration<a class="headerlink" href="#duration" title="Link to this heading">¶</a></h3>
+<p>We introduce a <code class="docutils literal notranslate"><span class="pre">duration</span></code> type to express timing.
+Durations can be assigned with expressions including timing literals.
+<code class="docutils literal notranslate"><span class="pre">durationof()</span></code> is an intrinsic function used to reference the
+duration of a calibrated gate.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">duration</span><span class="w"> </span><span class="n">one_second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000ms</span><span class="p">;</span>
+<span class="kt">duration</span><span class="w"> </span><span class="n">thousand_cycles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000dt</span><span class="p">;</span>
+<span class="kt">duration</span><span class="w"> </span><span class="n">two_seconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one_second</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1s</span><span class="p">;</span>
+<span class="kt">duration</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">durationof</span><span class="p">({</span><span class="n">x</span><span class="w"> </span><span class="l">$3</span><span class="p">;});</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">duration</span></code> is further discussed in <a class="reference internal" href="delays.html#duration-and-stretch"><span class="std std-ref">Duration and stretch types</span></a></p>
+</section>
+<section id="stretch">
+<h3>Stretch<a class="headerlink" href="#stretch" title="Link to this heading">¶</a></h3>
+<p>We further introduce a <code class="docutils literal notranslate"><span class="pre">stretch</span></code> type which is a sub-type of <code class="docutils literal notranslate"><span class="pre">duration</span></code>. <code class="docutils literal notranslate"><span class="pre">stretch</span></code> types
+have variable non-negative duration that is permitted to grow as necessary
+to satisfy constraints. Stretch variables are resolved at compile time
+into target-appropriate durations that satisfy a user’s specified design
+intent.</p>
+<p><code class="docutils literal notranslate"><span class="pre">stretch</span></code> is further discussed in <a class="reference internal" href="delays.html#duration-and-stretch"><span class="std std-ref">Duration and stretch types</span></a></p>
+</section>
+</section>
+<section id="aliasing">
+<h2>Aliasing<a class="headerlink" href="#aliasing" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">let</span></code> keyword allows quantum bits and registers to be referred to by
+another name as long as the alias is in scope.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="p">[</span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="c1">// myreg[0] refers to the qubit q[1]</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">myreg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">4</span><span class="p">];</span>
+</pre></div>
+</div>
+</section>
+<section id="index-sets-and-slicing">
+<h2>Index sets and slicing<a class="headerlink" href="#index-sets-and-slicing" title="Link to this heading">¶</a></h2>
+</section>
+<section id="register-concatenation-and-slicing">
+<h2>Register concatenation and slicing<a class="headerlink" href="#register-concatenation-and-slicing" title="Link to this heading">¶</a></h2>
+<p>Two or more registers of the same type (i.e. classical or quantum) can
+be concatenated to form a register of the same type whose size is the
+sum of the sizes of the individual registers. The concatenated register
+is a reference to the bits or qubits of the original registers. The
+statement <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">++</span> <span class="pre">b</span></code> denotes the concatenation of registers <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>. A register cannot
+be concatenated with any part of itself.</p>
+<p>Classical and quantum registers can be indexed in a way that selects a
+subset of (qu)bits, i.e. by an index set. A register so indexed is
+interpreted as a register of the same type but with a different size.
+The register slice is a reference to the original register. A register
+cannot be indexed by an empty index set.</p>
+<p>Similarly, classical arrays can be indexed using index sets. See <a class="reference internal" href="#array-slicing"><span class="std std-ref">Array concatenation and slicing</span></a>.</p>
+<p>An index set can be specified by a single integer (signed or unsigned), a
+comma-separated list of integers contained in braces <code class="docutils literal notranslate"><span class="pre">{a,b,c,…}</span></code>, or a range.
+Ranges are written as <code class="docutils literal notranslate"><span class="pre">a:b</span></code> or
+<code class="docutils literal notranslate"><span class="pre">a:c:b</span></code> where <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, and <code class="docutils literal notranslate"><span class="pre">c</span></code> are integers (signed or unsigned).
+The range corresponds to the set <span class="math notranslate nohighlight">\(\{a, a+c, a+2c, \dots, a+mc\}\)</span>
+where <span class="math notranslate nohighlight">\(m\)</span> is the largest integer such that <span class="math notranslate nohighlight">\(a+mc\leq b\)</span> if
+<span class="math notranslate nohighlight">\(c&gt;0\)</span> and <span class="math notranslate nohighlight">\(a+mc\geq b\)</span> if <span class="math notranslate nohighlight">\(c&lt;0\)</span>. If <span class="math notranslate nohighlight">\(a=b\)</span> then
+the range corresponds to <span class="math notranslate nohighlight">\(\{a\}\)</span>. Otherwise, the range is the
+empty set. If <span class="math notranslate nohighlight">\(c\)</span> is not given, it is assumed to be one, and
+<span class="math notranslate nohighlight">\(c\)</span> cannot be zero. Note the index sets can be defined by
+variables whose values may only be known at run time.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">one</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">10</span><span class="p">]</span><span class="w"> </span><span class="n">two</span><span class="p">;</span>
+<span class="c1">// Aliased register of twelve qubits</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">concatenated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">two</span><span class="p">;</span>
+<span class="c1">// First qubit in aliased qubit array</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">concatenated</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
+<span class="c1">// Last qubit in aliased qubit array</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">concatenated</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">];</span>
+<span class="c1">// Qubits zero, three and five</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">qubit_selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two</span><span class="p">[{</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">}];</span>
+<span class="c1">// First seven qubits in aliased qubit array</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">sliced</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">concatenated</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">6</span><span class="p">];</span>
+<span class="c1">// Every second qubit</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">every_second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">concatenated</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">2</span><span class="p">:</span><span class="m">12</span><span class="p">];</span>
+<span class="c1">// Using negative ranges to take the last 3 elements</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">last_three</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two</span><span class="p">[</span><span class="o">-</span><span class="m">4</span><span class="p">:</span><span class="o">-</span><span class="m">1</span><span class="p">];</span>
+<span class="c1">// Concatenate two alias in another one</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sliced</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">last_three</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="classical-value-bit-slicing">
+<h2>Classical value bit slicing<a class="headerlink" href="#classical-value-bit-slicing" title="Link to this heading">¶</a></h2>
+<p>A subset of classical values (int, uint, and angle) may be accessed at the bit
+level using index sets similar to register slicing. The bit slicing operation
+always returns a bit array of size equal to the size of the index set.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">]</span><span class="w"> </span><span class="n">myInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span><span class="p">;</span><span class="w"> </span><span class="c1">// 0xF or 0b1111</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">lastBit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myInt</span><span class="p">[</span><span class="m">0</span><span class="p">];</span><span class="w"> </span><span class="c1">// 1</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">signBit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myInt</span><span class="p">[</span><span class="m">31</span><span class="p">];</span><span class="w"> </span><span class="c1">// 0</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">alsoSignBit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myInt</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// 0</span>
+
+<span class="kt">bit</span><span class="p">[</span><span class="m">16</span><span class="p">]</span><span class="w"> </span><span class="n">evenBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myInt</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">2</span><span class="p">:</span><span class="m">31</span><span class="p">];</span><span class="w"> </span><span class="c1">// 3</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">16</span><span class="p">]</span><span class="w"> </span><span class="n">upperBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myInt</span><span class="p">[</span><span class="o">-</span><span class="m">16</span><span class="p">:</span><span class="o">-</span><span class="m">1</span><span class="p">];</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">16</span><span class="p">]</span><span class="w"> </span><span class="n">upperReversed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myInt</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">:</span><span class="o">-</span><span class="m">16</span><span class="p">];</span>
+
+<span class="n">myInt</span><span class="p">[</span><span class="m">4</span><span class="p">:</span><span class="m">7</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">&quot;1010&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// myInt == 0xAF</span>
+</pre></div>
+</div>
+<p>Bit-level access is still possible with elements of arrays. It is suggested that
+multi-dimensional access be done using the comma-delimited version of the
+subscript operator to reduce confusion. With this convention nearly all
+instances of multiple subscripts <code class="docutils literal notranslate"><span class="pre">[][]</span></code> will be bit-level accesses of array
+elements.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">32</span><span class="p">],</span><span class="w"> </span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">intArr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">};</span>
+<span class="c1">// Access bit 0 of element 0 of intArr and set it to 1</span>
+<span class="n">intArr</span><span class="p">[</span><span class="m">0</span><span class="p">][</span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="c1">// lowest 5 bits of intArr[4] copied to b</span>
+<span class="kt">bit</span><span class="p">[</span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intArr</span><span class="p">[</span><span class="m">4</span><span class="p">][</span><span class="m">0</span><span class="p">:</span><span class="m">4</span><span class="p">];</span>
+</pre></div>
+</div>
+</section>
+<section id="array-concatenation-and-slicing">
+<span id="array-slicing"></span><h2>Array concatenation and slicing<a class="headerlink" href="#array-concatenation-and-slicing" title="Link to this heading">¶</a></h2>
+<p>Two or more classical arrays of the same fundamental type can be
+concatenated to form an array of the same type whose size is the
+sum of the sizes of the individual arrays. Unlike with qubit registers, this operation
+copies the contents of the input arrays to form the new (larger) array. This means that
+arrays <em>can</em> be concatenated with themselves. However, the array concatenation
+operator is forbidden to be used directly in the argument list of a subroutine
+or extern call. If a concatenated array is to be passed to a subroutine then it
+should be explicitly declared and assigned the concatenation.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">};</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">};</span>
+
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="n">concat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">second</span><span class="p">;</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="n">selfConcat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">first</span><span class="p">;</span>
+
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">secondSlice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">second</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">2</span><span class="p">];</span><span class="w"> </span><span class="c1">// {3, 4}</span>
+
+<span class="c1">// slicing with assignment</span>
+<span class="n">second</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// second == {2, 0, 1}</span>
+
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="n">third</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">};</span>
+<span class="c1">// combined slicing and concatenation</span>
+<span class="n">selfConcat</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">third</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">2</span><span class="p">];</span>
+<span class="c1">// selfConcat == {0, 1, 6, 7}</span>
+
+<span class="nf">subroutine_call</span><span class="p">(</span><span class="n">first</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">third</span><span class="p">)</span><span class="w"> </span><span class="c1">// forbidden</span>
+<span class="nf">subroutine_call</span><span class="p">(</span><span class="n">selfConcat</span><span class="p">)</span><span class="w"> </span><span class="c1">// allowed</span>
+</pre></div>
+</div>
+<p>Arrays can be sliced just like quantum registers using a range <code class="docutils literal notranslate"><span class="pre">a:b:c</span></code>
+and can be indexed using an integer but cannot be indexed by a a comma-separated
+list of integers contained in braces <code class="docutils literal notranslate"><span class="pre">{a,b,c,…}</span></code>. Slicing uses
+the subscript operator <code class="docutils literal notranslate"><span class="pre">[]</span></code>, but produces an array (or reference in the case
+of assignment) with the same number of dimensions as the given identifier.
+Array slicing is syntactic sugar for concisely expressing for loops over
+multi-dimensional arrays.
+For sliced assignments, as with non-sliced assignments, the shapes and types of
+the slices must match.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">scalar</span><span class="p">;</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">oneD</span><span class="p">;</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">twoD</span><span class="p">;</span><span class="w"> </span><span class="c1">// 3x2</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">anotherTwoD</span><span class="p">;</span><span class="w"> </span><span class="c1">// 3x2</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">threeD</span><span class="p">;</span><span class="w"> </span><span class="c1">// 4x3x2</span>
+<span class="kt">array</span><span class="p">[</span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="n">anotherThreeD</span><span class="p">;</span><span class="w"> </span><span class="c1">// 2x3x4</span>
+
+<span class="n">threeD</span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scalar</span><span class="p">;</span><span class="w"> </span><span class="c1">// allowed</span>
+<span class="n">threeD</span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oneD</span><span class="p">;</span><span class="w"> </span><span class="c1">// allowed</span>
+<span class="n">threeD</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">twoD</span><span class="p">;</span><span class="w"> </span><span class="c1">// allowed</span>
+
+<span class="n">threeD</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oneD</span><span class="p">;</span><span class="w"> </span><span class="c1">// error - shape mismatch</span>
+<span class="n">threeD</span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="c1">// error - shape mismatch</span>
+<span class="n">threeD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">anotherThreeD</span><span class="w"> </span><span class="c1">// error - shape mismatch</span>
+
+<span class="n">twoD</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">anotherTwoD</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// allowed</span>
+<span class="n">twoD</span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">anotherTwoD</span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">];</span><span class="w"> </span><span class="c1">// allowed</span>
+</pre></div>
+</div>
+</section>
+<section id="casting-specifics">
+<span id="implicit-promotion-rules"></span><span id="castingspecifics"></span><h2>Casting specifics<a class="headerlink" href="#casting-specifics" title="Link to this heading">¶</a></h2>
+<p>The classical types are divided into the ‘standard’ classical types (bool, int,
+uint, float, and complex) that exist in languages like C, and the ‘special’
+classical types (bit, angle, duration, and stretch) that do not.
+The standard types follow rules that mimic those of C99 for <a class="reference external" href="https://en.cppreference.com/w/c/language/conversion">promotion and
+conversion</a> in mixed
+expressions and assignments.</p>
+<p>If values with two different types are used as the operands of a binary
+operation, the lesser of the two types is cast to the greater of the two.  All
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> are greater than all <code class="docutils literal notranslate"><span class="pre">float</span></code>, and all <code class="docutils literal notranslate"><span class="pre">complex</span></code> and all
+<code class="docutils literal notranslate"><span class="pre">float</span></code> are greater than all <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">uint</span></code>.  Within each level of
+<code class="docutils literal notranslate"><span class="pre">complex</span></code> and <code class="docutils literal notranslate"><span class="pre">float</span></code>, types with greater width are greater than types with
+lower width.  For more information, see the <a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Usual_arithmetic_conversions">usual arithmetic conversions in C</a>.</p>
+<p>The rules for rank of integer conversions mimic those of C99.  For more, see
+<a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Integer_promotions">integer promotions</a>, and
+<a class="reference external" href="https://en.cppreference.com/w/c/language/conversion#Integer_conversions">integer conversions</a>.</p>
+<p>Standard and special classical types
+may only mix in expressions with operators defined for those mixed types,
+otherwise explicit casts must be provided, unless otherwise noted (such as for
+assigning float values or expressions to angles).
+Additionally, angle values will be implicitly promoted or converted in the same manner as
+unsigned integers when mixed with or assigned to angle values with differing
+precision.</p>
+<p>In general, for any cast between standard types that results in loss of
+precision, if the source value is larger than can be represented in the target
+type, the exact behavior is implementation specific and must be documented by
+the vendor.</p>
+<section id="allowed-casts">
+<h3>Allowed casts<a class="headerlink" href="#allowed-casts" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="8"><p><span class="center">Casting To</span></p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Casting From</p></th>
+<th class="head"><p>bool</p></th>
+<th class="head"><p>int</p></th>
+<th class="head"><p>uint</p></th>
+<th class="head"><p>float</p></th>
+<th class="head"><p>angle</p></th>
+<th class="head"><p>bit</p></th>
+<th class="head"><p>duration</p></th>
+<th class="head"><p>qubit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p><strong>bool</strong></p></td>
+<td><p><span class="center">-</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>int</strong></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="center">-</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>uint</strong></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="center">-</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>float</strong></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="center">-</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>angle</strong></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="center">-</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>bit</strong></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="gbg">Yes</span></p></td>
+<td><p><span class="center">-</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>duration</strong></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No*</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="center">-</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>qubit</strong></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="rbg">No</span></p></td>
+<td><p><span class="center">-</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>*Note: <code class="docutils literal notranslate"><span class="pre">duration</span></code> values can be converted to <code class="docutils literal notranslate"><span class="pre">float</span></code> using the division operator. See <a class="reference internal" href="#divideduration"><span class="std std-ref">Converting duration to other types</span></a></p>
+</section>
+<section id="casting-from-bool">
+<h3>Casting from bool<a class="headerlink" href="#casting-from-bool" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">bool</span></code> values cast from <code class="docutils literal notranslate"><span class="pre">false</span></code> to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> and from <code class="docutils literal notranslate"><span class="pre">true</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code> or
+an equivalent representation. <code class="docutils literal notranslate"><span class="pre">bool</span></code> values can only be cast to <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code>
+(a single bit), so explicit index syntax must be given if the target <code class="docutils literal notranslate"><span class="pre">bit</span></code>
+has more than 1 bit of precision.</p>
+</section>
+<section id="casting-from-int-uint">
+<h3>Casting from int/uint<a class="headerlink" href="#casting-from-int-uint" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">int[n]</span></code> and <code class="docutils literal notranslate"><span class="pre">uint[n]</span></code> values cast to the standard types mimicking C99
+behavior. Casting to <code class="docutils literal notranslate"><span class="pre">bool</span></code> values follows the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0</span></code>.
+As noted above, if the value is too large to be represented in the
+target type the result is implementation-specific. However,
+casting between <code class="docutils literal notranslate"><span class="pre">int[n]</span></code> and <code class="docutils literal notranslate"><span class="pre">uint[n]</span></code> is expected to preserve the bit
+ordering, specifically it should be the case that <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">int[n](uint[n](x))</span></code>
+and vice versa. Casting to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code> is only allowed when <code class="docutils literal notranslate"><span class="pre">m==n</span></code>. If the target
+<code class="docutils literal notranslate"><span class="pre">bit</span></code> has more or less precision, then explicit slicing syntax must be given.
+As noted, the conversion is done assuming a little-endian 2’s complement
+representation.</p>
+</section>
+<section id="casting-from-float">
+<h3>Casting from float<a class="headerlink" href="#casting-from-float" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">float[n]</span></code> values cast to the standard types mimicking C99 behavior (<em>e.g.</em>
+discarding the fractional part for integer-type targets). As noted above,
+if the value is too large to be represented in the
+target type the result is implementation-specific.</p>
+<p>Casting a <code class="docutils literal notranslate"><span class="pre">float[n]</span></code> value to an <code class="docutils literal notranslate"><span class="pre">angle[m]</span></code> involves finding the nearest
+representable value modulo <span class="math notranslate nohighlight">\(\text{float}_n(2\pi)\)</span>, where ties between two
+possible representations are resolved by choosing to have zero in the
+least-significant bit (<em>i.e.</em> round to nearest, ties to even).  Casting the
+floating-point values <code class="docutils literal notranslate"><span class="pre">inf</span></code>, <code class="docutils literal notranslate"><span class="pre">-inf</span></code> and all representations of <code class="docutils literal notranslate"><span class="pre">NaN</span></code> to
+<code class="docutils literal notranslate"><span class="pre">angle[m]</span></code> is not defined.</p>
+<p>For example, given the double-precision floating-point value:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// The closest double-precision representation of 2*pi.</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">two_pi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">6.283185307179586</span>
+<span class="c1">// For double precision, we have</span>
+<span class="c1">//   (two_pi * (127./512.)) / two_pi == (127./512.)</span>
+<span class="c1">// exactly.</span>
+<span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two_pi</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mf">127.</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">512.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>the result of the cast <code class="docutils literal notranslate"><span class="pre">angle[8](f)</span></code> should have the bitwise representation
+<code class="docutils literal notranslate"><span class="pre">&quot;01000000&quot;</span></code> (which represents the exact angle
+<span class="math notranslate nohighlight">\(2\pi\cdot\frac{64}{256} = \frac\pi2\)</span>), despite <code class="docutils literal notranslate"><span class="pre">&quot;00111111&quot;</span></code>
+(<span class="math notranslate nohighlight">\(2\pi\cdot\frac{63}{256}\)</span>) being equally close, because of the
+round-to-nearest ties-to-even behaviour.</p>
+</section>
+<section id="casting-from-angle">
+<h3>Casting from angle<a class="headerlink" href="#casting-from-angle" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">angle[n]</span></code> values cast to <code class="docutils literal notranslate"><span class="pre">bool</span></code> using the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0</span></code>.  Casting
+to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code> values is only allowed when <code class="docutils literal notranslate"><span class="pre">n==m</span></code>, otherwise explicit slicing
+syntax must be provided.  When casting to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code>, the value is a direct
+copy of the bit pattern using the same little-endian ordering <a class="reference internal" href="#angle-type"><span class="std std-ref">as described
+above</span></a>.</p>
+<p>When casting between angles of differing precisions (<code class="docutils literal notranslate"><span class="pre">n!=m</span></code>): if the target
+has more significant bits, then the value is padded with <code class="docutils literal notranslate"><span class="pre">m-n</span></code> least
+significant bits of <code class="docutils literal notranslate"><span class="pre">0</span></code>; if the target has fewer significant bits, then
+there are two acceptable behaviors that can be supported by compilers:
+rounding and truncation. For rounding the value is rounded to the nearest
+value, with ties going to the value with the even least significant bit.
+Trunction is likely to have more hardware support. This behavior can be
+controlled by the use of a <code class="docutils literal notranslate"><span class="pre">#pragma</span></code>.</p>
+</section>
+<section id="casting-from-bit">
+<h3>Casting from bit<a class="headerlink" href="#casting-from-bit" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> values cast to <code class="docutils literal notranslate"><span class="pre">bool</span></code> using the convention <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">!=</span> <span class="pre">0</span></code>. Casting to
+<code class="docutils literal notranslate"><span class="pre">int[m]</span></code> or <code class="docutils literal notranslate"><span class="pre">uint[m]</span></code> is done assuming a little endian 2’s complement
+representation, and is only allowed when <code class="docutils literal notranslate"><span class="pre">n==m</span></code>, otherwise explicit slicing
+syntax must be given. Likewise, <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> can only be cast to <code class="docutils literal notranslate"><span class="pre">angle[m]</span></code>
+when <code class="docutils literal notranslate"><span class="pre">n==m</span></code>, in which case an exact per-bit copy is done using little-endian
+bit order. Finally, casting between bits of differing precisions is not
+allowed, explicit slicing syntax must be given.</p>
+</section>
+<section id="converting-duration-to-other-types">
+<span id="divideduration"></span><h3>Converting duration to other types<a class="headerlink" href="#converting-duration-to-other-types" title="Link to this heading">¶</a></h3>
+<p>Casting from or to duration values is not allowed, however, operations on
+durations that produce values of different types is allowed. For example,
+dividing a duration by a duration produces a machine-precision <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">duration</span><span class="w"> </span><span class="n">one_ns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1ns</span><span class="p">;</span>
+<span class="kt">duration</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">500ns</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">a_in_ns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">one_ns</span><span class="p">;</span><span class="w">  </span><span class="c1">// 500.0</span>
+
+<span class="kt">duration</span><span class="w"> </span><span class="n">one_s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1s</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">a_in_s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">one_s</span><span class="p">;</span><span class="w"> </span><span class="c1">// 5e-7</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">OpenQASM 3.0 Specification</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Language</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="comments.html">Comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comments.html#version-string">Version string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comments.html#included-files">Included files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Types and Casting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#identifiers">Identifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variables">Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quantum-types">Quantum types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classical-scalar-types">Classical scalar types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compile-time-constants">Compile-time constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#literals">Literals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arrays">Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#types-related-to-timing">Types related to timing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aliasing">Aliasing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#index-sets-and-slicing">Index sets and slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#register-concatenation-and-slicing">Register concatenation and slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classical-value-bit-slicing">Classical value bit slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#array-concatenation-and-slicing">Array concatenation and slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#casting-specifics">Casting specifics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gates.html">Gates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="insts.html">Built-in quantum instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classical.html">Classical instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subroutines.html">Subroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scope.html">Scoping of variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#input-output">Input/output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="delays.html">Circuit timing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pulses.html">Pulse-level descriptions of gates and measurement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openpulse.html">OpenPulse Grammar</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">OpenQasm 3.0 Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="/index.html">Live Version</a></li>
+    
+    <li class="toctree-l1"><a href="/versions/3.0/index.html">Version 3.0</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Language</a><ul>
+      <li>Previous: <a href="comments.html" title="previous chapter">Comments</a></li>
+      <li>Next: <a href="gates.html" title="next chapter">Gates</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/language/types.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
