@@ -471,7 +471,7 @@ it is called from.</p>
 <li><p>A sequence of zero, one or more OpenQASM3 statements.</p></li>
 <li><p>A right-brace literal: <code class="docutils literal notranslate"><span class="pre">}</span></code>.</p></li>
 </ul>
-<p>The <code class="docutils literal notranslate"><span class="pre">integer-constant-list-expression</span></code> is a sequence of one or more integer <cite>const</cite> expressions separated by comma <code class="docutils literal notranslate"><span class="pre">,</span></code> literals.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">integer-constant-list-expression</span></code> is a sequence of one or more integer <code class="docutils literal notranslate"><span class="pre">const</span></code> expressions separated by comma <code class="docutils literal notranslate"><span class="pre">,</span></code> literals.</p>
 <p>A <code class="docutils literal notranslate"><span class="pre">default</span></code> statement shall be the following grammar:</p>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> keyword.</p></li>
@@ -513,6 +513,31 @@ it is called from.</p>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> where the cases are <code class="docutils literal notranslate"><span class="pre">const</span></code> expressions:</p></li>
+</ol>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
+
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span><span class="p">;</span>
+
+<span class="nf">switch</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="nf">case</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="nf">case</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="nf">case</span><span class="w"> </span><span class="n">B</span><span class="o">+</span><span class="m">1</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="n">default</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
 <li><p>A switch statement with binary literals in the <code class="docutils literal notranslate"><span class="pre">case</span></code> statements:</p></li>
 </ol>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
@@ -531,10 +556,10 @@ it is called from.</p>
 <span class="n">case</span><span class="w"> </span><span class="mb">0b11</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// OpenQASM3 statement(s)</span>
 <span class="p">}</span>
-<span class="p">}</span><span class="err">```</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
+<ol class="arabic simple" start="4">
 <li><p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement containing declarations at <code class="docutils literal notranslate"><span class="pre">case</span></code> statement scope, and a function call, also at <code class="docutils literal notranslate"><span class="pre">case</span></code> statement scope:</p></li>
 </ol>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
@@ -566,7 +591,7 @@ it is called from.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="4">
+<ol class="arabic simple" start="5">
 <li><p>A <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement containing a nested <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement.</p></li>
 </ol>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
