@@ -315,9 +315,9 @@ imaginary components.  Each component behaves as a <code class="docutils literal
 designator <code class="docutils literal notranslate"><span class="pre">[size]</span></code> can be omitted to use the default hardware <code class="docutils literal notranslate"><span class="pre">float</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">complex</span></code> with no arguments is a synonym for <code class="docutils literal notranslate"><span class="pre">complex[float]</span></code>.</p>
 <p>Imaginary literals are written as a decimal-integer or floating-point literal
-followed by the letters <code class="docutils literal notranslate"><span class="pre">im</span></code>.  There may be zero or more spaces between the
-numeric component and the <code class="docutils literal notranslate"><span class="pre">im</span></code> component.  The type of this token is
-<code class="docutils literal notranslate"><span class="pre">complex</span></code> (its value has zero real component), and the component type is as
+followed by the letters <code class="docutils literal notranslate"><span class="pre">im</span></code>.  There may be zero or more spaces or tabs
+between the numeric component and the <code class="docutils literal notranslate"><span class="pre">im</span></code> component.  The type of this token
+is <code class="docutils literal notranslate"><span class="pre">complex</span></code> (its value has zero real component), and the component type is as
 normal given the floating-point literal, or the machine-size <code class="docutils literal notranslate"><span class="pre">float</span></code> if the
 numeric component is an integer.</p>
 <p>The real and imaginary components of a complex number can be extracted using the
