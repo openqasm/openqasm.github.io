@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Release Notes &#8212; OpenQASM Live Specification  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
     <link rel="stylesheet" type="text/css" href="_static/colors.css?v=3aae764c" />
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
@@ -18,8 +18,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -33,14 +34,36 @@
             
   <section id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading">¶</a></h1>
-<section id="ast-py-v0-5-0-19">
-<span id="release-notes-ast-py-v0-5-0-19"></span><h2>ast-py/v0.5.0-19<a class="headerlink" href="#ast-py-v0-5-0-19" title="Link to this heading">¶</a></h2>
+<section id="ast-py-v0-5-0-20">
+<span id="release-notes-ast-py-v0-5-0-20"></span><h2>ast-py/v0.5.0-20<a class="headerlink" href="#ast-py-v0-5-0-20" title="Link to this heading">¶</a></h2>
+<section id="new-features">
+<span id="release-notes-ast-py-v0-5-0-20-new-features"></span><h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Added CI support for ensuring contributions include a release note.
+If this is not desired for a PR the tag “no-reno” may be added to the
+PR.</p></li>
+</ul>
+</section>
 <section id="upgrade-notes">
-<span id="release-notes-ast-py-v0-5-0-19-upgrade-notes"></span><h3>Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Link to this heading">¶</a></h3>
+<span id="release-notes-ast-py-v0-5-0-20-upgrade-notes"></span><h3>Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Improve physical qubit documentation. Define what constitutes a valid
 physical identifier, define physical circuits, and answer several questions
 about what a compiler may do with physical qubits.</p></li>
+</ul>
+</section>
+</section>
+<section id="ast-py-v0-4-0">
+<span id="release-notes-ast-py-v0-4-0"></span><h2>ast-py/v0.4.0<a class="headerlink" href="#ast-py-v0-4-0" title="Link to this heading">¶</a></h2>
+<section id="release-notes-ast-py-v0-4-0-upgrade-notes">
+<span id="id1"></span><h3>Upgrade Notes<a class="headerlink" href="#release-notes-ast-py-v0-4-0-upgrade-notes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The “wildcard” identifiers in pulse grammars are now regular OpenQASM 3
+identifiers, without the leading dollar sign (<code class="docutils literal notranslate"><span class="pre">$</span></code>), <em>e.g.</em> what was <code class="docutils literal notranslate"><span class="pre">$q</span></code>
+before is now simply <code class="docutils literal notranslate"><span class="pre">q</span></code>.  Precise hardware qubits are still referenced
+as <code class="docutils literal notranslate"><span class="pre">$0</span></code>, for example.  This was made for better consistency in identifiers;
+having the dollar sign in the wildcard carried no information, since it
+applied to any qubit already.</p></li>
 </ul>
 </section>
 </section>
@@ -68,8 +91,13 @@ about what a compiler may do with physical qubits.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="language/index.html">Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="grammar/index.html">OpenQasm 3.0 Grammar</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ast-py-v0-5-0-19">ast-py/v0.5.0-19</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ast-py-v0-5-0-20">ast-py/v0.5.0-20</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#upgrade-notes">Upgrade Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ast-py-v0-4-0">ast-py/v0.4.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#release-notes-ast-py-v0-4-0-upgrade-notes">Upgrade Notes</a></li>
 </ul>
 </li>
 </ul>
@@ -116,11 +144,11 @@ about what a compiler may do with physical qubits.</p></li>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
+      &#169;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
       |
       <a href="_sources/release_notes.rst.txt"
