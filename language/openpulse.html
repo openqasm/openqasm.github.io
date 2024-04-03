@@ -638,7 +638,7 @@ the program.</p>
 <span class="w">    </span><span class="nb">set_frequency</span><span class="p">(</span><span class="n">driveframe</span><span class="p">,</span><span class="w"> </span><span class="n">frequency_start</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="n">frequency_num_steps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="k">for</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">1</span><span class="p">:</span><span class="n">frequency_num_steps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// step into a `cal` block to adjust the pulse frequency via the frame frequency</span>
 <span class="w">    </span><span class="n">cal</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nb">shift_frequency</span><span class="p">(</span><span class="n">driveframe</span><span class="p">,</span><span class="w"> </span><span class="n">frequency_step</span><span class="p">);</span>
@@ -811,7 +811,7 @@ sideband).</p>
 <span class="p">}</span>
 
 <span class="c1">// Ramsey sequence on qubit 1 and 3, Hahn echo on qubit 2</span>
-<span class="k">for</span><span class="w"> </span><span class="no">τ</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="mf">10us</span><span class="p">:</span><span class="mf">1ms</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="k">for</span><span class="w"> </span><span class="kt">duration</span><span class="w"> </span><span class="no">τ</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="mf">10us</span><span class="p">:</span><span class="mf">1ms</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">  </span><span class="c1">// First π/2 pulse</span>
 <span class="w">  </span><span class="nf">rx</span><span class="p">(</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="l">$0</span><span class="p">,</span><span class="w"> </span><span class="l">$1</span><span class="p">,</span><span class="w"> </span><span class="l">$2</span><span class="p">;</span>
@@ -822,7 +822,7 @@ sideband).</p>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="c1">// Hahn echo π pulse composed of two π/2 pulses</span>
-<span class="w">  </span><span class="n">for</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">1</span><span class="p">]:</span>
+<span class="w">  </span><span class="n">for</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">:</span><span class="m">1</span><span class="p">]:</span>
 <span class="w">    </span><span class="nf">rx</span><span class="p">(</span><span class="no">π</span><span class="o">/</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="l">$2</span><span class="p">;</span>
 
 <span class="w">  </span><span class="n">cal</span><span class="w"> </span><span class="p">{</span>
