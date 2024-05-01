@@ -230,56 +230,75 @@ hardware-dependent rounding mode and subnormal handling.</p>
 </section>
 <section id="evaluation-order">
 <h3>Evaluation order<a class="headerlink" href="#evaluation-order" title="Link to this heading">¶</a></h3>
-<p>OpenQASM evaluates expressions from left to right.</p>
-<blockquote>
-<div><table class="docutils align-default" id="id8">
+<p>OpenQASM evaluates expressions in natural mathematical order, following the defined
+operator-precedence and -associativity table below.  Operators of greater precedence are evaluated
+before operators of less precedence.  The order of evaluation for operators of the same precedence
+is set by the associativity: left-associative operators evaluate from left to right (<em>i.e.</em> <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span>
+<span class="pre">+</span> <span class="pre">c</span></code> evaluates as <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span> <span class="pre">+</span> <span class="pre">c</span></code>) while right-associative operators evaluate from right to left
+(<em>i.e.</em> <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">**</span> <span class="pre">b</span> <span class="pre">**</span> <span class="pre">c</span></code> evaluates as <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">**</span> <span class="pre">(b</span> <span class="pre">**</span> <span class="pre">c)</span></code>).</p>
+<table class="docutils align-default" id="id8">
 <caption><span class="caption-number">Table 3 </span><span class="caption-text">[operator-precedence] operator precedence in OpenQASM ordered from highest precedence to lowest precedence. Higher precedence operators will be evaluated first.</span><a class="headerlink" href="#id8" title="Link to this table">¶</a></caption>
-<tbody>
-<tr class="row-odd"><td><p>Operator</p></td>
-<td><p>Operator Types</p></td>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Operator names</p></th>
+<th class="head"><p>Associativity</p></th>
 </tr>
+</thead>
+<tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">(type)(x)</span></code></p></td>
 <td><p>Call, index, cast</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">**</span></code></p></td>
 <td><p>Power</p></td>
+<td><p>right</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">!</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">~</span></code></p></td>
 <td><p>Unary</p></td>
+<td><p>right</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code></p></td>
 <td><p>Multiplicative</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code></p></td>
 <td><p>Additive</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code></p></td>
 <td><p>Bit Shift</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code></p></td>
 <td><p>Comparison</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">==</span></code></p></td>
 <td><p>Equality</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&amp;</span></code></p></td>
 <td><p>Bitwise AND</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">^</span></code></p></td>
 <td><p>Bitwise XOR</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">|</span></code></p></td>
 <td><p>Bitwise OR</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code></p></td>
 <td><p>Logical AND</p></td>
+<td><p>left</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">||</span></code></p></td>
 <td><p>Logical OR</p></td>
+<td><p>left</p></td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 </section>
 </section>
 <section id="looping-and-branching">

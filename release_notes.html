@@ -34,10 +34,10 @@
             
   <section id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading">¶</a></h1>
-<section id="ast-py-v0-5-0-34">
-<span id="release-notes-ast-py-v0-5-0-34"></span><h2>ast-py/v0.5.0-34<a class="headerlink" href="#ast-py-v0-5-0-34" title="Link to this heading">¶</a></h2>
+<section id="ast-py-v0-5-0-35">
+<span id="release-notes-ast-py-v0-5-0-35"></span><h2>ast-py/v0.5.0-35<a class="headerlink" href="#ast-py-v0-5-0-35" title="Link to this heading">¶</a></h2>
 <section id="new-features">
-<span id="release-notes-ast-py-v0-5-0-34-new-features"></span><h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading">¶</a></h3>
+<span id="release-notes-ast-py-v0-5-0-35-new-features"></span><h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Added CI support for ensuring contributions include a release note.
 If this is not desired for a PR the tag “no-reno” may be added to the
@@ -60,7 +60,7 @@ branches that depend on a common control expression.</p></li>
 </ul>
 </section>
 <section id="upgrade-notes">
-<span id="release-notes-ast-py-v0-5-0-34-upgrade-notes"></span><h3>Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Link to this heading">¶</a></h3>
+<span id="release-notes-ast-py-v0-5-0-35-upgrade-notes"></span><h3>Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Improve physical qubit documentation. Define what constitutes a valid
 physical identifier, define physical circuits, and answer several questions
@@ -68,12 +68,17 @@ about what a compiler may do with physical qubits.</p></li>
 </ul>
 </section>
 <section id="bug-fixes">
-<span id="release-notes-ast-py-v0-5-0-34-bug-fixes"></span><h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">¶</a></h3>
+<span id="release-notes-ast-py-v0-5-0-35-bug-fixes"></span><h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>The language specification requires that the type of a loop variable in a
 <cite>for</cite> loop be declared. However a few examples of <cite>for</cite> loops lacked these
 declarations.  These examples have been fixed to include type declarations
 on these loop variables.</p></li>
+</ul>
+<ul class="simple">
+<li><p>The section on classical instructions now lists the associativity of all operators in the
+precedence table, and correctly identifies the power operator as being right-associative.  The
+previous description of the precedence and associativity was at best imprecise.</p></li>
 </ul>
 <ul class="simple">
 <li><p>Corrected the sample definitions of square-root gates involving <code class="docutils literal notranslate"><span class="pre">pow</span></code> in the <code class="docutils literal notranslate"><span class="pre">stdgates.inc</span></code>
@@ -87,7 +92,7 @@ including gate definitions from the standard library.</p></li>
 </ul>
 </section>
 <section id="other-notes">
-<span id="release-notes-ast-py-v0-5-0-34-other-notes"></span><h3>Other Notes<a class="headerlink" href="#other-notes" title="Link to this heading">¶</a></h3>
+<span id="release-notes-ast-py-v0-5-0-35-other-notes"></span><h3>Other Notes<a class="headerlink" href="#other-notes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>The keywords <code class="docutils literal notranslate"><span class="pre">switch</span></code>, <code class="docutils literal notranslate"><span class="pre">case</span></code>, and <code class="docutils literal notranslate"><span class="pre">default</span></code> are no longer reserved
 by the spec for future expansion of the language.</p></li>
@@ -132,7 +137,7 @@ applied to any qubit already.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="language/index.html">Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="grammar/index.html">OpenQasm 3.0 Grammar</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ast-py-v0-5-0-34">ast-py/v0.5.0-34</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ast-py-v0-5-0-35">ast-py/v0.5.0-35</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#upgrade-notes">Upgrade Notes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
