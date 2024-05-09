@@ -51,10 +51,10 @@ Assuming <code class="docutils literal notranslate"><span class="pre">g0</span><
 <h3>Broadcasting<a class="headerlink" href="#broadcasting" title="Link to this heading">¶</a></h3>
 <p>If any arguments of a gate are quantum registers instead of qubits, then all such registers must be <strong>of the same length</strong> and
 this syntax is a convenient shorthand for broadcasting over the qubits of the register. For example, the circuit</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">1</span><span class="p">];</span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">qr1</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">qr2</span><span class="p">[</span><span class="m">2</span><span class="p">];</span>
-<span class="kt">qubit</span><span class="w"> </span><span class="n">qr3</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">qubit</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="n">qr0</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="n">qr1</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">qr2</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="p">[</span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="n">qr3</span><span class="p">;</span>
 
 <span class="nf">g4</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr1</span><span class="p">,</span><span class="w"> </span><span class="n">qr2</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr3</span><span class="p">;</span><span class="w"> </span><span class="c1">// ok</span>
 <span class="nf">g4</span><span class="w"> </span><span class="n">qr0</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr2</span><span class="p">,</span><span class="w"> </span><span class="n">qr1</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">qr3</span><span class="p">;</span><span class="w"> </span><span class="c1">// error! qr2 and qr3 differ in size</span>
