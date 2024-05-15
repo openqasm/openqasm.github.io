@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Release Notes &#8212; OpenQASM 3.1 Specification  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="_static/colors.css?v=3aae764c" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="OpenQasm 3.0 Grammar" href="grammar/index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="release-notes">
+<h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading">¶</a></h1>
+<section id="release-notes-0-0-0">
+<span id="id1"></span><h2>0.0.0<a class="headerlink" href="#release-notes-0-0-0" title="Link to this heading">¶</a></h2>
+<section id="new-features">
+<span id="release-notes-0-0-0-new-features"></span><h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Added CI support for ensuring contributions include a release note.
+If this is not desired for a PR the tag “no-reno” may be added to the
+PR.</p></li>
+</ul>
+</section>
+<section id="upgrade-notes">
+<span id="release-notes-0-0-0-upgrade-notes"></span><h3>Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Improve physical qubit documentation. Define what constitutes a valid
+physical identifier, define physical circuits, and answer several questions
+about what a compiler may do with physical qubits.</p></li>
+</ul>
+<ul class="simple">
+<li><p>The “wildcard” identifiers in pulse grammars are now regular OpenQASM 3
+identifiers, without the leading dollar sign (<code class="docutils literal notranslate"><span class="pre">$</span></code>), <em>e.g.</em> what was <code class="docutils literal notranslate"><span class="pre">$q</span></code>
+before is now simply <code class="docutils literal notranslate"><span class="pre">q</span></code>.  Precise hardware qubits are still referenced
+as <code class="docutils literal notranslate"><span class="pre">$0</span></code>, for example.  This was made for better consistency in identifiers;
+having the dollar sign in the wildcard carried no information, since it
+applied to any qubit already.</p></li>
+</ul>
+</section>
+<section id="other-notes">
+<span id="release-notes-0-0-0-other-notes"></span><h3>Other Notes<a class="headerlink" href="#other-notes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The keywords <code class="docutils literal notranslate"><span class="pre">switch</span></code>, <code class="docutils literal notranslate"><span class="pre">case</span></code>, and <code class="docutils literal notranslate"><span class="pre">default</span></code> are no longer reserved
+by the spec for future expansion of the language.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">OpenQASM 3.1 Specification</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language/index.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grammar/index.html">OpenQasm 3.0 Grammar</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-notes-0-0-0">0.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#upgrade-notes">Upgrade Notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-notes">Other Notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openqasm/openqasm/">GitHub</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="/index.html">Live Version</a></li>
+    
+    <li class="toctree-l1"><a href="/versions/3.1/index.html">Version 3.1</a></li>
+    
+    <li class="toctree-l1"><a href="/versions/3.0/index.html">Version 3.0</a></li>
+    
+    <li class="toctree-l1"><a href="https://github.com/openqasm/openqasm/">GitHub</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="grammar/index.html" title="previous chapter">OpenQasm 3.0 Grammar</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2017-2023, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/release_notes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
