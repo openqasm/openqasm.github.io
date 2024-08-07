@@ -112,12 +112,12 @@ frame of a Hamiltonian, throughout the execution of a program. Openpulse provide
 <ul class="simple">
 <li><p>Tracking time appropriately so programs do not need to deal in absolute time or with the
 bookkeeping of advancing time in a sequence of pulses.</p></li>
-<li><p>Tracking accrued phase by producing a complex value given an input time (i.e. via the mathematical
+<li><p>Tracking accrued phase by producing a complex value given an input time (<em>i.e.</em> via the mathematical
 relationship <span class="math notranslate nohighlight">\(e^{i\left(2\pi f t + \theta\right)}\)</span>,  where <cite>f</cite> is frequency and
 <span class="math notranslate nohighlight">\(\theta\)</span> is the accrued phase). In this way,  a <code class="docutils literal notranslate"><span class="pre">frame</span></code> type behaves analogously to
 a <a class="reference external" href="https://en.wikipedia.org/wiki/Numerically-controlled_oscillator">numerically-controlled oscillator (NCO)</a>).
 One motivation for keeping track of accrued phase is to allow pulses to be defined in the rotating frame with the
-effect being an equivalent application in the lab frame (i.e. with the carrier supplied by the <code class="docutils literal notranslate"><span class="pre">frame</span></code>).
+effect being an equivalent application in the lab frame (<em>i.e.</em> with the carrier supplied by the <code class="docutils literal notranslate"><span class="pre">frame</span></code>).
 Another motivation is to more naturally implement a “virtual Z-gate”, which does not require a physical pulse but
 rather shifts the phase of all future pulses on that frame.</p></li>
 </ul>
@@ -315,9 +315,9 @@ only appear inside a <code class="docutils literal notranslate"><span class="pre
 <li><p>The frame to use for the pulse.</p></li>
 <li><p>A value of type <code class="docutils literal notranslate"><span class="pre">waveform</span></code> representing the waveform envelope.</p></li>
 </ul>
-<p>Here, the <code class="docutils literal notranslate"><span class="pre">frame</span></code> provides the time at which the <code class="docutils literal notranslate"><span class="pre">waveform</span></code> envelope is scheduled (i.e. via
-the frame’s current <code class="docutils literal notranslate"><span class="pre">time</span></code>), its carrier frequency (i.e. via the frames current <code class="docutils literal notranslate"><span class="pre">frequency</span></code>),
-and its phase offset (i.e. via the frame’s current <code class="docutils literal notranslate"><span class="pre">phase</span></code>).</p>
+<p>Here, the <code class="docutils literal notranslate"><span class="pre">frame</span></code> provides the time at which the <code class="docutils literal notranslate"><span class="pre">waveform</span></code> envelope is scheduled (<em>i.e.</em> via
+the frame’s current <code class="docutils literal notranslate"><span class="pre">time</span></code>), its carrier frequency (<em>i.e.</em> via the frames current <code class="docutils literal notranslate"><span class="pre">frequency</span></code>),
+and its phase offset (<em>i.e.</em> via the frame’s current <code class="docutils literal notranslate"><span class="pre">phase</span></code>).</p>
 <div class="highlight-openpulse notranslate"><div class="highlight"><pre><span></span><span class="nb">play</span><span class="p">(</span><span class="kt">frame</span><span class="w"> </span><span class="n">fr</span><span class="p">,</span><span class="w"> </span><span class="kt">waveform</span><span class="w"> </span><span class="n">wfm</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -739,7 +739,7 @@ an acousto-optic deflector (AOD). The EOMs put sidebands on the laser light whil
 the light in an amount proportional to the frequency of the RF drive. This example was chosen
 because it is similar in spirit to the work by Levine et al._:cite:<cite>levine2019</cite> except that phase
 control is exerted using virtual Z gates on the AODs – requiring frame tracking of the qubit
-frequency yet application of a tone that maps to the qubit position (i.e. requires the use of a
+frequency yet application of a tone that maps to the qubit position (<em>i.e.</em> requires the use of a
 sideband).</p>
 <p>The program aims to perform a Hahn echo sequence on q1, and a Ramsey sequence on q2 and q3.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">defcalgrammar</span><span class="w"> </span><span class="s">&quot;openpulse&quot;</span><span class="p">;</span>
