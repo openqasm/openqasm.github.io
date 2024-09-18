@@ -181,7 +181,7 @@ the gate is equivalent to <span class="math notranslate nohighlight">\(P(\pi/2)\
 <div class="math notranslate nohighlight">
 \[\begin{split}\texttt{sdg a;} \mapsto S^\dagger\colon\ \left\{\begin{alignedat}[c]2
    \lvert0\rangle &amp;{}\to{}&amp;  &amp;\lvert0\rangle\\
-   \lvert1\rangle &amp;{}\to{}&amp; i&amp;\lvert1\rangle.
+   \lvert1\rangle &amp;{}\to{}&amp; -i&amp;\lvert1\rangle.
 \end{alignedat}\right.\end{split}\]</div>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.0.</span></p>
@@ -234,11 +234,11 @@ the gate is equivalent to <span class="math notranslate nohighlight">\(P(\pi/4)\
 <dl class="oq gate">
 <dt class="sig sig-object oq" id="rx">
 <em class="property"><span class="kt"><span class="pre">gate</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">θ</span></em><span class="sig-paren">)</span><span class="w"> </span><span class="sig-paren"></span><em class="sig-param"><span class="pre">a</span></em><span class="sig-paren"></span><a class="headerlink" href="#rx" title="Link to this definition">¶</a></dt>
-<dd><p>Rotation about the <span class="math notranslate nohighlight">\(X\)</span> axis: <span class="math notranslate nohighlight">\(\mathit{RX}(\theta) = \exp(-i\theta X)\)</span>:</p>
+<dd><p>Rotation about the <span class="math notranslate nohighlight">\(X\)</span> axis: <span class="math notranslate nohighlight">\(\mathit{RX}(\theta) = \exp(-i\theta X/2)\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\texttt{rx(θ) a;} \mapsto \mathit{RX}(\theta)\colon\ \left\{\begin{aligned}[c]
-   \lvert0\rangle &amp;\to \cos\theta\lvert0\rangle - i\sin\theta\lvert1\rangle\\
-   \lvert1\rangle &amp;\to \cos\theta\lvert1\rangle - i\sin\theta\lvert0\rangle.
+   \lvert0\rangle &amp;\to \cos(\theta/2)\lvert0\rangle - i\sin(\theta/2)\lvert1\rangle\\
+   \lvert1\rangle &amp;\to \cos(\theta/2)\lvert1\rangle - i\sin(\theta/2)\lvert0\rangle.
 \end{aligned}\right.\end{split}\]</div>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.0.</span></p>
@@ -248,11 +248,11 @@ the gate is equivalent to <span class="math notranslate nohighlight">\(P(\pi/4)\
 <dl class="oq gate">
 <dt class="sig sig-object oq" id="ry">
 <em class="property"><span class="kt"><span class="pre">gate</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">θ</span></em><span class="sig-paren">)</span><span class="w"> </span><span class="sig-paren"></span><em class="sig-param"><span class="pre">a</span></em><span class="sig-paren"></span><a class="headerlink" href="#ry" title="Link to this definition">¶</a></dt>
-<dd><p>Rotation about the <span class="math notranslate nohighlight">\(Y\)</span> axis: <span class="math notranslate nohighlight">\(\mathit{RY}(\theta) = \exp(-i\theta Y)\)</span>:</p>
+<dd><p>Rotation about the <span class="math notranslate nohighlight">\(Y\)</span> axis: <span class="math notranslate nohighlight">\(\mathit{RY}(\theta) = \exp(-i\theta Y/2)\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\texttt{ry(θ) a;} \mapsto \mathit{RY}(\theta)\colon\ \left\{\begin{aligned}[c]
-   \lvert0\rangle &amp;\to \cos\theta\lvert0\rangle + \sin\theta\lvert1\rangle\\
-   \lvert1\rangle &amp;\to \cos\theta\lvert1\rangle - \sin\theta\lvert0\rangle.
+   \lvert0\rangle &amp;\to \cos(\theta/2)\lvert0\rangle + \sin(\theta/2)\lvert1\rangle\\
+   \lvert1\rangle &amp;\to \cos(\theta/2)\lvert1\rangle - \sin(\theta/2)\lvert0\rangle.
 \end{aligned}\right.\end{split}\]</div>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.0.</span></p>
@@ -262,12 +262,12 @@ the gate is equivalent to <span class="math notranslate nohighlight">\(P(\pi/4)\
 <dl class="oq gate">
 <dt class="sig sig-object oq" id="rz">
 <em class="property"><span class="kt"><span class="pre">gate</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">θ</span></em><span class="sig-paren">)</span><span class="w"> </span><span class="sig-paren"></span><em class="sig-param"><span class="pre">a</span></em><span class="sig-paren"></span><a class="headerlink" href="#rz" title="Link to this definition">¶</a></dt>
-<dd><p>Rotation about the <span class="math notranslate nohighlight">\(Z\)</span> axis: <span class="math notranslate nohighlight">\(\mathit{RZ}(\theta) = \exp(-i\theta Z)\)</span>.  Note that
+<dd><p>Rotation about the <span class="math notranslate nohighlight">\(Z\)</span> axis: <span class="math notranslate nohighlight">\(\mathit{RZ}(\theta) = \exp(-i\theta Z/2)\)</span>.  Note that
 this differs from <a class="reference internal" href="#p" title="language/standard_library"><code class="xref oq oq-gate docutils literal notranslate"><span class="pre">p</span></code></a> by a global phase of half the rotation angle:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\texttt{rz(θ) a;} \mapsto \mathit{RZ}(\theta)\colon\ \left\{\begin{aligned}[c]
-   \lvert0\rangle &amp;\to \cos\theta\lvert0\rangle + \sin\theta\lvert1\rangle\\
-   \lvert1\rangle &amp;\to \sin\theta\lvert0\rangle - \cos\theta\lvert1\rangle.
+   \lvert0\rangle &amp;\to \cos(\theta/2)\lvert0\rangle + \sin(\theta/2)\lvert1\rangle\\
+   \lvert1\rangle &amp;\to \sin(\theta/2)\lvert0\rangle - \cos(\theta/2)\lvert1\rangle.
 \end{aligned}\right.\end{split}\]</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -379,9 +379,9 @@ or explicitly:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\texttt{crx(θ) a, b;} \mapsto \mathit{CRX}_{ba}(\theta)\colon\ \left\{\begin{aligned}[c]
    {\lvert00\rangle}_{ba} &amp;\to {\lvert00\rangle}_{ba}\\
-   {\lvert01\rangle}_{ba} &amp;\to {\bigl(\cos\theta\lvert0\rangle - i\sin\theta\lvert1\rangle\bigr)}_b{\lvert1\rangle}_a\\
+   {\lvert01\rangle}_{ba} &amp;\to {\bigl(\cos(\theta/2)\lvert0\rangle - i\sin(\theta/2)\lvert1\rangle\bigr)}_b{\lvert1\rangle}_a\\
    {\lvert10\rangle}_{ba} &amp;\to {\lvert10\rangle}_{ba}\\
-   {\lvert11\rangle}_{ba} &amp;\to {\bigl(\cos\theta\lvert1\rangle - i\sin\theta\lvert0\rangle\bigr)}_b{\lvert1\rangle}_a\\
+   {\lvert11\rangle}_{ba} &amp;\to {\bigl(\cos(\theta/2)\lvert1\rangle - i\sin(\theta/2)\lvert0\rangle\bigr)}_b{\lvert1\rangle}_a\\
 \end{aligned}\right.\end{split}\]</div>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.0.</span></p>
@@ -395,11 +395,11 @@ or explicitly:</p>
 <span class="math notranslate nohighlight">\(\mathit{CRY}_{ba}(\theta) = I_b{\lvert0\rangle\!\langle0\rvert}_a + \mathit{RY}_b(\theta){\lvert1\rangle\!\langle1\rvert}_a\)</span>,
 or explicitly:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\texttt{cry(θ) a, b;} \mathit{CRY}_{ba}(\theta)\colon\ \left\{\begin{aligned}[c]
+\[\begin{split}\texttt{cry(θ) a, b;} \mapsto \mathit{CRY}_{ba}(\theta)\colon\ \left\{\begin{aligned}[c]
    {\lvert00\rangle}_{ba} &amp;\to {\lvert00\rangle}_{ba}\\
-   {\lvert01\rangle}_{ba} &amp;\to {\bigl(\cos\theta\lvert0\rangle + \sin\theta\lvert1\rangle\bigr)}_b{\lvert1\rangle}_a\\
+   {\lvert01\rangle}_{ba} &amp;\to {\bigl(\cos(\theta/2)\lvert0\rangle + \sin(\theta/2)\lvert1\rangle\bigr)}_b{\lvert1\rangle}_a\\
    {\lvert10\rangle}_{ba} &amp;\to {\lvert10\rangle}_{ba}&amp;\\
-   {\lvert11\rangle}_{ba} &amp;\to {\bigl(\cos\theta\lvert1\rangle - \sin\theta\lvert0\rangle\bigr)}_b{\lvert1\rangle}_a\\
+   {\lvert11\rangle}_{ba} &amp;\to {\bigl(\cos(\theta/2)\lvert1\rangle - \sin(\theta/2)\lvert0\rangle\bigr)}_b{\lvert1\rangle}_a\\
 \end{aligned}\right.\end{split}\]</div>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.0.</span></p>
@@ -413,7 +413,7 @@ or explicitly:</p>
 <span class="math notranslate nohighlight">\(\mathit{CRZ}_{ba}(\theta) = I_b{\lvert0\rangle\!\langle0\rvert}_a + \mathit{RZ}_b(\theta){\lvert1\rangle\!\langle1\rvert}_a\)</span>,
 or explicitly:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\texttt{crz(θ) a, b;} \mathit{CRZ}_{ba}(\theta)\colon\ \left\{\begin{alignedat}[c]2
+\[\begin{split}\texttt{crz(θ) a, b;} \mapsto \mathit{CRZ}_{ba}(\theta)\colon\ \left\{\begin{alignedat}[c]2
    {\lvert00\rangle}_{ba} &amp;{}\to{}&amp; &amp;{\lvert00\rangle}_{ba}\\
    {\lvert01\rangle}_{ba} &amp;{}\to{}&amp; e^{-i\theta/2} &amp;{\lvert01\rangle}_{ba}\\
    {\lvert10\rangle}_{ba} &amp;{}\to{}&amp; &amp;{\lvert10\rangle}_{ba} \vphantom{e^{i\theta/2}}\\
