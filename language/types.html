@@ -86,8 +86,7 @@ actual hardware; see below). The statement <code class="docutils literal notrans
 declares a quantum register with <code class="docutils literal notranslate"><span class="pre">size</span></code> qubits.
 Sizes must always be <a class="reference internal" href="#const-expression"><span class="std std-ref">compile-time constant</span></a> positive
 integers.
-Quantum registers are static arrays of qubits
-that cannot be dynamically resized.</p>
+Quantum registers cannot be resized after declaration.</p>
 <p>The label <code class="docutils literal notranslate"><span class="pre">name[j]</span></code> refers to a qubit of this register, where
 <span class="math notranslate nohighlight">\(j\in \{0,1,\dots,\mathrm{size}(\mathrm{name})-1\}\)</span> is an integer.</p>
 <div class="admonition note">
@@ -188,7 +187,7 @@ hardware providers.</p>
 <p>There is a classical bit type that takes values 0 or 1. Classical
 registers are static arrays of bits. The classical registers model part
 of the controller state that is exposed within the OpenQASM program. The
-statement <code class="docutils literal notranslate"><span class="pre">bit</span> <span class="pre">name;</span></code> declares a classical bit, and or <code class="docutils literal notranslate"><span class="pre">bit[size]</span> <span class="pre">name;</span></code> declares a register of
+statement <code class="docutils literal notranslate"><span class="pre">bit</span> <span class="pre">name;</span></code> declares a single classical bit, while <code class="docutils literal notranslate"><span class="pre">bit[size]</span> <span class="pre">name;</span></code> declares a register of
 <code class="docutils literal notranslate"><span class="pre">size</span></code> bits. The label <code class="docutils literal notranslate"><span class="pre">name[j]</span></code> refers to a bit of this register, where <span class="math notranslate nohighlight">\(j\in
 \{0,1,\dots,\mathrm{size}(\mathrm{name})-1\}\)</span> is an integer.</p>
 <p>Bit registers may also be declared as <code class="docutils literal notranslate"><span class="pre">creg</span> <span class="pre">name[size]</span></code>. This is included for backwards
@@ -203,6 +202,21 @@ bit is on the right.</p>
 <span class="c1">// Declare and assign a register of bits with decimal value of 15</span>
 <span class="kt">bit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mb">&quot;00001111&quot;</span><span class="p">;</span>
 </pre></div>
+</div>
+<p>The scalar type <code class="docutils literal notranslate"><span class="pre">bit</span></code> logically represents a single bit of data, but no restrictions or suggestions are made for how an implementation should choose to store a variable declared as a scalar bit.
+The type <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> behaves as if it is stored in memory as a contiguous bit-packed sequence; this is reflected in its casting rules to and from the other types.
+There are no defined semantics for how <code class="docutils literal notranslate"><span class="pre">bit</span></code> or <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> types should behave if used for a parameter or return value in an <code class="docutils literal notranslate"><span class="pre">extern</span></code> call that implies an FFI call, and it is discouraged for implementations to allow this.
+Neither scalar <code class="docutils literal notranslate"><span class="pre">bit</span></code>s nor <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> registers can be the base type of an <code class="docutils literal notranslate"><span class="pre">array</span></code>.</p>
+<p>The indexing operation on a <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> with an integer value returns a value of type <code class="docutils literal notranslate"><span class="pre">bit</span></code>, and a value of type <code class="docutils literal notranslate"><span class="pre">bit</span></code> can be assigned to a single integer offset into a <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> type.</p>
+<p>Values being used in an expression (r-values, in C parlance) with types <code class="docutils literal notranslate"><span class="pre">bool</span></code> and (scalar) <code class="docutils literal notranslate"><span class="pre">bit</span></code> are interchangeable; whenever a value can be implicitly cast to type <code class="docutils literal notranslate"><span class="pre">bool</span></code>, it can also implicitly be cast to type <code class="docutils literal notranslate"><span class="pre">bit</span></code> and vice versa.
+For example, it is legal to initialize and set <code class="docutils literal notranslate"><span class="pre">bit</span></code> values using the integer literals <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and the Boolean literals <code class="docutils literal notranslate"><span class="pre">false</span></code> and <code class="docutils literal notranslate"><span class="pre">true</span></code>.
+Similarly, it is legal to use a <code class="docutils literal notranslate"><span class="pre">bit</span></code>-valued expression as the condition of an <code class="docutils literal notranslate"><span class="pre">if</span></code> statement.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Despite having the same bit length, the types <code class="docutils literal notranslate"><span class="pre">bit</span></code> and <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code> are distinct.
+<code class="docutils literal notranslate"><span class="pre">bit</span></code> is a scalar that is interchangeable with <code class="docutils literal notranslate"><span class="pre">bool</span></code>, while <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code> is a register type of length one.
+The literals <code class="docutils literal notranslate"><span class="pre">false</span></code>, <code class="docutils literal notranslate"><span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> can be assigned to a value of type <code class="docutils literal notranslate"><span class="pre">bit</span></code>, while the literals <code class="docutils literal notranslate"><span class="pre">&quot;0&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;1&quot;</span></code> are the corresponding literals for <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code>.</p>
+<p>The distinction is important in the type-checking of broadcast expressions, and in the implied semantics of the type.</p>
 </div>
 </section>
 <section id="integers">
@@ -352,13 +366,15 @@ semantics for non-<code class="docutils literal notranslate"><span class="pre">f
 </section>
 <section id="boolean-types">
 <h3>Boolean types<a class="headerlink" href="#boolean-types" title="Link to this heading">¶</a></h3>
-<p>There is a Boolean type <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">name;</span></code> that takes values <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>. Qubit measurement results
-can be converted from a classical <code class="docutils literal notranslate"><span class="pre">bit</span></code> type to a Boolean using <code class="docutils literal notranslate"><span class="pre">bool(c)</span></code>, where 1 will
-be true and 0 will be false.</p>
+<p>There is a Boolean type <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">name;</span></code> that takes values <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>.
+The Boolean type is byte aligned, and can be the base type of an <code class="docutils literal notranslate"><span class="pre">array</span></code>.</p>
+<p>When used in expressions, values of type <code class="docutils literal notranslate"><span class="pre">bool</span></code> can always be implicitly cast to the equivalent scalar <code class="docutils literal notranslate"><span class="pre">bit</span></code>, and vice versa.
+The difference between <code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">bit</span></code> is primarily about the expectations of storage requirements; <code class="docutils literal notranslate"><span class="pre">bit</span></code> is used when the storage is expected to be bit-packed, such as in the special register type <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code>.
+<code class="docutils literal notranslate"><span class="pre">bool</span></code> is a byte-aligned single-bit integer type.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">bit</span><span class="w"> </span><span class="n">my_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
 <span class="kt">bool</span><span class="w"> </span><span class="n">my_bool</span><span class="p">;</span>
 <span class="c1">// Assign a cast bit to a boolean</span>
-<span class="n">my_bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span><span class="p">(</span><span class="n">my_bit</span><span class="p">);</span>
+<span class="n">my_bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_bit</span><span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -764,11 +780,9 @@ can be accessed, using the following general syntax:</p>
 <span class="n">multiDim</span><span class="p">[</span><span class="o">-</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// multiDim == {{0.0, 1.2}, {2.1, 2.2}, {3.1, 0.0}}</span>
 </pre></div>
 </div>
-<p>The first argument to the <code class="docutils literal notranslate"><span class="pre">array</span></code> declaration is the base type
-of the array. The supported classical types include various sizes of <code class="docutils literal notranslate"><span class="pre">bit</span></code>,
-<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code>, and <code class="docutils literal notranslate"><span class="pre">angle</span></code>, as well as
-<code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">duration</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">stretch</span></code> is not a valid array
-base type.</p>
+<p>The first argument to the <code class="docutils literal notranslate"><span class="pre">array</span></code> declaration is the base type of the array.
+The supported classical types include any sizes of <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code>, and <code class="docutils literal notranslate"><span class="pre">angle</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">duration</span></code>.
+Note that <code class="docutils literal notranslate"><span class="pre">bit</span></code>, <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> and <code class="docutils literal notranslate"><span class="pre">stretch</span></code> are not valid array base types, nor are any quantum types.</p>
 <p>Arrays cannot be resized or reshaped. Arrays are statically typed, and cannot
 implicitly convert to or from any other type.</p>
 <p>The size of an array is constant and immutable, and is recorded once, at
@@ -790,11 +804,7 @@ of 7 total dimensions. The subscript operator <code class="docutils literal notr
 and for multi-dimensional arrays subarray accesses can be specified using a
 comma-delimited list of indices (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">myArr[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>), with the outer
 dimension specified first.</p>
-<p>For interoperability, the standard
-ways of declaring quantum registers and bit registers are equivalent to the
-array syntax version (<em>i.e.</em> <code class="docutils literal notranslate"><span class="pre">qubit[5]</span> <span class="pre">q1;</span></code> is the same as
-<code class="docutils literal notranslate"><span class="pre">array[qubit,</span> <span class="pre">5]</span> <span class="pre">q1;</span></code>).
-Assignment to elements of arrays, as in the examples above, acts as expected,
+<p>Assignment to elements of arrays, as in the examples above, acts as expected,
 with the left-hand side of the assignment operating as a reference, thereby
 updating the values inside the original array. For multi-dimensional arrays,
 the shape and type of the assigned value must match that of the reference.</p>
@@ -1119,9 +1129,9 @@ the vendor.</p>
 <section id="casting-from-bool">
 <h3>Casting from bool<a class="headerlink" href="#casting-from-bool" title="Link to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">bool</span></code> values cast from <code class="docutils literal notranslate"><span class="pre">false</span></code> to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> and from <code class="docutils literal notranslate"><span class="pre">true</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code> or
-an equivalent representation. <code class="docutils literal notranslate"><span class="pre">bool</span></code> values can only be cast to <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code>
-(a single bit), so explicit index syntax must be given if the target <code class="docutils literal notranslate"><span class="pre">bit</span></code>
-has more than 1 bit of precision.</p>
+an equivalent representation.
+<code class="docutils literal notranslate"><span class="pre">bool</span></code> values are interchangeable with scalar <code class="docutils literal notranslate"><span class="pre">bit</span></code> values.
+Because of this, a <code class="docutils literal notranslate"><span class="pre">bool</span></code> can be assigned to a single index of a <code class="docutils literal notranslate"><span class="pre">bit[]</span></code> register type, or an explicit cast can be used to convert a <code class="docutils literal notranslate"><span class="pre">bool</span></code> into a <code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> value for any <code class="docutils literal notranslate"><span class="pre">n</span></code>, where all bits are <code class="docutils literal notranslate"><span class="pre">0</span></code> except for the low bit, which has the same value as the Boolean.</p>
 </section>
 <section id="casting-from-int-uint">
 <h3>Casting from int/uint<a class="headerlink" href="#casting-from-int-uint" title="Link to this heading">¶</a></h3>
@@ -1132,7 +1142,7 @@ target type the result is implementation-specific. However,
 casting between <code class="docutils literal notranslate"><span class="pre">int[n]</span></code> and <code class="docutils literal notranslate"><span class="pre">uint[n]</span></code> is expected to preserve the bit
 ordering, specifically it should be the case that <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">int[n](uint[n](x))</span></code>
 and vice versa. Casting to <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code> is only allowed when <code class="docutils literal notranslate"><span class="pre">m==n</span></code>. If the target
-<code class="docutils literal notranslate"><span class="pre">bit</span></code> has more or less precision, then explicit slicing syntax must be given.
+<code class="docutils literal notranslate"><span class="pre">bit[]</span></code> has more or less precision, then explicit slicing syntax must be given.
 As noted, the conversion is done assuming a little-endian 2’s complement
 representation.</p>
 </section>
@@ -1188,6 +1198,7 @@ syntax must be given. Likewise, <code class="docutils literal notranslate"><span
 when <code class="docutils literal notranslate"><span class="pre">n==m</span></code>, in which case an exact per-bit copy is done using little-endian
 bit order. Finally, casting between bits of differing precisions is not
 allowed, explicit slicing syntax must be given.</p>
+<p>The scalar <code class="docutils literal notranslate"><span class="pre">bit</span></code> is implicitly interchangeable with <code class="docutils literal notranslate"><span class="pre">bool</span></code>.</p>
 </section>
 <section id="converting-duration-to-other-types">
 <span id="divideduration"></span><h3>Converting duration to other types<a class="headerlink" href="#converting-duration-to-other-types" title="Link to this heading">¶</a></h3>
