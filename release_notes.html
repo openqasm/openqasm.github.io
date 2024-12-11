@@ -34,10 +34,10 @@
             
   <section id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading">¶</a></h1>
-<section id="spec-v3-1-0-22">
-<span id="release-notes-spec-v3-1-0-22"></span><h2>spec/v3.1.0-22<a class="headerlink" href="#spec-v3-1-0-22" title="Link to this heading">¶</a></h2>
+<section id="spec-v3-1-0-23">
+<span id="release-notes-spec-v3-1-0-23"></span><h2>spec/v3.1.0-23<a class="headerlink" href="#spec-v3-1-0-23" title="Link to this heading">¶</a></h2>
 <section id="new-features">
-<span id="release-notes-spec-v3-1-0-22-new-features"></span><h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading">¶</a></h3>
+<span id="release-notes-spec-v3-1-0-23-new-features"></span><h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>The types <code class="docutils literal notranslate"><span class="pre">bool</span></code> and (scalar) <code class="docutils literal notranslate"><span class="pre">bit</span></code> are now explicitly described as being completely
 interchangeable in expression (r-value) positions, and that <code class="docutils literal notranslate"><span class="pre">bit</span></code> and <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code> are distinct
@@ -47,9 +47,16 @@ bit-packed type, so cannot be used as the base type of an <code class="docutils 
 byte-aligned single-bit integer-like type.  <code class="docutils literal notranslate"><span class="pre">bit[1]</span></code> is a register (sequence) type that
 happens to be of length one.</p></li>
 </ul>
+<ul class="simple">
+<li><p>Adds a recommendation that pragmas and annotations start with a namespaced
+identifier to avoid naming collisions between pragmas and annotations
+specified by different implementations.
+To support namespaced annotations, the annotations keyword may now include
+a dotted (‘.’) list of identifiers.</p></li>
+</ul>
 </section>
 <section id="upgrade-notes">
-<span id="release-notes-spec-v3-1-0-22-upgrade-notes"></span><h3>Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Link to this heading">¶</a></h3>
+<span id="release-notes-spec-v3-1-0-23-upgrade-notes"></span><h3>Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>It has been clarified that arrays and registers of size zero are
 allowed; however, integers and angles must have size greater than
@@ -63,7 +70,7 @@ in general.</p></li>
 </ul>
 </section>
 <section id="bug-fixes">
-<span id="release-notes-spec-v3-1-0-22-bug-fixes"></span><h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">¶</a></h3>
+<span id="release-notes-spec-v3-1-0-23-bug-fixes"></span><h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Some minor mathematical errors in the descriptions of the explicit gate
 actions in <a class="reference internal" href="language/standard_library.html#sdg" title="language/standard_library"><code class="xref oq oq-gate docutils literal notranslate"><span class="pre">sdg</span></code></a>, <a class="reference internal" href="language/standard_library.html#rx" title="language/standard_library"><code class="xref oq oq-gate docutils literal notranslate"><span class="pre">rx</span></code></a>, <a class="reference internal" href="language/standard_library.html#ry" title="language/standard_library"><code class="xref oq oq-gate docutils literal notranslate"><span class="pre">ry</span></code></a>, <a class="reference internal" href="language/standard_library.html#rz" title="language/standard_library"><code class="xref oq oq-gate docutils literal notranslate"><span class="pre">rz</span></code></a>, <a class="reference internal" href="language/standard_library.html#crx" title="language/standard_library"><code class="xref oq oq-gate docutils literal notranslate"><span class="pre">crx</span></code></a> and
@@ -96,7 +103,7 @@ meanings.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="language/index.html">Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="grammar/index.html">OpenQASM 3.0 Grammar</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#spec-v3-1-0-22">spec/v3.1.0-22</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#spec-v3-1-0-23">spec/v3.1.0-23</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#upgrade-notes">Upgrade Notes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>

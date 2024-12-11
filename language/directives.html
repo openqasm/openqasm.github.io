@@ -35,19 +35,41 @@
             
   <section id="directives">
 <h1>Directives<a class="headerlink" href="#directives" title="Link to this heading">¶</a></h1>
-<p>OpenQASM supports directive mechanisms that allows other information to
+<p>OpenQASM supports directive mechanisms that allow other information to
 be included in the program. Directives are either pragmas or annotations.
 Both are used to supply additional information to the compiler passes and the
 target system or simulator. Ideally the meaning of the program does not change
 if some or all of the directives are ignored, so they can be interpreted
 at the discretion of the consuming process.</p>
+<section id="pragma-and-annotation-namespacing">
+<h2>Pragma and annotation namespacing<a class="headerlink" href="#pragma-and-annotation-namespacing" title="Link to this heading">¶</a></h2>
+<p>It is intended that different implementators of the specification might
+define their own pragmas and annotations. This creates the possibility that
+different implementations might define pragmas or annotations that collide.</p>
+<p>To avoid such collisions we recommend that implementations namespace their
+pragmas and annotations as follows:</p>
+<ul class="simple">
+<li><p>Pragmas start with <cite>pragma &lt;namespace&gt;.&lt;name&gt;(.&lt;name&gt;)*</cite>.</p></li>
+<li><p>Annotations start with <cite>&#64;&lt;namespace&gt;.&lt;name&gt;(.&lt;name&gt;)*</cite>.</p></li>
+</ul>
+<p>Where <cite>namespace</cite> and <cite>name</cite> are valid OpenQASM identifiers.</p>
+<p>If the pragma or annotation takes additional arguments the
+final <cite>&lt;name&gt;</cite> should be followed by a single space before the
+additional text.</p>
+<p>The namespace should be a short name that identifies the organization that
+defines behaviour of the pragmas and annotations contained within it.</p>
+<p>The namespace <cite>openqasm</cite> is reserved for future use by the OpenQASM
+specification.</p>
+</section>
 <section id="pragmas">
 <h2>Pragmas<a class="headerlink" href="#pragmas" title="Link to this heading">¶</a></h2>
 <p>Pragma directives start with <code class="docutils literal notranslate"><span class="pre">pragma</span></code> and continue to the end of line. The
 text after <code class="docutils literal notranslate"><span class="pre">pragma</span></code> is a single string, and parsing is left to the specific
-implementation. Implementations may optionally choose to support the older <code class="docutils literal notranslate"><span class="pre">#pragma</span></code>
-keyword as a custom extension.
-Pragmas should be processed as soon as they are encountered; if a
+implementation, although implementors are encourage to use the namespacing
+described above.</p>
+<p>Implementations may optionally choose to support the older <code class="docutils literal notranslate"><span class="pre">#pragma</span></code> keyword
+as a custom extension.</p>
+<p>Pragmas should be processed as soon as they are encountered; if a
 pragma is not supported by a compiler pass it should be ignored and preserved
 intact for future passes.  Pragmas should avoid stateful or positional
 interactions to avoid unexpected behaviors between included source files. If the
@@ -57,7 +79,7 @@ this specification, such as adding directives to a simulator.</p>
 <p>*Note: The following examples are simply possible implementations, this
 specification does not define any pragmas. Please consult your tool’s
 documentation for supported pragmas.</p>
-<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">pragma</span> simulator noise model &quot;qpu1.noise&quot;
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">pragma</span> qiskit.simulator noise model &quot;qpu1.noise&quot;
 </pre></div>
 </div>
 <p>Pragmas can also be used to specify system-level information or assertions for
@@ -65,10 +87,10 @@ the entire circuit.</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="cp">OPENQASM</span><span class="w"> </span><span class="l">3.0</span><span class="p">;</span>
 
 <span class="c1">// Attach billing information</span>
-<span class="cp">pragma</span> user alice account 12345678
+<span class="cp">pragma</span> ibm.user alice account 12345678
 
 <span class="c1">// Assert that the QPU is healthy to run this circuit</span>
-<span class="cp">pragma</span> max_temp qpu 0.4
+<span class="cp">pragma</span> ibm.max_temp qpu 0.4
 
 <span class="kt">qubit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
 </pre></div>
@@ -78,7 +100,8 @@ the entire circuit.</p>
 <h2>Annotations<a class="headerlink" href="#annotations" title="Link to this heading">¶</a></h2>
 <p>Annotations can be added to supply additional information to the following
 OpenQASM <code class="docutils literal notranslate"><span class="pre">statement</span></code> as defined in the grammar. Annotations will start with a
-<code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol, have an identifying keyword and continue to the end of the line.</p>
+<code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol, have a dotted list of identifying keywords and continue to the end
+of the line.</p>
 <p>Multiple annotations may be added to a single statement. No ordering or
 interaction between annotations are prescribed by this specification.</p>
 <p>*Note: The following examples are simply possible implementations, this
@@ -89,21 +112,21 @@ documentation for supported annotations.</p>
 <span class="kt">input</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">control_flags</span><span class="p">;</span>
 
 <span class="c1">// Instruct compiler to create a reversible version of the function</span>
-<span class="nd">@reversible</span>
+<span class="nd">@openqasm</span>.reversible
 <span class="kd">gate</span><span class="w"> </span><span class="nf">multiply</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="c1">// Prevent swap insertion</span>
-<span class="nd">@noswap</span>
+<span class="nd">@openqasm</span>.noswap
 <span class="k">box</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="nf">rx</span><span class="p">(</span><span class="no">pi</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
 <span class="w">   </span><span class="nf">cnot</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">0</span><span class="p">],</span><span class="w"> </span><span class="n">q</span><span class="p">[</span><span class="m">3</span><span class="p">];</span>
 <span class="p">}</span>
 
 <span class="c1">// Apply multiple annotations</span>
-<span class="nd">@crosstalk</span>
-<span class="nd">@noise</span> profile &quot;gate_noise.qnf&quot;
+<span class="nd">@openqasm</span>.crosstalk
+<span class="nd">@openqasm</span>.noise profile &quot;gate_noise.qnf&quot;
 <span class="kd">defcal</span><span class="w"> </span><span class="nf">noisy_gate</span><span class="w"> </span><span class="l">$0</span><span class="w"> </span><span class="l">$1</span><span class="w"> </span><span class="p">{</span><span class="x"> ... </span><span class="p">}</span>
 </pre></div>
 </div>
@@ -227,6 +250,7 @@ not using parameterized circuits in a quantum program for the case of the VQE:</
 <li class="toctree-l2"><a class="reference internal" href="subroutines.html">Subroutines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scope.html">Scoping of variables</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Directives</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pragma-and-annotation-namespacing">Pragma and annotation namespacing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pragmas">Pragmas</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#annotations">Annotations</a></li>
 </ul>
