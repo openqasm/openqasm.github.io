@@ -84,7 +84,7 @@ declares a reference to a quantum bit. These qubits are referred
 to as “virtual qubits” (in distinction to “physical qubits” on
 actual hardware; see below). The statement <code class="docutils literal notranslate"><span class="pre">qubit[size]</span> <span class="pre">name;</span></code>
 declares a quantum register with <code class="docutils literal notranslate"><span class="pre">size</span></code> qubits.
-Sizes must always be <a class="reference internal" href="#const-expression"><span class="std std-ref">compile-time constant</span></a> positive
+Sizes must always be <a class="reference internal" href="#const-expression"><span class="std std-ref">compile-time constant</span></a> non-negative
 integers.
 Quantum registers cannot be resized after declaration.</p>
 <p>The label <code class="docutils literal notranslate"><span class="pre">name[j]</span></code> refers to a qubit of this register, where
@@ -225,6 +225,7 @@ The literals <code class="docutils literal notranslate"><span class="pre">false<
 signed 1:n-1:0 and unsigned 0:n:0 integers of the given size. The sizes
 and the surrounding brackets can be omitted (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">name;</span></code>) to use
 a precision that is specified by the particular target architecture.
+If provided, the <code class="docutils literal notranslate"><span class="pre">size</span></code> of an integer must be at least 1.
 Bit-level operations cannot be used on types without a specified width, and
 unspecified-width types are different to <em>all</em> specified-width types for
 the purposes of casting.
@@ -286,8 +287,8 @@ this subtracted from <span class="math notranslate nohighlight">\(2\pi\)</span>.
 multiplication and division by unsigned integers is defined by standard
 unsigned-integer arithmetic, with more details found in <a class="reference internal" href="classical.html#classical-instructions"><span class="std std-ref">the section on
 classical instructions</span></a>.</p>
-<p>The statement <code class="docutils literal notranslate"><span class="pre">angle[size]</span> <span class="pre">name;</span></code> statement declares a new angle called
-<code class="docutils literal notranslate"><span class="pre">name</span></code> with <code class="docutils literal notranslate"><span class="pre">size</span></code> bits in its representation.  Angles can be assigned
+<p>The statement <code class="docutils literal notranslate"><span class="pre">angle[size]</span> <span class="pre">name;</span></code> declares a new angle called
+<code class="docutils literal notranslate"><span class="pre">name</span></code> with <code class="docutils literal notranslate"><span class="pre">size</span></code> bits in its representation, where <code class="docutils literal notranslate"><span class="pre">size</span></code> must be a positive integer.  Angles can be assigned
 values using the constant <code class="docutils literal notranslate"><span class="pre">π</span></code> or <code class="docutils literal notranslate"><span class="pre">pi</span></code>, such as:</p>
 <div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declare a 20-bit angle with the value of &quot;π/2&quot;</span>
 <span class="kt">angle</span><span class="p">[</span><span class="m">20</span><span class="p">]</span><span class="w"> </span><span class="n">my_angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">π</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">2</span><span class="p">;</span>
@@ -804,6 +805,7 @@ of 7 total dimensions. The subscript operator <code class="docutils literal notr
 and for multi-dimensional arrays subarray accesses can be specified using a
 comma-delimited list of indices (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">myArr[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>), with the outer
 dimension specified first.</p>
+<p>One or more dimension(s) of an array can be zero, in which case the array has size zero.  An array of size zero cannot be indexed, e.g. given <code class="docutils literal notranslate"><span class="pre">array[float[32],</span> <span class="pre">0]</span> <span class="pre">myArray;</span></code>, it is an error to access either <code class="docutils literal notranslate"><span class="pre">myArray[0]</span></code> or <code class="docutils literal notranslate"><span class="pre">myArray[-1]</span></code>.</p>
 <p>Assignment to elements of arrays, as in the examples above, acts as expected,
 with the left-hand side of the assignment operating as a reference, thereby
 updating the values inside the original array. For multi-dimensional arrays,
