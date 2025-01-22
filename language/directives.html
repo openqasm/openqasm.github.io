@@ -193,6 +193,17 @@ variable:</p>
 <span class="c1">// Estimate the expectation value and store in an output variable</span>
 </pre></div>
 </div>
+<p>The above example could also be written using an input array:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kt">input</span><span class="w"> </span><span class="kt">array</span><span class="p">[</span><span class="kt">angle</span><span class="p">[</span><span class="m">32</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="n">params</span><span class="p">;</span>
+<span class="kt">qubit</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+
+<span class="c1">// Build an ansatz using the above free parameters, eg.</span>
+<span class="nf">rx</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="m">0</span><span class="p">])</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="nf">ry</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="m">1</span><span class="p">])</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+
+<span class="c1">// Estimate the expectation value and store in an output variable</span>
+</pre></div>
+</div>
 <p>The following Python pseudocode illustrates the differences between using and
 not using parameterized circuits in a quantum program for the case of the VQE:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example without using parametric circuits:</span>
