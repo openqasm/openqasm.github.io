@@ -351,6 +351,26 @@ require more than 150ns for all valid combinations:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>Qubits can be marked as synchronized by a box using the <code class="docutils literal notranslate"><span class="pre">nop</span></code> keyword (see <a class="reference internal" href="insts.html#nop"><span class="std std-ref">Explicit no-operation</span></a>).
+This can allow the explicit synchronization of qubits at a high level, without assigning any semantics to the action of that qubit within a box.
+For example:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">include</span><span class="w"> </span><span class="s">&quot;stdgates.inc&quot;</span><span class="p">;</span>
+
+<span class="kt">stretch</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
+<span class="k">box</span><span class="w"> </span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// Qubits $0 and $1 are explicitly used by the `cx`.</span>
+<span class="w">   </span><span class="n">cx</span><span class="w"> </span><span class="l">$0</span><span class="p">,</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// Qubit $2 must be synchronized to $0 and $1 at the start</span>
+<span class="w">   </span><span class="c1">// and end of the box, but has no defined operations within</span>
+<span class="w">   </span><span class="c1">// the box.</span>
+<span class="w">   </span><span class="n">nop</span><span class="w"> </span><span class="l">$2</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.2: </span>The <code class="docutils literal notranslate"><span class="pre">nop</span></code> directive.</p>
+</div>
 </section>
 <section id="barrier-instruction">
 <h2>Barrier instruction<a class="headerlink" href="#barrier-instruction" title="Link to this heading">¶</a></h2>

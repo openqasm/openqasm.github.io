@@ -36,7 +36,7 @@
             
   <section id="built-in-quantum-instructions">
 <h1>Built-in quantum instructions<a class="headerlink" href="#built-in-quantum-instructions" title="Link to this heading">¶</a></h1>
-<p>This section describes built-in non-unitary operations.</p>
+<p>This section describes built-in operations on qubits, including non-unitary ones.</p>
 <section id="initialization">
 <h2>Initialization<a class="headerlink" href="#initialization" title="Link to this heading">¶</a></h2>
 <p>The statement <code class="docutils literal notranslate"><span class="pre">reset</span> <span class="pre">qubit|qubit[];</span></code> resets a qubit or quantum register to the state
@@ -105,6 +105,42 @@ final operation on <code class="docutils literal notranslate"><span class="pre">
 </figcaption>
 </figure>
 </section>
+<section id="explicit-no-operation">
+<span id="nop"></span><h2>Explicit no-operation<a class="headerlink" href="#explicit-no-operation" title="Link to this heading">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.2: </span>The entire <code class="docutils literal notranslate"><span class="pre">nop</span></code> directive.</p>
+</div>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">nop</span> <span class="pre">&lt;qubits&gt;;</span></code> is an explicit no-operation on all mentioned qubits, but marks them as being “used” within a scope.
+<code class="docutils literal notranslate"><span class="pre">&lt;qubits&gt;</span></code> is a comma-separated list of qubit or qubit-register operands.</p>
+<p>In the global scope this has no effect on the program operation, though a compiler must still validate the arguments.
+This has a particularly important effect on <span class="xref std std-ref">boxed scopes</span>; a <code class="docutils literal notranslate"><span class="pre">nop</span></code> counts as a “use” of the qubit within the <code class="docutils literal notranslate"><span class="pre">box</span></code>, causing the qubit to be synchronized with the rest of the box at entry and exit.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">nop</span></code> statement is valid in exactly the places that a gate-call statement is valid.
+The operands of a <code class="docutils literal notranslate"><span class="pre">nop</span></code> statement must all be in scope and be of type <code class="docutils literal notranslate"><span class="pre">qubit</span></code> or <code class="docutils literal notranslate"><span class="pre">qubit[n]</span></code> for any non-negative integer <code class="docutils literal notranslate"><span class="pre">n</span></code>.</p>
+<p>For example:</p>
+<div class="highlight-qasm3 notranslate"><div class="highlight"><pre><span></span><span class="kn">include</span><span class="w"> </span><span class="s">&quot;stdgates.inc&quot;</span><span class="p">;</span>
+
+<span class="kt">stretch</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
+<span class="k">box</span><span class="w"> </span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// Qubits $0 and $1 are explicitly used by the `cx`.</span>
+<span class="w">   </span><span class="n">cx</span><span class="w"> </span><span class="l">$0</span><span class="p">,</span><span class="w"> </span><span class="l">$1</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// Qubit $2 must be synchronized to $0 and $1 at the start</span>
+<span class="w">   </span><span class="c1">// and end of the box, but has no defined operations within</span>
+<span class="w">   </span><span class="c1">// the box.</span>
+<span class="w">   </span><span class="n">nop</span><span class="w"> </span><span class="l">$2</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// More than one qubit can be specified in the list.  It is</span>
+<span class="w">   </span><span class="c1">// not an error to duplicate qubits, nor to ``nop`` a qubit</span>
+<span class="w">   </span><span class="c1">// with explicit operations in this scope.</span>
+<span class="w">   </span><span class="n">nop</span><span class="w"> </span><span class="l">$3</span><span class="p">,</span><span class="w"> </span><span class="l">$0</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// The ``nop`` statement can have zero operands, and this</span>
+<span class="w">   </span><span class="c1">// has no observable effect at all.</span>
+<span class="w">   </span><span class="n">nop</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -135,6 +171,7 @@ final operation on <code class="docutils literal notranslate"><span class="pre">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Built-in quantum instructions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#measurement">Measurement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#explicit-no-operation">Explicit no-operation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="classical.html">Classical instructions</a></li>
