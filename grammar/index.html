@@ -440,8 +440,8 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos">160</span><span class="c">// Ignore whitespace between tokens, and define C++-style comments.</span>
 <span class="linenos">161</span><span class="nl">Whitespace</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="o">+</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">skip</span><span class="w"> </span><span class="p">;</span>
 <span class="linenos">162</span><span class="nl">Newline</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="o">+</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">skip</span><span class="w"> </span><span class="p">;</span>
-<span class="linenos">163</span><span class="nl">LineComment</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;//&#39;</span><span class="w"> </span><span class="o">~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="o">*</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">skip</span><span class="p">;</span>
-<span class="linenos">164</span><span class="nl">BlockComment</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;/*&#39;</span><span class="w"> </span><span class="o">.*?</span><span class="w"> </span><span class="s1">&#39;*/&#39;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">skip</span><span class="p">;</span>
+<span class="linenos">163</span><span class="nl">LineComment</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;//&#39;</span><span class="w"> </span><span class="o">~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="o">*</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">channel</span><span class="o">(</span><span class="no">HIDDEN</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos">164</span><span class="nl">BlockComment</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;/*&#39;</span><span class="w"> </span><span class="o">.*?</span><span class="w"> </span><span class="s1">&#39;*/&#39;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">channel</span><span class="o">(</span><span class="no">HIDDEN</span><span class="o">)</span><span class="p">;</span>
 <span class="linenos">165</span>
 <span class="linenos">166</span>
 <span class="linenos">167</span><span class="c">// The version identifier token would be ambiguous between itself and</span>
@@ -481,12 +481,12 @@ an AST. Furthermore, it does not conduct any semantic analysis.</p>
 <span class="linenos">201</span><span class="x">// of the tokens, because ANTLR doesn&#39;t allow us to inherit rules directly.</span>
 <span class="linenos">202</span><span class="x">mode CAL_PRELUDE;</span>
 <span class="linenos">203</span><span class="x">    CAL_PRELUDE_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
-<span class="linenos">204</span><span class="x">    CAL_PRELUDE_COMMENT: (LineComment | BlockComment) -&gt; skip;</span>
+<span class="linenos">204</span><span class="x">    CAL_PRELUDE_COMMENT: (LineComment | BlockComment) -&gt; channel(HIDDEN);</span>
 <span class="linenos">205</span><span class="x">    CAL_PRELUDE_LBRACE: LBRACE -&gt; type(LBRACE), mode(CAL_BLOCK);</span>
 <span class="linenos">206</span>
 <span class="linenos">207</span><span class="x">mode DEFCAL_PRELUDE;</span>
 <span class="linenos">208</span><span class="x">    DEFCAL_PRELUDE_WHITESPACE: </span><span class="p">[</span><span class="x"> \t\r\n</span><span class="p">]</span><span class="x">+ -&gt; skip;</span>
-<span class="linenos">209</span><span class="x">    DEFCAL_PRELUDE_COMMENT: (LineComment | BlockComment) -&gt; skip;</span>
+<span class="linenos">209</span><span class="x">    DEFCAL_PRELUDE_COMMENT: (LineComment | BlockComment) -&gt; channel(HIDDEN);</span>
 <span class="linenos">210</span><span class="x">    DEFCAL_PRELUDE_LBRACE: LBRACE -&gt; type(LBRACE), mode(CAL_BLOCK);</span>
 <span class="linenos">211</span>
 <span class="linenos">212</span><span class="x">    // Duplications of valid constant expression tokens that may appear in the</span>
