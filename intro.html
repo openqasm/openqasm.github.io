@@ -89,7 +89,7 @@ An implementation of OpenQASM 3 is permitted to reject programs that use, for ex
 Similarly, even if a hardware implementation accepts values declared <code class="docutils literal notranslate"><span class="pre">complex[float[64]]</span></code>, it is not required to accept programs that use the infix <code class="docutils literal notranslate"><span class="pre">**</span></code> power operator on them at runtime, but a compiler is required to evaluate such operator expressions if the operands are compile-time known.</p>
 <p>Hardware implementations that support a particular feature <em>must</em> follow the rules for it given in this specification, unless such a feature is specifically stated to be “implementation-defined”.
 If they cannot, then they <em>must not</em> accept programs that use that feature.
-The user can therefore expect that if an OpenQASM 3 program accepted by two implementations, both will perform the same behaviour except in cases this document explicitly allows it to differ.</p>
+The user can therefore expect that if an OpenQASM 3 program is accepted by two implementations, both will perform the same behaviour except in cases this document explicitly allows it to differ.</p>
 </section>
 <section id="contributors">
 <h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">¶</a></h2>
