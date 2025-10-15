@@ -600,21 +600,7 @@ by the second argument.</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">uint</span></code></p></td>
 <td><p>Number of set (1) bits.</p></td>
 </tr>
-<tr class="row-even"><td><p>pow</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">uint</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">complex</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
-</td>
-<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
-</td>
-<td><p><span class="math notranslate nohighlight">\(\texttt{pow(a, b)} = a^b\)</span>.</p>
-<p>For floating-point and complex values,
-the principal value is returned.</p>
-</td>
-</tr>
-<tr class="row-odd"><td><p>rotl</p></td>
+<tr class="row-even"><td><p>rotl</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bit[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">uint[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
 </td>
@@ -633,7 +619,7 @@ the width of the input.</p>
 <p><code class="docutils literal notranslate"><span class="pre">rotl(a,</span> <span class="pre">n)</span> <span class="pre">==</span> <span class="pre">rotr(a,</span> <span class="pre">-n)</span></code>.</p>
 </td>
 </tr>
-<tr class="row-even"><td><p>rotr</p></td>
+<tr class="row-odd"><td><p>rotr</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bit[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">uint[n]</span> <span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">distance</span></code></p>
 </td>
@@ -644,12 +630,12 @@ the width of the input.</p>
 of <code class="docutils literal notranslate"><span class="pre">value</span></code> by <code class="docutils literal notranslate"><span class="pre">distance</span></code> places to
 the right (towards lower indices).</p></td>
 </tr>
-<tr class="row-odd"><td><p>sin</p></td>
+<tr class="row-even"><td><p>sin</p></td>
 <td><p>(<code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Sine.</p></td>
 </tr>
-<tr class="row-even"><td><p>sqrt</p></td>
+<tr class="row-odd"><td><p>sqrt</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p>
 </td>
@@ -659,13 +645,20 @@ the right (towards lower indices).</p></td>
 <td><p>Square root.  This always returns the
 principal root.</p></td>
 </tr>
-<tr class="row-odd"><td><p>tan</p></td>
+<tr class="row-even"><td><p>tan</p></td>
 <td><p>(<code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Tangent.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <cite>pow</cite> function was once erroneously listed as a built-in arithmetic function in the table above.
+It could not be parsed by the reference grammar because it conflicted with
+the <cite>pow</cite> gate modifier. It was also not mentioned in the OpenQASM 3 paper.
+Use the <cite>**</cite> operator instead.</p>
 </div>
 <p>For each built-in function, the chosen overload is the first one to appear in
 the list above where all given operands can be implicitly cast to the valid
@@ -684,18 +677,6 @@ is an error if there is no valid overload for a given sequence of operands.</p>
 <span class="c1">// The ``float -&gt; float`` overload of ``exp`` is chosen in both of these</span>
 <span class="c1">// cases; in the first, there is an exact type match, in the second the</span>
 <span class="c1">// ``int[8]`` input can be implicitly promoted to ``float``.</span>
-
-<span class="kt">const</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pow</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span><span class="w"> </span><span class="n">u1</span><span class="p">);</span>
-<span class="c1">// Value 64, expression has type `const int`.  The first overload of `pow`</span>
-<span class="c1">// is chosen, because `i1` can be implicitly promoted to `const int` and</span>
-<span class="c1">// `u1` to `const uint`.</span>
-
-<span class="kt">const</span><span class="w"> </span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]</span><span class="w"> </span><span class="n">f4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pow</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="m">2</span><span class="p">);</span>
-<span class="c1">// Value 0.0625, expression has type `const float`.  The second,</span>
-<span class="c1">// `(float, float) -&gt; float`, overload is chosen, because `-2` (type</span>
-<span class="c1">// `const int`) cannot be implicitly promoted to `const uint`, but both</span>
-<span class="c1">// input types can be implicitly promoted to `float`.  The `complex` overload</span>
-<span class="c1">// is not attempted, because it has lower priority.</span>
 
 <span class="kt">const</span><span class="w"> </span><span class="kt">bit</span><span class="p">[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="n">b2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">rotl</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">);</span>
 <span class="c1">// Value &quot;0101_0001&quot;, expression has type `const bit[8]`.</span>

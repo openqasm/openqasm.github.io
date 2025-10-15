@@ -208,6 +208,11 @@ and power and the corresponding assignment operators.</p>
 runtime.  OpenQASM 3 compilers may reject programs that require runtime
 operations on these values if the target backend does not support them.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For floating-point and complex values, the <code class="docutils literal notranslate"><span class="pre">**</span></code> operator returns
+the principal value.</p>
+</div>
 </section>
 <section id="complex-numbers">
 <h3>Complex numbers<a class="headerlink" href="#complex-numbers" title="Link to this heading">¶</a></h3>
@@ -226,6 +231,11 @@ hardware-dependent rounding mode and subnormal handling.</p>
 <span class="kt">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]]</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w">   </span><span class="c1">// f = (-55.0+60.0im)/53.0</span>
 <span class="kt">complex</span><span class="p">[</span><span class="kt">float</span><span class="p">[</span><span class="m">64</span><span class="p">]]</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w">  </span><span class="c1">// g = (0.10694695640729072+0.17536481119721312im)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For floating-point and complex values, the <code class="docutils literal notranslate"><span class="pre">**</span></code> operator returns
+the principal value.</p>
 </div>
 </section>
 <section id="evaluation-order">
