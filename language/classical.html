@@ -662,8 +662,8 @@ it is called from.</p>
 <p><code class="docutils literal notranslate"><span class="pre">extern</span></code> functions are declared by giving their signature using the
 statement <code class="docutils literal notranslate"><span class="pre">extern</span> <span class="pre">name(inputs)</span> <span class="pre">-&gt;</span> <span class="pre">output;</span></code> where <code class="docutils literal notranslate"><span class="pre">inputs</span></code> is a comma-separated list of type
 names and <code class="docutils literal notranslate"><span class="pre">output</span></code> is a single type name. The parentheses may be omitted if there are no <code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">extern</span></code> functions can take of any number of arguments whose types correspond to the classical
-types of OpenQASM. Inputs are passed by value. They can return zero or one value whose type
+<p><code class="docutils literal notranslate"><span class="pre">extern</span></code> functions can take any number of arguments whose types correspond to the classical
+types of OpenQASM. Inputs are passed by value. They can return zero or one values whose type
 is any classical type in OpenQASM except real constants. If necessary,
 multiple return values can be accommodated by concatenating registers.
 The type and size of each argument must be known at compile time to
