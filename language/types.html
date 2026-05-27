@@ -784,7 +784,7 @@ last, and so on, with <code class="docutils literal notranslate"><span class="pr
 Multi-dimensional arrays (as in the example above) are allowed, with a maximum
 of 7 total dimensions. The subscript operator <code class="docutils literal notranslate"><span class="pre">[]</span></code> is used for element access,
 and for multi-dimensional arrays subarray accesses can be specified using a
-comma-delimited list of indices (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">myArr[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>), with the outer
+comma-separated list of indices (<em>e.g.</em> <code class="docutils literal notranslate"><span class="pre">myArr[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>), with the outer
 dimension specified first.</p>
 <p>One or more dimension(s) of an array can be zero, in which case the array has size zero.  An array of size zero cannot be indexed, e.g. given <code class="docutils literal notranslate"><span class="pre">array[float[32],</span> <span class="pre">0]</span> <span class="pre">myArray;</span></code>, it is an error to access either <code class="docutils literal notranslate"><span class="pre">myArray[0]</span></code> or <code class="docutils literal notranslate"><span class="pre">myArray[-1]</span></code>.</p>
 <p>Assignment to elements of arrays, as in the examples above, acts as expected,
@@ -907,7 +907,7 @@ always returns a bit array of size equal to the size of the index set.</p>
 </pre></div>
 </div>
 <p>Bit-level access is still possible with elements of arrays. It is suggested that
-multi-dimensional access be done using the comma-delimited version of the
+multi-dimensional access be done using the comma-separated version of the
 subscript operator to reduce confusion. With this convention nearly all
 instances of multiple subscripts <code class="docutils literal notranslate"><span class="pre">[][]</span></code> will be bit-level accesses of array
 elements.</p>
@@ -950,7 +950,7 @@ should be explicitly declared and assigned the concatenation.</p>
 </pre></div>
 </div>
 <p>Arrays can be sliced just like quantum registers using a range <code class="docutils literal notranslate"><span class="pre">a:b:c</span></code>
-and can be indexed using an integer but cannot be indexed by a a comma-separated
+and can be indexed using an integer but cannot be indexed by a comma-separated
 list of integers contained in braces <code class="docutils literal notranslate"><span class="pre">{a,b,c,…}</span></code>. Slicing uses
 the subscript operator <code class="docutils literal notranslate"><span class="pre">[]</span></code>, but produces an array (or reference in the case
 of assignment) with the same number of dimensions as the given identifier.
