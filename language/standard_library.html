@@ -266,8 +266,8 @@ the gate is equivalent to <span class="math notranslate nohighlight">\(P(\pi/4)\
 this differs from <a class="reference internal" href="#p" title="language/standard_library"><code class="xref oq oq-gate docutils literal notranslate"><span class="pre">p</span></code></a> by a global phase of half the rotation angle:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\texttt{rz(θ) a;} \mapsto \mathit{RZ}(\theta)\colon\ \left\{\begin{aligned}[c]
-   \lvert0\rangle &amp;\to \cos(\theta/2)\lvert0\rangle + \sin(\theta/2)\lvert1\rangle\\
-   \lvert1\rangle &amp;\to \sin(\theta/2)\lvert0\rangle - \cos(\theta/2)\lvert1\rangle.
+   \lvert0\rangle &amp;\to \exp(-i\theta/2)\lvert0\rangle \\
+   \lvert1\rangle &amp;\to \exp(\phantom{-} i\theta/2)\lvert1\rangle.
 \end{aligned}\right.\end{split}\]</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
